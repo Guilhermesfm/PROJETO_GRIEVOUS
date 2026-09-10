@@ -143,6 +143,16 @@ const XLSX = require("xlsx");
     await page.locator(`text=${placa}`).first().click({ force: true });
     await page.waitForTimeout(3000);
 
+    const dataCriacao = (
+      await page.locator('palantir-text[type="text"]').allInnerTexts()
+    )
+      .map((texto) => texto.trim())
+      .find((texto) => /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}$/.test(texto));
+
+    if (!dataCriacao) {
+      throw new Error(`Data de criacao nao encontrada para a placa ${placa}`);
+    }
+
     // Captura o texto da situação da OS
     const situacao = (
       await page
@@ -152,9 +162,13 @@ const XLSX = require("xlsx");
         .innerText()
     ).trim();
 
-    resultados.push({ Placa: placa, Situacao: situacao });
+    resultados.push({
+      Placa: placa,
+      Situacao: situacao,
+      "Data de criacao": dataCriacao,
+    });
 
-    console.log(`Placa ${placa} -> ${situacao}`);
+    console.log(`Placa ${placa} -> ${situacao} | Criada em ${dataCriacao}`);
   }
 
   await browser.close();
