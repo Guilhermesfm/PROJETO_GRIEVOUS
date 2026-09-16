@@ -1,14 +1,29 @@
+const path = require("node:path");
 const { chromium } = require("playwright");
 const XLSX = require("xlsx");
+const { email_Login, password_Login } = require("../variaveis.js");
 
-(async () => {
-  // Preencha aqui as placas que serao consultadas.
-  const placas = ["OPZ4G70", "QMT7J41", "TDO8D16", "RWV6H65", "GFS4C62"];
+const OUTPUT_DIR = path.resolve(
+  __dirname,
+  "..",
+  "thisisnotthedroidyouarelookingfor",
+);
+
+function resolveOutputPath(filename = "situacoes_placas.xlsx") {
+  return path.join(OUTPUT_DIR, filename);
+}
+
+async function runAutomation(placas = []) {
+  if (!email_Login || !password_Login) {
+    throw new Error(
+      "Credenciais nao configuradas. Defina EMAIL e PASSWORD no arquivo .env.",
+    );
+  }
 
   const resultados = [];
 
   const browser = await chromium.launch({
-    headless: false,
+    headless: true,
     executablePath: chromium.executablePath(),
   });
   const page = await browser.newPage();
@@ -43,35 +58,36 @@ const XLSX = require("xlsx");
     }
   }
 
-  // 1. Acessa a página de login
-  await page.goto(
-    "https://app.fieldcontrol.com.br/autenticador-v2/#/login?to=:hash:%2Fatividades",
-  );
+  try {
+    // 1. Acessa a página de login
+    await page.goto(
+      "https://app.fieldcontrol.com.br/autenticador-v2/#/login?to=:hash:%2Fatividades",
+    );
 
-  // 2. Clica no campo de e-mail e preenche
-  await page.click('input[name="email"]');
-  await page.fill('input[name="email"]', "guilherme.miguel@inoprime.com.br");
+    // 2. Clica no campo de e-mail e preenche
+    await page.click('input[name="email"]');
+    await page.fill('input[name="email"]', email_Login);
 
-  // 3. Clica em "Continuar"
-  await page.click('palantir-button:has-text("Continuar")');
+    // 3. Clica em "Continuar"
+    await page.click('palantir-button:has-text("Continuar")');
 
-  // 4. Clica no campo de senha e preenche
-  await page.click('input[aria-label="password"]');
-  await page.fill('input[aria-label="password"]', "Inoprime@1234");
+    // 4. Clica no campo de senha e preenche
+    await page.click('input[aria-label="password"]');
+    await page.fill('input[aria-label="password"]', password_Login);
 
-  // 5. Clica em "Continuar" de novo
-  await page.click('palantir-button:has-text("Continuar")');
+    // 5. Clica em "Continuar" de novo
+    await page.click('palantir-button:has-text("Continuar")');
 
-  // 6. Aguarda 30 segundos para o login finalizar
-  await page.waitForTimeout(30000);
+    // 6. Aguarda 30 segundos para o login finalizar
+    await page.waitForTimeout(30000);
 
-  // 7. Aguarda e fecha todos os pop-ups conhecidos
-  await page.waitForTimeout(1000);
-  await fecharPopups();
-  await page.waitForTimeout(5000);
+    // 7. Aguarda e fecha todos os pop-ups conhecidos
+    await page.waitForTimeout(1000);
+    await fecharPopups();
+    await page.waitForTimeout(5000);
 
-  // 8. Repete a busca para cada placa da lista
-  for (const placa of placas) {
+    // 8. Repete a busca para cada placa da lista
+    for (const placa of placas) {
     // Clica no ícone de filtro
     const filtros = page.locator(
       'palantir-button[data-cy="filter-button"]:visible',
@@ -139,8 +155,45 @@ const XLSX = require("xlsx");
     await campoBusca.fill(placa);
     await page.waitForTimeout(2000);
 
-    // Clica no resultado que aparece com o texto da placa
-    await page.locator(`text=${placa}`).first().click({ force: true });
+    const candidatosResultado = [
+      page.getByText(placa, { exact: true }),
+      page.locator(`text=${placa}`),
+      page.locator("tr, li, div, palantir-item, palantir-card").filter({
+        hasText: placa,
+      }),
+      page
+        .locator(
+          '[role="row"], [role="option"], [data-cy*="row"], [data-cy*="item"]',
+        )
+        .filter({ hasText: placa }),
+    ];
+
+    let placaSelecionada = false;
+    for (const candidato of candidatosResultado) {
+      const total = await candidato.count().catch(() => 0);
+      if (!total) continue;
+
+      const alvo = candidato.filter({ hasText: placa }).first();
+      if (
+        await alvo
+          .waitFor({ state: "visible", timeout: 15000 })
+          .then(() => true)
+          .catch(() => false)
+      ) {
+        await alvo.click({ force: true });
+        placaSelecionada = true;
+        break;
+      }
+    }
+
+    if (!placaSelecionada) {
+      const pagina = await page.locator("body").innerText();
+      throw new Error(
+        `Nao foi possivel localizar a placa ${placa} na tela. ` +
+          `URL: ${page.url()}\nConteudo da pagina:\n${pagina.slice(0, 2000)}`,
+      );
+    }
+
     await page.waitForTimeout(3000);
 
     const dataCriacao = (
@@ -169,15 +222,35 @@ const XLSX = require("xlsx");
     });
 
     console.log(`Placa ${placa} -> ${situacao} | Criada em ${dataCriacao}`);
+    }
+  } finally {
+    await browser.close();
   }
-
-  await browser.close();
 
   // 9. Gera a planilha Excel com os resultados
   const planilha = XLSX.utils.json_to_sheet(resultados);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, planilha, "Situacoes");
-  XLSX.writeFile(workbook, "situacoes_placas.xlsx");
+  const outputPath = resolveOutputPath();
+  XLSX.writeFile(workbook, outputPath);
 
-  console.log("Planilha gerada: situacoes_placas.xlsx");
-})();
+  console.log(`Planilha gerada: ${outputPath}`);
+
+  return { outputPath, resultados };
+}
+
+async function main() {
+  await runAutomation([]);
+}
+
+if (require.main === module) {
+  main().catch((error) => {
+    console.error("Erro na execucao da automacao:", error);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  resolveOutputPath,
+  runAutomation,
+};

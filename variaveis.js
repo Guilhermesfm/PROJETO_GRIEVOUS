@@ -1,7 +1,7 @@
-import dotenv from 'dotenv';
+const dotenv = require("dotenv");
 dotenv.config();
 
-const email_Login = process.env.EMAIL || '';
-const password_Login = process.env.PASSWORD || '';
+const email_Login = process.env.EMAIL || "";
+const password_Login = process.env.PASSWORD || "";
 
-export { email_Login, password_Login };
+module.exports = { email_Login, password_Login };
