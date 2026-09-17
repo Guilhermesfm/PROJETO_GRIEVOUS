@@ -88,140 +88,140 @@ async function runAutomation(placas = []) {
 
     // 8. Repete a busca para cada placa da lista
     for (const placa of placas) {
-    // Clica no ícone de filtro
-    const filtros = page.locator(
-      'palantir-button[data-cy="filter-button"]:visible',
-    );
-    const filtroPorIdentificador = page
-      .locator('palantir-text[type="title"]')
-      .filter({ hasText: /^Por identificador$/ })
-      .locator("xpath=ancestor::palantir-accordion[1]");
-    const campoBusca = filtroPorIdentificador.locator(
-      'input[placeholder="Buscar..."]',
-    );
-    let filtroAberto = await campoBusca.isVisible().catch(() => false);
-    const quantidadeFiltros = await filtros.count();
+      // Clica no ícone de filtro
+      const filtros = page.locator(
+        'palantir-button[data-cy="filter-button"]:visible',
+      );
+      const filtroPorIdentificador = page
+        .locator('palantir-text[type="title"]')
+        .filter({ hasText: /^Por identificador$/ })
+        .locator("xpath=ancestor::palantir-accordion[1]");
+      const campoBusca = filtroPorIdentificador.locator(
+        'input[placeholder="Buscar..."]',
+      );
+      let filtroAberto = await campoBusca.isVisible().catch(() => false);
+      const quantidadeFiltros = await filtros.count();
 
-    if (!filtroAberto) {
-      for (let indice = 0; indice < quantidadeFiltros; indice += 1) {
-        const filtro = filtros.nth(indice);
-        await filtro.getByText("Filtrar", { exact: true }).click({
-          force: true,
-        });
-        await page.waitForTimeout(2500);
+      if (!filtroAberto) {
+        for (let indice = 0; indice < quantidadeFiltros; indice += 1) {
+          const filtro = filtros.nth(indice);
+          await filtro.getByText("Filtrar", { exact: true }).click({
+            force: true,
+          });
+          await page.waitForTimeout(2500);
+          if (
+            await campoBusca
+              .waitFor({ state: "visible", timeout: 10000 })
+              .then(() => true)
+              .catch(() => false)
+          ) {
+            filtroAberto = true;
+            break;
+          }
+        }
+      }
+
+      if (!filtroAberto) {
+        console.log(
+          "Aguardando o campo Buscar...; se necessario, abra Filtrar na janela do navegador.",
+        );
+        filtroAberto = await campoBusca
+          .waitFor({ state: "visible", timeout: 30000 })
+          .then(() => true)
+          .catch(() => false);
+      }
+
+      if (!filtroAberto) {
+        const estruturaFiltro = quantidadeFiltros
+          ? await filtros.first().evaluate((elemento) => {
+              const pais = [];
+              let atual = elemento;
+              for (let nivel = 0; nivel < 4 && atual; nivel += 1) {
+                pais.push(atual.outerHTML);
+                atual = atual.parentElement;
+              }
+              return pais.join("\n---\n");
+            })
+          : "nenhum filtro encontrado";
+        throw new Error(
+          `Nao foi possivel abrir o filtro de placas. URL: ${page.url()} | ` +
+            `Titulo: ${await page.title()} | Filtros: ${quantidadeFiltros}\n${estruturaFiltro}`,
+        );
+      }
+
+      // Preenche diretamente o campo exibido dentro do acordeao de filtros.
+      await campoBusca.waitFor({ state: "visible", timeout: 10000 });
+      await campoBusca.click({ force: true });
+      await campoBusca.fill(placa);
+      await page.waitForTimeout(2000);
+
+      const candidatosResultado = [
+        page.getByText(placa, { exact: true }),
+        page.locator(`text=${placa}`),
+        page.locator("tr, li, div, palantir-item, palantir-card").filter({
+          hasText: placa,
+        }),
+        page
+          .locator(
+            '[role="row"], [role="option"], [data-cy*="row"], [data-cy*="item"]',
+          )
+          .filter({ hasText: placa }),
+      ];
+
+      let placaSelecionada = false;
+      for (const candidato of candidatosResultado) {
+        const total = await candidato.count().catch(() => 0);
+        if (!total) continue;
+
+        const alvo = candidato.filter({ hasText: placa }).first();
         if (
-          await campoBusca
-            .waitFor({ state: "visible", timeout: 10000 })
+          await alvo
+            .waitFor({ state: "visible", timeout: 15000 })
             .then(() => true)
             .catch(() => false)
         ) {
-          filtroAberto = true;
+          await alvo.click({ force: true });
+          placaSelecionada = true;
           break;
         }
       }
-    }
 
-    if (!filtroAberto) {
-      console.log(
-        "Aguardando o campo Buscar...; se necessario, abra Filtrar na janela do navegador.",
-      );
-      filtroAberto = await campoBusca
-        .waitFor({ state: "visible", timeout: 30000 })
-        .then(() => true)
-        .catch(() => false);
-    }
-
-    if (!filtroAberto) {
-      const estruturaFiltro = quantidadeFiltros
-        ? await filtros.first().evaluate((elemento) => {
-            const pais = [];
-            let atual = elemento;
-            for (let nivel = 0; nivel < 4 && atual; nivel += 1) {
-              pais.push(atual.outerHTML);
-              atual = atual.parentElement;
-            }
-            return pais.join("\n---\n");
-          })
-        : "nenhum filtro encontrado";
-      throw new Error(
-        `Nao foi possivel abrir o filtro de placas. URL: ${page.url()} | ` +
-          `Titulo: ${await page.title()} | Filtros: ${quantidadeFiltros}\n${estruturaFiltro}`,
-      );
-    }
-
-    // Preenche diretamente o campo exibido dentro do acordeao de filtros.
-    await campoBusca.waitFor({ state: "visible", timeout: 10000 });
-    await campoBusca.click({ force: true });
-    await campoBusca.fill(placa);
-    await page.waitForTimeout(2000);
-
-    const candidatosResultado = [
-      page.getByText(placa, { exact: true }),
-      page.locator(`text=${placa}`),
-      page.locator("tr, li, div, palantir-item, palantir-card").filter({
-        hasText: placa,
-      }),
-      page
-        .locator(
-          '[role="row"], [role="option"], [data-cy*="row"], [data-cy*="item"]',
-        )
-        .filter({ hasText: placa }),
-    ];
-
-    let placaSelecionada = false;
-    for (const candidato of candidatosResultado) {
-      const total = await candidato.count().catch(() => 0);
-      if (!total) continue;
-
-      const alvo = candidato.filter({ hasText: placa }).first();
-      if (
-        await alvo
-          .waitFor({ state: "visible", timeout: 15000 })
-          .then(() => true)
-          .catch(() => false)
-      ) {
-        await alvo.click({ force: true });
-        placaSelecionada = true;
-        break;
+      if (!placaSelecionada) {
+        const pagina = await page.locator("body").innerText();
+        throw new Error(
+          `Nao foi possivel localizar a placa ${placa} na tela. ` +
+            `URL: ${page.url()}\nConteudo da pagina:\n${pagina.slice(0, 2000)}`,
+        );
       }
-    }
 
-    if (!placaSelecionada) {
-      const pagina = await page.locator("body").innerText();
-      throw new Error(
-        `Nao foi possivel localizar a placa ${placa} na tela. ` +
-          `URL: ${page.url()}\nConteudo da pagina:\n${pagina.slice(0, 2000)}`,
-      );
-    }
+      await page.waitForTimeout(3000);
 
-    await page.waitForTimeout(3000);
+      const dataCriacao = (
+        await page.locator('palantir-text[type="text"]').allInnerTexts()
+      )
+        .map((texto) => texto.trim())
+        .find((texto) => /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}$/.test(texto));
 
-    const dataCriacao = (
-      await page.locator('palantir-text[type="text"]').allInnerTexts()
-    )
-      .map((texto) => texto.trim())
-      .find((texto) => /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}$/.test(texto));
+      if (!dataCriacao) {
+        throw new Error(`Data de criacao nao encontrada para a placa ${placa}`);
+      }
 
-    if (!dataCriacao) {
-      throw new Error(`Data de criacao nao encontrada para a placa ${placa}`);
-    }
+      // Captura o texto da situação da OS
+      const situacao = (
+        await page
+          .locator('palantir-text[type="title"][size="xs"]')
+          .filter({ hasText: /\S/ })
+          .first()
+          .innerText()
+      ).trim();
 
-    // Captura o texto da situação da OS
-    const situacao = (
-      await page
-        .locator('palantir-text[type="title"][size="xs"]')
-        .filter({ hasText: /\S/ })
-        .first()
-        .innerText()
-    ).trim();
+      resultados.push({
+        Placa: placa,
+        Situacao: situacao,
+        "Data de criacao": dataCriacao,
+      });
 
-    resultados.push({
-      Placa: placa,
-      Situacao: situacao,
-      "Data de criacao": dataCriacao,
-    });
-
-    console.log(`Placa ${placa} -> ${situacao} | Criada em ${dataCriacao}`);
+      console.log(`Placa ${placa} -> ${situacao} | Criada em ${dataCriacao}`);
     }
   } finally {
     await browser.close();
