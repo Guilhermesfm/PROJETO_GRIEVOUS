@@ -16,7 +16,11 @@ const path = require("node:path");
 const { chromium } = require("playwright");
 const XLSX = require("xlsx");
 const { carregarCredenciais, carregarUrlsField } = require("../variaveis.js");
-const { filtrarPorIdentificador, salvarDiagnostico } = require("../filtro-field.js");
+const {
+  filtrarPorIdentificador,
+  salvarDiagnostico,
+  esperarListagemPronta,
+} = require("../filtro-field.js");
 const { fecharPopups } = require("../popups-field.js");
 
 // ---------------------------------------------------------------------------
@@ -47,12 +51,6 @@ const MAPA_PERGUNTAS = {
 // Seletores do Field (marcacao Palantir).
 const SELETORES = {
   botaoEditarLinha: "palantir-button.palantir-table__action-button",
-  // A aba "Formularios" da gaveta, com o contador ao lado. O primeiro
-  // seletor veio da marcacao real; os outros sao alternativas.
-  abaFormularios:
-    'div.tw-flex:has(palantir-badge):text-matches("^\s*Formul", "i"), ' +
-    '[role="tab"]:has-text("Formul"), ' +
-    'palantir-tab:has-text("Formul")',
 };
 
 
@@ -171,7 +169,16 @@ async function login(page) {
 
   await page.waitForTimeout(TIMEOUT_LOGIN);
   await fecharPopups(page);
-  await page.waitForTimeout(3000);
+
+  // Espera a listagem aparecer de fato, em vez de um tempo fixo: o Field
+  // demora a trocar o esqueleto pela barra de filtros nova.
+  if (!(await esperarListagemPronta(page))) {
+    const caminho = await salvarDiagnostico(page, "listagem-nao-carregou");
+    throw new Error(
+      "A listagem de atividades nao carregou depois do login." +
+        (caminho ? ` | Diagnostico: ${caminho}.png` : ""),
+    );
+  }
 }
 
 /**
@@ -191,7 +198,7 @@ async function voltarParaListagem(page) {
     await page
       .goto(URL_ATIVIDADES, { waitUntil: "domcontentloaded" })
       .catch(() => {});
-    await page.waitForTimeout(3000);
+    await esperarListagemPronta(page);
     return;
   }
 
@@ -245,14 +252,86 @@ async function abrirOs(page, identificador) {
   );
 }
 
-/** A gaveta da O.S. esta aberta? Confirma pela aba "Formularios". */
-async function esperarGaveta(page, timeout = 12000) {
+/**
+ * A aba "Formularios" da gaveta.
+ *
+ * O clicavel e o <button class="palantir-tabs__button">; o texto fica numa
+ * <div> dentro dele, junto do contador. Mirar no texto pegava a div e o
+ * clique nao trocava de aba — a leitura acabava acontecendo na aba "Geral".
+ */
+function localizarAbaFormularios(page) {
   return page
-    .locator(SELETORES.abaFormularios)
-    .first()
+    .locator("button.palantir-tabs__button")
+    .filter({ hasText: /Formul[aá]rios/i })
+    .first();
+}
+
+/** A gaveta da O.S. esta aberta? Confirma pela barra de abas. */
+async function esperarGaveta(page, timeout = 15000) {
+  return localizarAbaFormularios(page)
     .waitFor({ state: "visible", timeout })
     .then(() => true)
     .catch(() => false);
+}
+
+/**
+ * Troca para a aba "Formularios" e espera o painel de respostas.
+ *
+ * A confirmacao e a classe "--active" no botao mais o titulo "Respostas (N)".
+ * Sem checar, um clique que nao pega passa despercebido e a extracao le a
+ * tela errada, devolvendo quase nada.
+ */
+async function abrirAbaFormularios(page, identificador) {
+  const aba = localizarAbaFormularios(page);
+
+  const existe = await aba
+    .waitFor({ state: "visible", timeout: 15000 })
+    .then(() => true)
+    .catch(() => false);
+
+  if (!existe) {
+    const caminho = await salvarDiagnostico(page, `sem-aba-form-${identificador}`);
+    throw new Error(
+      `Aba "Formularios" nao encontrada na O.S. ${identificador}` +
+        (caminho ? ` | Diagnostico: ${caminho}.png` : ""),
+    );
+  }
+
+  for (let tentativa = 1; tentativa <= 3; tentativa += 1) {
+    const classe = (await aba.getAttribute("class").catch(() => "")) || "";
+    if (classe.includes("palantir-tabs__button--active")) break;
+
+    await aba.click({ timeout: 5000 }).catch(async () => {
+      await aba.click({ force: true }).catch(() => {});
+    });
+    await page.waitForTimeout(2000);
+  }
+
+  const pronto = await page
+    .getByText(/Respostas\s*\(\s*\d+\s*\)/i)
+    .first()
+    .waitFor({ state: "visible", timeout: 20000 })
+    .then(() => true)
+    .catch(() => false);
+
+  if (!pronto) {
+    const caminho = await salvarDiagnostico(page, `sem-respostas-${identificador}`);
+    throw new Error(
+      `A aba "Formularios" nao carregou as respostas da O.S. ${identificador}` +
+        (caminho ? ` | Diagnostico: ${caminho}.png` : ""),
+    );
+  }
+
+  // Quantas respostas o proprio Field diz que existem — serve para conferir
+  // se a leitura pegou todas.
+  const declaradas = await page
+    .getByText(/Respostas\s*\(\s*\d+\s*\)/i)
+    .first()
+    .innerText()
+    .then((t) => Number((t.match(/\d+/) || [0])[0]))
+    .catch(() => 0);
+
+  return declaradas;
 }
 
 /**
@@ -267,6 +346,61 @@ function separarNumeroPergunta(texto) {
   const casamento = limpo.match(/^(\d{1,3})\s*[).:\-–]?\s+(.+)$/);
   if (!casamento) return { numero: null, pergunta: limpo };
   return { numero: Number(casamento[1]), pergunta: casamento[2].trim() };
+}
+
+/**
+ * Conta as perguntas numeradas visiveis na tela.
+ *
+ * Serve para saber se os cartoes ja renderizaram: o cabecalho "Respostas (N)"
+ * aparece antes deles, e extrair nesse intervalo devolvia zero — foi o que
+ * fez a planilha sair vazia mesmo com a aba certa aberta.
+ */
+async function contarPerguntasNaTela(page) {
+  return page
+    .evaluate(() => {
+      const ENUNCIADO = /^\s*\d{1,3}\s*[).:\-–]?\s+\S/;
+      const RUIDO =
+        /p[áa]gina|itens?\.|pr[óo]xim|anterior|\bde\s+\d+\b|resultados?|linhas? por/i;
+      // Contador de caracteres dos campos de texto ("56 / 5000") tambem
+      // comeca com numero e entrava como se fosse a pergunta 56.
+      const CONTADOR = /^\s*\d{1,4}\s*\/\s*\d{1,6}\s*$/;
+
+      let total = 0;
+      for (const no of document.querySelectorAll("p, h1, h2, h3, h4, h5, span, div, legend, label")) {
+        const texto = (no.textContent || "").replace(/\s+/g, " ").trim();
+        if (!ENUNCIADO.test(texto) || texto.length > 200) continue;
+        if (no.querySelector("input, textarea, select, img")) continue;
+        if (RUIDO.test(texto) || CONTADOR.test(texto)) continue;
+        if (!no.getClientRects().length) continue;
+        total += 1;
+      }
+      return total;
+    })
+    .catch(() => 0);
+}
+
+/** Espera os cartoes de pergunta aparecerem e pararem de crescer. */
+async function esperarRespostasRenderizadas(page, timeout = 40000) {
+  const limite = Date.now() + timeout;
+  let anterior = -1;
+  let estaveis = 0;
+
+  while (Date.now() < limite) {
+    const atual = await contarPerguntasNaTela(page);
+
+    if (atual > 0 && atual === anterior) {
+      estaveis += 1;
+      // Duas leituras iguais seguidas: parou de renderizar.
+      if (estaveis >= 2) return atual;
+    } else {
+      estaveis = 0;
+    }
+
+    anterior = atual;
+    await page.waitForTimeout(1000);
+  }
+
+  return anterior > 0 ? anterior : 0;
 }
 
 /**
@@ -301,14 +435,13 @@ async function carregarTodasAsRespostas(page, limite = 30) {
  * de O.S. usa.
  */
 async function extrairFormularios(page, identificador) {
-  const aba = page.locator(SELETORES.abaFormularios).first();
-  if (await aba.isVisible().catch(() => false)) {
-    await aba.click({ force: true }).catch(() => {});
-    await page.waitForTimeout(2500);
-  }
+  const declaradas = await abrirAbaFormularios(page, identificador);
 
+  // Os cartoes chegam depois do cabecalho; sem esperar, a leitura acontece
+  // numa tela ainda vazia.
+  await esperarRespostasRenderizadas(page);
   await carregarTodasAsRespostas(page);
-  await page.waitForTimeout(800);
+  await esperarRespostasRenderizadas(page);
 
   fs.mkdirSync(DEBUG_DIR, { recursive: true });
   fs.writeFileSync(
@@ -328,20 +461,64 @@ async function extrairFormularios(page, identificador) {
     // O enunciado vem numerado: "10. NECESSARIO TROCA DO EQUIPAMENTO *".
     const ENUNCIADO = /^\s*\d{1,3}\s*[).:\-–]?\s+\S/;
 
-    // Acha o cartao da pergunta: sobe do enunciado ate o elemento que tambem
-    // contem os campos de resposta. Nao depende do nome das classes, que o
-    // Field troca sem aviso.
+    // Textos que comecam com numero mas nao sao pergunta.
+    const RUIDO =
+      /p[áa]gina|itens?\.|pr[óo]xim|anterior|\bde\s+\d+\b|resultados?|linhas? por/i;
+    // Contador de caracteres dos campos de texto ("56 / 5000") tambem
+    // comeca com numero e entrava como se fosse a pergunta 56.
+    const CONTADOR = /^\s*\d{1,4}\s*\/\s*\d{1,6}\s*$/;
+
+    const CAMPOS =
+      'input, textarea, select, palantir-checkbox, palantir-radio, [role="radio"], [role="checkbox"], img';
+
+    /** Quantos enunciados existem dentro deste elemento. */
+    function quantosEnunciados(elemento) {
+      let total = 0;
+      for (const filho of elemento.querySelectorAll(
+        "p, h1, h2, h3, h4, h5, span, div, legend, label",
+      )) {
+        const t = (filho.textContent || "").replace(/\s+/g, " ").trim();
+        if (ENUNCIADO.test(t) && t.length <= 200 && !filho.querySelector(CAMPOS)) {
+          total += 1;
+        }
+      }
+      return total;
+    }
+
+    /**
+     * Acha o cartao da pergunta: sobe do enunciado ate achar os campos de
+     * resposta, mas para antes de englobar a pergunta seguinte.
+     *
+     * Sem esse limite, um nivel a mais varria o formulario inteiro e a
+     * resposta saia com as opcoes de todas as outras perguntas emendadas.
+     */
     function blocoDaPergunta(enunciado) {
+      // Comeca no proprio enunciado: se ja o primeiro pai envolver outra
+      // pergunta, e melhor ficar com o enunciado sozinho do que devolver um
+      // bloco que varre meio formulario.
+      let melhor = enunciado;
       let atual = enunciado.parentElement;
+
       for (let nivel = 0; nivel < 6 && atual; nivel += 1) {
-        const temCampos = atual.querySelector(
-          'input, textarea, select, palantir-checkbox, palantir-radio, [role="radio"], [role="checkbox"], img',
-        );
-        if (temCampos) return atual;
+        // Passou a conter outra pergunta: subiu demais.
+        if (quantosEnunciados(atual) > 1) break;
+
+        melhor = atual;
+        if (atual.querySelector(CAMPOS)) return atual;
         atual = atual.parentElement;
       }
-      return enunciado.parentElement || enunciado;
+
+      return melhor;
     }
+
+    // A aba que sai de cena continua no DOM, apenas escondida. Sem este
+    // filtro, texto da aba "Geral" entrava como se fosse pergunta — inclusive
+    // com numero, atropelando o mapeamento.
+    const visivel = (elemento) =>
+      Boolean(
+        elemento.getClientRects().length &&
+          getComputedStyle(elemento).visibility !== "hidden",
+      );
 
     const vistos = new Set();
     const resultado = [];
@@ -355,6 +532,10 @@ async function extrairFormularios(page, identificador) {
       if (!ENUNCIADO.test(texto) || texto.length > 200) continue;
       // So o elemento que carrega o texto, nao os ancestrais nem os campos.
       if (no.querySelector("input, textarea, select, img")) continue;
+      if (!visivel(no)) continue;
+      // Rodape de paginacao ("1 de 1 Primeira pagina...") tambem comeca com
+      // numero e entrava como se fosse pergunta.
+      if (RUIDO.test(texto) || CONTADOR.test(texto)) continue;
 
       const bloco = blocoDaPergunta(no);
       if (vistos.has(bloco)) continue;
@@ -413,6 +594,13 @@ async function extrairFormularios(page, identificador) {
 
     return resultado;
   });
+
+  if (declaradas && itens.length < declaradas) {
+    console.warn(
+      `${identificador}: o Field declara ${declaradas} respostas e foram ` +
+        `lidas ${itens.length} — conferir o HTML em debug-formularios/`,
+    );
+  }
 
   return itens.map((item, indice) => {
     const { numero, pergunta } = separarNumeroPergunta(item.enunciado);

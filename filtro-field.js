@@ -56,6 +56,45 @@ async function salvarDiagnostico(page, nome) {
 }
 
 /**
+ * Espera a listagem terminar de carregar.
+ *
+ * O Field desenha primeiro um esqueleto com a barra antiga ("Filtrar") e so
+ * depois troca pela barra nova. Agir antes disso derrubava tudo logo na
+ * primeira O.S., com "Mais filtros nao encontrado" — o botao nem existia
+ * ainda. Aproveita para fechar avisos, que costumam aparecer nesse intervalo.
+ */
+async function esperarListagemPronta(page, tentativas = 3, porTentativa = 45000) {
+  for (let tentativa = 1; tentativa <= tentativas; tentativa += 1) {
+    const limite = Date.now() + porTentativa;
+
+    while (Date.now() < limite) {
+      if (
+        await page
+          .locator(SELETORES.maisFiltros)
+          .first()
+          .isVisible()
+          .catch(() => false)
+      ) {
+        return true;
+      }
+
+      await fecharPopups(page, 2);
+      await page.waitForTimeout(1500);
+    }
+
+    // A consulta que traz a lista as vezes volta erro e o Field fica no
+    // esqueleto para sempre, sem tentar de novo. Recarregar resolve; desistir
+    // derrubaria a execucao inteira por uma falha passageira.
+    if (tentativa < tentativas) {
+      await page.reload({ waitUntil: "domcontentloaded" }).catch(() => {});
+      await page.waitForTimeout(4000);
+    }
+  }
+
+  return false;
+}
+
+/**
  * Abre o menu "Mais filtros".
  *
  * O menu é um overlay do CDK: ele só existe no DOM depois que o botão é
@@ -123,7 +162,11 @@ async function abrirFiltroIdentificador(page) {
   const jaAberto = await acharCampoBusca(page, 1500);
   if (jaAberto) return jaAberto;
 
-  // 2. Filtro fixado como chip na barra (botao de pin do Field).
+  // 2. A listagem precisa estar carregada; senao a barra de filtros nem
+  //    existe no DOM.
+  await esperarListagemPronta(page);
+
+  // 3. Filtro fixado como chip na barra (botao de pin do Field).
   const chip = page
     .locator(SELETORES.chip)
     .filter({ hasText: /^\s*Identificador\s*$/ })
@@ -137,7 +180,7 @@ async function abrirFiltroIdentificador(page) {
     if (campo) return campo;
   }
 
-  // 3. Caminho completo: "Mais filtros" -> item "Identificador".
+  // 4. Caminho completo: "Mais filtros" -> item "Identificador".
   await abrirMenuFiltros(page);
 
   // Localiza pelo rotulo exato e sobe para o container clicavel.
@@ -216,6 +259,7 @@ async function filtrarPorIdentificador(page, valor) {
 
 module.exports = {
   filtrarPorIdentificador,
+  esperarListagemPronta,
   abrirFiltroIdentificador,
   salvarDiagnostico,
   SELETORES,
