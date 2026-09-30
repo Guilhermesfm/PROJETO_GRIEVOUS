@@ -19,3 +19,7 @@ folha-de-pagamento/*.xlsx
 folha-de-pagamento/*.xlsm
 folha-de-pagamento/*.csv
 placas/*.xlsx
+
+# Executavel gerado localmente
+Grievous.exe
+Grievous.txt
