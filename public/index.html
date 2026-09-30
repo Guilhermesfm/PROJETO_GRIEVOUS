@@ -3,18 +3,45 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Consulta de Placas</title>
+    <title>Grievous</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%E2%9A%94%EF%B8%8F%3C/text%3E%3C/svg%3E"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      /* Estrutura e nomes de classe seguem o padrao Color Admin (Sean Theme),
+         com a paleta do Grievous: grafite, osso e sabre azul. */
       :root {
-        --bg: #f3f6fb;
-        --panel: #ffffff;
-        --panel-soft: #eef4ff;
-        --line: #dfe7f4;
-        --text: #1e2a3a;
-        --muted: #607086;
-        --primary: #1d4ed8;
-        --primary-dark: #1e3a8a;
-        --success: #0f766e;
+        /* Paleta do General: osso, grafite, olho ambar e sabres azul/verde. */
+        --app-bg: #0a0d0b;
+        --app-sidebar-bg: #10140f;
+        --app-header-bg: #0d110e;
+        --app-panel-bg: #141813;
+        --app-panel-head: #1b201a;
+        --app-line: #2a3128;
+        --app-text: #dcd8cc;
+        --app-muted: #7e8878;
+        --app-bone: #efe9da;
+        --app-eye: #f5b921;
+        --app-saber: #52c4ff;
+        --app-saber-dim: rgba(82, 196, 255, 0.14);
+        --app-blade: #7bf06a;
+        --app-blade-dim: rgba(123, 240, 106, 0.14);
+        --app-green: #7bf06a;
+        --app-amber: #f5b921;
+        --app-red: #e5484d;
       }
 
       * {
@@ -23,189 +50,1354 @@
 
       body {
         margin: 0;
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        padding: 32px;
-        font-family: "Segoe UI", Arial, sans-serif;
-        background: linear-gradient(180deg, #edf4ff 0%, #e6edf7 100%);
-        color: var(--text);
+        color: var(--app-text);
+        font-family: "Inter", "Segoe UI", Arial, sans-serif;
+        font-size: 0.9rem;
+        /* Brilho verde do sabre vindo do canto, como nos posters. */
+        background:
+          radial-gradient(
+            900px 600px at 78% 8%,
+            rgba(123, 240, 106, 0.09),
+            transparent 62%
+          ),
+          radial-gradient(
+            700px 500px at 12% 96%,
+            rgba(82, 196, 255, 0.07),
+            transparent 60%
+          ),
+          var(--app-bg);
+        background-attachment: fixed;
       }
 
-      .container {
-        width: min(760px, 100%);
-        background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        padding: 30px 28px;
-        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      /* ---------- Header ---------- */
+      #header.header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 56px;
+        background: var(--app-header-bg);
+        border-bottom: 1px solid var(--app-line);
+        display: flex;
+        align-items: center;
+        padding: 0 18px;
+        z-index: 1020;
       }
 
-      h1 {
-        margin: 0 0 8px;
-        font-size: clamp(1.8rem, 2vw, 2.4rem);
-        color: var(--text);
+      .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 800;
+        letter-spacing: 3px;
+        font-size: 1.05rem;
+        color: var(--app-bone);
+        text-decoration: none;
       }
 
-      .subtitulo {
-        margin: 0 0 18px;
-        color: var(--muted);
-        font-size: 0.98rem;
+      /* Os quatro sabres do General, dois azuis e dois verdes. */
+      .sabers {
+        display: flex;
+        align-items: flex-end;
+        gap: 3px;
+        height: 26px;
       }
 
-      label {
+      .sabers i {
         display: block;
-        margin-bottom: 10px;
-        font-weight: 600;
+        width: 3px;
+        border-radius: 2px;
       }
 
-      textarea {
-        width: 100%;
-        min-height: 160px;
-        resize: vertical;
-        border-radius: 12px;
-        border: 1px solid var(--line);
-        background: #fbfdff;
-        color: var(--text);
-        padding: 14px 16px;
-        font-size: 1rem;
-        line-height: 1.6;
-        outline: none;
-        transition:
-          border-color 0.2s ease,
-          box-shadow 0.2s ease;
+      .sabers i:nth-child(1) {
+        height: 16px;
+        background: var(--app-saber);
+        box-shadow: 0 0 8px var(--app-saber);
+      }
+      .sabers i:nth-child(2) {
+        height: 24px;
+        background: var(--app-blade);
+        box-shadow: 0 0 8px var(--app-blade);
+      }
+      .sabers i:nth-child(3) {
+        height: 20px;
+        background: var(--app-blade);
+        box-shadow: 0 0 8px var(--app-blade);
+      }
+      .sabers i:nth-child(4) {
+        height: 12px;
+        background: var(--app-saber);
+        box-shadow: 0 0 8px var(--app-saber);
       }
 
-      textarea:focus {
-        border-color: rgba(29, 78, 216, 0.55);
-        box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.08);
+      .navbar-brand .mask {
+        width: 30px;
+        height: 34px;
+        color: var(--app-bone);
+        filter: drop-shadow(0 0 6px rgba(245, 185, 33, 0.25));
       }
 
-      .bar {
+      .navbar-brand small {
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        letter-spacing: 0;
+        font-size: 0.72rem;
+        color: var(--app-muted);
+      }
+
+      /* ---------- Sidebar ---------- */
+      #sidebar.sidebar {
+        position: fixed;
+        top: 56px;
+        bottom: 0;
+        left: 0;
+        width: 230px;
+        background: var(--app-sidebar-bg);
+        border-right: 1px solid var(--app-line);
+        padding: 16px 0;
+        overflow-y: auto;
+      }
+
+      .nav-header {
+        padding: 10px 20px 6px;
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 1.4px;
+        color: var(--app-muted);
+      }
+
+      .sidebar .nav-link {
         display: flex;
         align-items: center;
         gap: 12px;
-        margin-top: 18px;
-      }
-
-      button {
-        border: none;
-        border-radius: 10px;
-        padding: 12px 20px;
-        background: linear-gradient(
-          135deg,
-          var(--primary),
-          var(--primary-dark)
-        );
-        color: white;
-        font-weight: 700;
+        padding: 11px 20px;
+        color: var(--app-text);
+        border-left: 3px solid transparent;
         cursor: pointer;
-        transition:
-          transform 0.2s ease,
-          box-shadow 0.2s ease;
-        box-shadow: 0 8px 18px rgba(29, 78, 216, 0.25);
+        transition: background 0.15s ease;
       }
 
-      button:hover {
-        transform: translateY(-1px);
+      .sidebar .nav-link i {
+        width: 18px;
+        text-align: center;
+        color: var(--app-muted);
       }
 
-      button:disabled {
-        opacity: 0.7;
-        cursor: wait;
+      .sidebar .nav-link:hover {
+        background: rgba(255, 255, 255, 0.04);
       }
 
-      #status {
-        flex: 1;
-        min-height: 24px;
-        padding: 10px 12px;
-        border-radius: 10px;
-        background: var(--panel-soft);
-        border: 1px solid var(--line);
-        color: var(--muted);
-        font-size: 0.95rem;
+      .sidebar .nav-link.active {
+        background: var(--app-blade-dim);
+        border-left-color: var(--app-blade);
+        box-shadow: inset 3px 0 12px -4px var(--app-blade);
       }
 
-      #resultados {
-        margin: 22px 0 0;
-        padding-left: 20px;
-        color: var(--text);
-        line-height: 1.9;
+      .sidebar .nav-link.active i {
+        color: var(--app-blade);
       }
 
-      li + li {
-        margin-top: 6px;
+      /* ---------- Content ---------- */
+      #content.content {
+        margin: 56px 0 0 230px;
+        padding: 24px 26px 60px;
+      }
+
+      .page-header {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.35rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin: 0 0 4px;
+        color: var(--app-bone);
+        text-shadow: 0 0 22px rgba(123, 240, 106, 0.22);
+      }
+
+      .page-subtitle {
+        color: var(--app-muted);
+        margin: 0 0 22px;
+      }
+
+      /* ---------- Panel (padrao Color Admin) ---------- */
+      .panel {
+        background: var(--app-panel-bg);
+        border: 1px solid var(--app-line);
+        border-radius: 3px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        /* Canto chanfrado, como as placas da armadura. */
+        clip-path: polygon(
+          0 0,
+          calc(100% - 14px) 0,
+          100% 14px,
+          100% 100%,
+          14px 100%,
+          0 calc(100% - 14px)
+        );
+      }
+
+      .panel-heading {
+        background: linear-gradient(
+          90deg,
+          var(--app-panel-head),
+          rgba(123, 240, 106, 0.05)
+        );
+        border-bottom: 1px solid var(--app-line);
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .panel-title {
+        margin: 0;
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 1.6px;
+        text-transform: uppercase;
+        color: var(--app-bone);
+      }
+
+      .panel-title i {
+        color: var(--app-eye);
+      }
+
+      .panel-body {
+        padding: 18px 16px;
+      }
+
+      /* ---------- Widgets de estatistica ---------- */
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 12px;
+      }
+
+      .widget-stat {
+        background: var(--app-panel-head);
+        border: 1px solid var(--app-line);
+        border-left: 3px solid var(--app-eye);
+        border-radius: 3px;
+        padding: 13px 15px;
+        clip-path: polygon(
+          0 0,
+          calc(100% - 10px) 0,
+          100% 10px,
+          100% 100%,
+          0 100%
+        );
+      }
+
+      .widget-stat .value {
+        color: var(--app-bone);
+      }
+
+      .widget-stat.is-green {
+        border-left-color: var(--app-blade);
+      }
+
+      .widget-stat .title {
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 1.1px;
+        color: var(--app-muted);
+        margin-bottom: 6px;
+      }
+
+      .widget-stat .value {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.5rem;
+        line-height: 1;
+      }
+
+      .widget-stat.is-green {
+        border-left-color: var(--app-green);
+      }
+      .widget-stat.is-amber {
+        border-left-color: var(--app-amber);
+      }
+      .widget-stat.is-red {
+        border-left-color: var(--app-red);
+      }
+      .widget-stat.is-muted {
+        border-left-color: var(--app-muted);
+      }
+
+      /* O cinza padrao do Bootstrap some no fundo escuro. */
+      .text-muted,
+      .form-label {
+        color: var(--app-muted) !important;
+      }
+
+      code {
+        color: var(--app-saber);
+      }
+
+      /* ---------- Formularios e botoes ---------- */
+      textarea.form-control,
+      input.form-control,
+      select.form-select {
+        background: #1a212c;
+        border: 1px solid var(--app-line);
+        color: var(--app-text);
+      }
+
+      textarea.form-control:focus,
+      input.form-control:focus,
+      select.form-select:focus {
+        background: #1a212c;
+        color: var(--app-text);
+        border-color: var(--app-saber);
+        box-shadow: 0 0 0 0.2rem var(--app-saber-dim);
+      }
+
+      .btn-saber {
+        background: linear-gradient(135deg, var(--app-blade), var(--app-saber));
+        border: none;
+        color: #08120a;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        box-shadow: 0 0 14px rgba(123, 240, 106, 0.25);
+      }
+
+      .btn-saber:hover:not(:disabled) {
+        background: linear-gradient(135deg, #96ff86, #74d4ff);
+        color: #08120a;
+        box-shadow: 0 0 20px rgba(123, 240, 106, 0.4);
+      }
+
+      .btn-saber:disabled {
+        opacity: 0.5;
+      }
+
+      /* Parar: sabre vermelho do lado oposto. */
+      .btn-parar {
+        background: transparent;
+        border: 1px solid var(--app-red);
+        color: #ff8a8d;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+      }
+
+      .btn-parar:hover:not(:disabled) {
+        background: var(--app-red);
+        color: #1a0809;
+        box-shadow: 0 0 16px rgba(229, 72, 77, 0.35);
+      }
+
+      .btn-parar:disabled {
+        border-color: var(--app-line);
+        color: var(--app-muted);
+        opacity: 0.6;
+      }
+
+      .btn-ghost {
+        background: transparent;
+        border: 1px solid var(--app-line);
+        color: var(--app-text);
+      }
+
+      .btn-ghost:hover {
+        border-color: var(--app-eye);
+        color: var(--app-eye);
+      }
+
+      /* ---------- Progresso e log ---------- */
+      /* Barra de progresso como uma lâmina acendendo. */
+      .progress {
+        height: 6px;
+        background: #0c100c;
+        border: 1px solid var(--app-line);
+        border-radius: 3px;
+      }
+
+      .progress-bar {
+        background: linear-gradient(90deg, var(--app-saber), var(--app-blade));
+        box-shadow: 0 0 12px var(--app-blade);
+        transition: width 0.3s ease;
+      }
+
+      .console-log {
+        background: #080b08;
+        border: 1px solid var(--app-line);
+        border-radius: 5px;
+        height: 260px;
+        overflow-y: auto;
+        padding: 12px 14px;
+        font-family: "Consolas", "Courier New", monospace;
+        font-size: 0.78rem;
+        line-height: 1.7;
+      }
+
+      .console-log .linha {
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .console-log .hora {
+        color: var(--app-muted);
+        margin-right: 8px;
+      }
+
+      .log-ok {
+        color: var(--app-green);
+      }
+      .log-erro {
+        color: var(--app-red);
+      }
+      .log-info {
+        color: var(--app-saber);
+      }
+      .log-neutro {
+        color: var(--app-text);
+      }
+
+      /* ---------- Tabelas ---------- */
+      .table {
+        color: var(--app-text);
+        margin: 0;
+        font-size: 0.82rem;
+      }
+
+      .table > :not(caption) > * > * {
+        background: transparent;
+        border-bottom-color: var(--app-line);
+        padding: 9px 12px;
+      }
+
+      .table thead th {
+        color: var(--app-muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 0.8px;
+        border-bottom: 1px solid var(--app-line);
+      }
+
+      .table tbody tr:hover > * {
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .table-wrap {
+        max-height: 420px;
+        overflow: auto;
+      }
+
+      .badge-cat {
+        font-size: 0.68rem;
+        font-weight: 600;
+        padding: 3px 9px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .cat-instalacao {
+        background: rgba(77, 184, 255, 0.18);
+        color: var(--app-saber);
+      }
+      .cat-remocao {
+        background: rgba(47, 208, 122, 0.16);
+        color: var(--app-green);
+      }
+      .cat-manutencao {
+        background: rgba(245, 166, 35, 0.16);
+        color: var(--app-amber);
+      }
+      .cat-remanejamento {
+        background: rgba(186, 122, 255, 0.18);
+        color: #ba7aff;
+      }
+      .cat-impedido {
+        background: rgba(229, 72, 77, 0.16);
+        color: var(--app-red);
+      }
+      .cat-fora {
+        background: rgba(139, 152, 171, 0.16);
+        color: var(--app-muted);
+      }
+
+      .tab-pane {
+        display: none;
+      }
+      .tab-pane.active {
+        display: block;
+      }
+
+      .empty-state {
+        text-align: center;
+        color: var(--app-muted);
+        padding: 34px 10px;
+      }
+
+      .empty-state i {
+        font-size: 1.8rem;
+        opacity: 0.4;
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      /* ---------- Tela de login ---------- */
+      #tela-login {
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background:
+          radial-gradient(
+            760px 520px at 50% 18%,
+            rgba(123, 240, 106, 0.1),
+            transparent 62%
+          ),
+          #060806;
+      }
+
+      #tela-login.aberta {
+        display: flex;
+      }
+
+      .login-card {
+        width: min(420px, 100%);
+        background: var(--app-panel-bg);
+        border: 1px solid var(--app-line);
+        padding: 34px 30px 28px;
+        clip-path: polygon(
+          0 0,
+          calc(100% - 20px) 0,
+          100% 20px,
+          100% 100%,
+          20px 100%,
+          0 calc(100% - 20px)
+        );
+      }
+
+      .login-card .mask {
+        width: 58px;
+        height: 66px;
+        color: var(--app-bone);
+        display: block;
+        margin: 0 auto 14px;
+        filter: drop-shadow(0 0 14px rgba(245, 185, 33, 0.3));
+      }
+
+      .login-card h1 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.3rem;
+        letter-spacing: 4px;
+        text-align: center;
+        color: var(--app-bone);
+        margin: 0 0 4px;
+      }
+
+      .login-card .sub {
+        text-align: center;
+        color: var(--app-muted);
+        font-size: 0.82rem;
+        margin: 0 0 24px;
+      }
+
+      .login-aviso {
+        margin-top: 16px;
+        font-size: 0.76rem;
+        color: var(--app-muted);
+        border-top: 1px solid var(--app-line);
+        padding-top: 14px;
+        line-height: 1.55;
+      }
+
+      .login-erro {
+        display: none;
+        margin-top: 14px;
+        padding: 9px 12px;
+        border-left: 3px solid var(--app-red);
+        background: rgba(229, 72, 77, 0.1);
+        color: #ff9a9d;
+        font-size: 0.82rem;
+      }
+
+      .login-erro.visivel {
+        display: block;
+      }
+
+      .conta-atual {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.8rem;
+        color: var(--app-muted);
+      }
+
+      .conta-atual .email {
+        color: var(--app-text);
+      }
+
+      @media (max-width: 820px) {
+        #sidebar.sidebar {
+          display: none;
+        }
+        #content.content {
+          margin-left: 0;
+          padding: 18px 16px 50px;
+        }
       }
     </style>
   </head>
+
   <body>
-    <div class="container">
-      <h1>Consulta de placas</h1>
-      <p class="subtitulo">
-        Informe as placas separadas por vírgula ou quebra de linha.
-      </p>
+    <!-- ============ TELA DE LOGIN ============ -->
+    <div id="tela-login">
+      <form class="login-card" id="form-login" autocomplete="on">
+        <svg class="mask" viewBox="0 0 44 50" fill="none" aria-hidden="true">
+          <path
+            d="M12 11 2 16l2 12 9-3Z M32 11l10 5-2 12-9-3Z"
+            fill="currentColor"
+            opacity=".55"
+          />
+          <path
+            d="M22 1c7 0 12 6 12 15 0 6-1 10-3 14l-2 12c-1 5-3 7-7 7s-6-2-7-7l-2-12c-2-4-3-8-3-14C10 7 15 1 22 1Z"
+            fill="currentColor"
+          />
+          <path d="M12.5 13.5 19 16l-1 6-6-3Z" fill="var(--app-eye)" />
+          <path d="M31.5 13.5 25 16l1 6 6-3Z" fill="var(--app-eye)" />
+          <path
+            d="M22 30v16M17 33h10M18 38h8M19 43h6"
+            stroke="#0a0d0b"
+            stroke-width="1.5"
+            opacity=".45"
+          />
+        </svg>
 
-      <label for="placas">Placas</label>
-      <textarea
-        id="placas"
-        placeholder="Exemplo: ABC1234, XYZ5678, DEF9012"
-      ></textarea>
+        <h1>GRIEVOUS</h1>
+        <p class="sub">Acesso ao Field Control</p>
 
-      <div class="bar">
-        <button id="btnExecutar">Executar</button>
-        <div id="status">Aguardando execução...</div>
+        <div class="mb-3">
+          <label class="form-label small" for="login-email">E-mail</label>
+          <input
+            type="email"
+            class="form-control"
+            id="login-email"
+            name="email"
+            autocomplete="username"
+            placeholder="nome@inoprime.com.br"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small" for="login-senha">Senha</label>
+          <div class="input-group">
+            <input
+              type="password"
+              class="form-control"
+              id="login-senha"
+              name="senha"
+              autocomplete="current-password"
+              required
+            />
+            <button
+              class="btn btn-ghost"
+              type="button"
+              id="btn-ver-senha"
+              title="Mostrar senha"
+            >
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <button class="btn btn-saber w-100" type="submit" id="btn-salvar-login">
+          <i class="fa-solid fa-right-to-bracket me-1"></i>Entrar
+        </button>
+
+        <div class="login-erro" id="login-erro"></div>
+
+        <p class="login-aviso">
+          <i class="fa-solid fa-lock me-1"></i>
+          As credenciais são gravadas no arquivo <code>.env</code> desta
+          máquina, que já está no <code>.gitignore</code>. Nada é enviado para
+          fora — o servidor só aceita conexões do próprio computador.
+        </p>
+      </form>
+    </div>
+
+    <div id="page-container" class="page-sidebar-fixed page-header-fixed">
+      <!-- Header -->
+      <div id="header" class="header navbar-default">
+        <a href="#" class="navbar-brand">
+          <!-- Máscara do General: crânio de osso com os olhos âmbar. -->
+          <svg class="mask" viewBox="0 0 44 50" fill="none" aria-hidden="true">
+            <!-- Abas laterais da máscara -->
+            <path
+              d="M12 11 2 16l2 12 9-3Z M32 11l10 5-2 12-9-3Z"
+              fill="currentColor"
+              opacity=".55"
+            />
+            <!-- Crânio: topo largo, queixo estreito -->
+            <path
+              d="M22 1c7 0 12 6 12 15 0 6-1 10-3 14l-2 12c-1 5-3 7-7 7s-6-2-7-7l-2-12c-2-4-3-8-3-14C10 7 15 1 22 1Z"
+              fill="currentColor"
+            />
+            <!-- Olhos âmbar, inclinados -->
+            <path d="M12.5 13.5 19 16l-1 6-6-3Z" fill="var(--app-eye)" />
+            <path d="M31.5 13.5 25 16l1 6 6-3Z" fill="var(--app-eye)" />
+            <!-- Sulcos do maxilar -->
+            <path
+              d="M22 30v16M17 33h10M18 38h8M19 43h6"
+              stroke="#0a0d0b"
+              stroke-width="1.5"
+              opacity=".45"
+            />
+          </svg>
+          <span class="sabers"><i></i><i></i><i></i><i></i></span>
+          GRIEVOUS
+          <small>automações Field Control</small>
+        </a>
+
+        <div class="conta-atual">
+          <i class="fa-solid fa-user-astronaut"></i>
+          <span class="email" id="conta-email">—</span>
+          <button class="btn btn-sm btn-ghost" id="btn-trocar-conta">
+            trocar
+          </button>
+        </div>
       </div>
 
-      <ul id="resultados"></ul>
+      <!-- Sidebar -->
+      <div id="sidebar" class="sidebar">
+        <div class="nav-header">Automações</div>
+        <nav class="nav flex-column">
+          <a class="nav-link active" data-aba="fechamento">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+            Fechamento
+          </a>
+          <a class="nav-link" data-aba="placas">
+            <i class="fa-solid fa-car-side"></i>
+            Placas
+          </a>
+        </nav>
+      </div>
+
+      <!-- Content -->
+      <div id="content" class="content">
+        <!-- ============ ABA FECHAMENTO ============ -->
+        <div class="tab-pane active" id="aba-fechamento">
+          <h1 class="page-header">Fechamento da folha</h1>
+          <p class="page-subtitle">
+            Lê a planilha de <code>folha-de-pagamento/</code>, abre cada O.S. no
+            Field e extrai as respostas dos formulários.
+          </p>
+
+          <!-- Resumo da planilha -->
+          <div class="panel">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <i class="fa-solid fa-table-list me-2"></i>Planilha de entrada
+              </h4>
+              <button class="btn btn-sm btn-ghost" id="btn-recarregar">
+                <i class="fa-solid fa-rotate me-1"></i>Recarregar
+              </button>
+            </div>
+            <div class="panel-body">
+              <div id="resumo-planilha">
+                <div class="empty-state">
+                  <i class="fa-solid fa-spinner fa-spin"></i>
+                  Lendo a planilha…
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Execucao -->
+          <div class="panel">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <i class="fa-solid fa-play me-2"></i>Execução
+              </h4>
+              <span class="text-muted small" id="status-execucao">parado</span>
+            </div>
+            <div class="panel-body">
+              <div class="row g-3 align-items-end mb-3">
+                <div class="col-auto">
+                  <label class="form-label small text-muted mb-1"
+                    >Limite de O.S. (0 = todas)</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    id="campo-limite"
+                    value="0"
+                    min="0"
+                    style="width: 130px"
+                  />
+                </div>
+                <div class="col-auto">
+                  <button class="btn btn-saber" id="btn-rodar-fechamento">
+                    <i class="fa-solid fa-bolt me-1"></i>Iniciar fechamento
+                  </button>
+                </div>
+                <div class="col-auto">
+                  <button class="btn btn-parar" id="btn-parar-fechamento" disabled>
+                    <i class="fa-solid fa-stop me-1"></i>Parar
+                  </button>
+                </div>
+                <div class="col-auto">
+                  <a
+                    class="btn btn-ghost"
+                    id="btn-baixar-fechamento"
+                    href="/api/pagamento/download"
+                  >
+                    <i class="fa-solid fa-download me-1"></i>Baixar planilha
+                  </a>
+                </div>
+              </div>
+
+              <div class="progress mb-2">
+                <div
+                  class="progress-bar"
+                  id="barra-progresso"
+                  style="width: 0%"
+                ></div>
+              </div>
+              <div class="d-flex justify-content-between small text-muted mb-3">
+                <span id="progresso-texto">Aguardando início</span>
+                <span id="progresso-contagem">0 / 0</span>
+              </div>
+
+              <div class="console-log" id="log-fechamento">
+                <div class="linha log-neutro">
+                  <span class="hora">--:--:--</span>General Grievous em espera.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resultado -->
+          <div class="panel">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <i class="fa-solid fa-list-check me-2"></i>O.S. processadas
+              </h4>
+            </div>
+            <div class="panel-body p-0">
+              <div class="table-wrap">
+                <table class="table table-sm align-middle">
+                  <thead>
+                    <tr>
+                      <th>Identificador</th>
+                      <th>Categoria</th>
+                      <th>Respostas</th>
+                      <th>Situação</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tabela-fechamento">
+                    <tr>
+                      <td colspan="4">
+                        <div class="empty-state">
+                          <i class="fa-solid fa-inbox"></i>
+                          Nada processado ainda.
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ ABA PLACAS ============ -->
+        <div class="tab-pane" id="aba-placas">
+          <h1 class="page-header">Consulta de placas</h1>
+          <p class="page-subtitle">
+            Busca a situação e a data de criação de cada placa no Field.
+          </p>
+
+          <div class="panel">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <i class="fa-solid fa-keyboard me-2"></i>Placas
+              </h4>
+            </div>
+            <div class="panel-body">
+              <label class="form-label small text-muted"
+                >Uma por linha, ou separadas por vírgula</label
+              >
+              <textarea
+                class="form-control mb-3"
+                id="campo-placas"
+                rows="6"
+                placeholder="ABC1D23&#10;XYZ4E56"
+              ></textarea>
+              <button class="btn btn-saber" id="btn-rodar-placas">
+                <i class="fa-solid fa-magnifying-glass me-1"></i>Consultar
+              </button>
+              <button class="btn btn-parar" id="btn-parar-placas" disabled>
+                <i class="fa-solid fa-stop me-1"></i>Parar
+              </button>
+              <a class="btn btn-ghost" href="/api/placas/download">
+                <i class="fa-solid fa-download me-1"></i>Baixar planilha
+              </a>
+              <span class="ms-3 small text-muted" id="status-placas"></span>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <i class="fa-solid fa-table me-2"></i>Resultados
+              </h4>
+            </div>
+            <div class="panel-body p-0">
+              <div class="table-wrap">
+                <table class="table table-sm align-middle">
+                  <thead>
+                    <tr>
+                      <th>Placa</th>
+                      <th>Situação</th>
+                      <th>Data de criação</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tabela-placas">
+                    <tr>
+                      <td colspan="3">
+                        <div class="empty-state">
+                          <i class="fa-solid fa-inbox"></i>
+                          Nenhuma consulta feita ainda.
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script>
-      // Captura os elementos visuais da tela.
-      const placasInput = document.getElementById("placas");
-      const btnExecutar = document.getElementById("btnExecutar");
-      const status = document.getElementById("status");
-      const resultados = document.getElementById("resultados");
+      // ---------- Login (grava as credenciais no .env) ----------
+      const telaLogin = document.getElementById("tela-login");
+      const erroLogin = document.getElementById("login-erro");
 
-      // Converte texto em lista de placas, aceitando vírgula ou quebra de linha.
-      function parsePlacas(texto) {
-        return texto
-          .split(/[\n,]+/)
-          .map((item) => item.trim())
-          .filter(Boolean);
+      function abrirLogin(email = "") {
+        document.getElementById("login-email").value = email;
+        document.getElementById("login-senha").value = "";
+        erroLogin.classList.remove("visivel");
+        telaLogin.classList.add("aberta");
+        document
+          .getElementById(email ? "login-senha" : "login-email")
+          .focus();
       }
 
-      // Quando clicar em "Executar", envia as placas para a API e mostra o retorno.
-      btnExecutar.addEventListener("click", async () => {
-        const placas = parsePlacas(placasInput.value);
-        status.textContent = "Executando automação...";
-        btnExecutar.disabled = true;
-        resultados.innerHTML = "";
+      function mostrarErroLogin(mensagem) {
+        erroLogin.textContent = mensagem;
+        erroLogin.classList.add("visivel");
+      }
+
+      // Verifica se o .env já tem credenciais; se não, abre o login.
+      async function verificarCredenciais() {
+        try {
+          const dados = await (await fetch("/api/credenciais")).json();
+          document.getElementById("conta-email").textContent =
+            dados.email || "não configurado";
+          if (!dados.configurado) abrirLogin(dados.email);
+          return dados.configurado;
+        } catch {
+          abrirLogin();
+          return false;
+        }
+      }
+
+      document
+        .getElementById("btn-trocar-conta")
+        .addEventListener("click", () =>
+          abrirLogin(document.getElementById("conta-email").textContent.trim()),
+        );
+
+      document
+        .getElementById("btn-ver-senha")
+        .addEventListener("click", () => {
+          const campo = document.getElementById("login-senha");
+          const escondida = campo.type === "password";
+          campo.type = escondida ? "text" : "password";
+          document.getElementById("btn-ver-senha").innerHTML = escondida
+            ? '<i class="fa-solid fa-eye-slash"></i>'
+            : '<i class="fa-solid fa-eye"></i>';
+        });
+
+      document
+        .getElementById("form-login")
+        .addEventListener("submit", async (evento) => {
+          evento.preventDefault();
+
+          const botao = document.getElementById("btn-salvar-login");
+          const email = document.getElementById("login-email").value.trim();
+          const senha = document.getElementById("login-senha").value;
+
+          botao.disabled = true;
+          erroLogin.classList.remove("visivel");
+
+          try {
+            const resposta = await fetch("/api/credenciais", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, senha }),
+            });
+            const dados = await resposta.json();
+            if (!dados.ok) throw new Error(dados.error);
+
+            document.getElementById("conta-email").textContent = dados.email;
+            document.getElementById("login-senha").value = "";
+            telaLogin.classList.remove("aberta");
+            carregarResumo();
+          } catch (erro) {
+            mostrarErroLogin(erro.message);
+          } finally {
+            botao.disabled = false;
+          }
+        });
+
+      // ---------- Navegacao entre abas ----------
+      document.querySelectorAll(".sidebar .nav-link").forEach((link) => {
+        link.addEventListener("click", () => {
+          document
+            .querySelectorAll(".sidebar .nav-link")
+            .forEach((item) => item.classList.remove("active"));
+          document
+            .querySelectorAll(".tab-pane")
+            .forEach((pane) => pane.classList.remove("active"));
+          link.classList.add("active");
+          document
+            .getElementById(`aba-${link.dataset.aba}`)
+            .classList.add("active");
+        });
+      });
+
+      // ---------- Helpers ----------
+      const CORES_CATEGORIA = {
+        instalacao: "cat-instalacao",
+        remocao: "cat-remocao",
+        manutencao: "cat-manutencao",
+        remanejamento: "cat-remanejamento",
+        impedido: "cat-impedido",
+      };
+
+      function badgeCategoria(categoria) {
+        const classe = CORES_CATEGORIA[categoria] || "cat-fora";
+        return `<span class="badge-cat ${classe}">${categoria}</span>`;
+      }
+
+      function escapar(texto) {
+        return String(texto ?? "").replace(
+          /[&<>"']/g,
+          (caractere) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[caractere],
+        );
+      }
+
+      function agora() {
+        return new Date().toLocaleTimeString("pt-BR");
+      }
+
+      function logar(mensagem, nivel = "neutro") {
+        const caixa = document.getElementById("log-fechamento");
+        const linha = document.createElement("div");
+        linha.className = `linha log-${nivel}`;
+        linha.innerHTML = `<span class="hora">${agora()}</span>${escapar(mensagem)}`;
+        caixa.appendChild(linha);
+        caixa.scrollTop = caixa.scrollHeight;
+      }
+
+      // ---------- Resumo da planilha ----------
+      async function carregarResumo() {
+        const alvo = document.getElementById("resumo-planilha");
+        alvo.innerHTML = `<div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i>Lendo a planilha…</div>`;
 
         try {
-          const response = await fetch("/api/run", {
+          const resposta = await fetch("/api/pagamento/planilha");
+          const dados = await resposta.json();
+
+          if (!dados.ok) {
+            alvo.innerHTML = `<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i>${escapar(dados.error)}</div>`;
+            return;
+          }
+
+          const ordem = [
+            ["instalacao", "is-green"],
+            ["remocao", "is-green"],
+            ["manutencao", "is-amber"],
+            ["remanejamento", ""],
+            ["impedido", "is-red"],
+            ["fora do escopo", "is-muted"],
+          ];
+
+          const cartoes = ordem
+            .filter(([chave]) => dados.porCategoria[chave])
+            .map(
+              ([chave, classe]) => `
+                <div class="widget-stat ${classe}">
+                  <div class="title">${chave}</div>
+                  <div class="value">${dados.porCategoria[chave]}</div>
+                </div>`,
+            )
+            .join("");
+
+          alvo.innerHTML = `
+            <div class="mb-3 small text-muted">
+              <i class="fa-solid fa-file-excel me-1"></i>
+              <strong class="text-white">${escapar(dados.planilha)}</strong>
+              &nbsp;·&nbsp; ${dados.total} O.S.
+            </div>
+            <div class="stat-grid">
+              <div class="widget-stat">
+                <div class="title">total</div>
+                <div class="value">${dados.total}</div>
+              </div>
+              ${cartoes}
+            </div>`;
+        } catch (erro) {
+          alvo.innerHTML = `<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i>${escapar(erro.message)}</div>`;
+        }
+      }
+
+      document
+        .getElementById("btn-recarregar")
+        .addEventListener("click", carregarResumo);
+
+      verificarCredenciais();
+      carregarResumo();
+
+      // ---------- Execucao do fechamento ----------
+      const botaoFechamento = document.getElementById("btn-rodar-fechamento");
+      const tabelaFechamento = document.getElementById("tabela-fechamento");
+      let primeiraLinha = true;
+
+      function adicionarLinha(identificador, categoria, respostas, situacao) {
+        if (primeiraLinha) {
+          tabelaFechamento.innerHTML = "";
+          primeiraLinha = false;
+        }
+        const linha = document.createElement("tr");
+        linha.innerHTML = `
+          <td>${escapar(identificador)}</td>
+          <td>${badgeCategoria(categoria)}</td>
+          <td>${respostas}</td>
+          <td>${situacao}</td>`;
+        tabelaFechamento.appendChild(linha);
+      }
+
+      const botaoParar = document.getElementById("btn-parar-fechamento");
+
+      // Pede a parada; quem encerra de fato é a automação, ao terminar a O.S.
+      async function pedirParada(botao, aoParar) {
+        botao.disabled = true;
+        botao.innerHTML =
+          '<i class="fa-solid fa-hourglass-half me-1"></i>Parando…';
+        try {
+          await fetch("/api/parar", { method: "POST" });
+          aoParar();
+        } catch (erro) {
+          botao.disabled = false;
+          botao.innerHTML = '<i class="fa-solid fa-stop me-1"></i>Parar';
+          throw erro;
+        }
+      }
+
+      function restaurarBotaoParar(botao) {
+        botao.disabled = true;
+        botao.innerHTML = '<i class="fa-solid fa-stop me-1"></i>Parar';
+      }
+
+      botaoParar.addEventListener("click", () =>
+        pedirParada(botaoParar, () =>
+          logar("Parada solicitada — encerrando após a O.S. atual.", "info"),
+        ).catch((erro) => logar(`Falha ao parar: ${erro.message}`, "erro")),
+      );
+
+      botaoFechamento.addEventListener("click", () => {
+        const limite = Number(document.getElementById("campo-limite").value) || 0;
+
+        botaoFechamento.disabled = true;
+        botaoParar.disabled = false;
+        document.getElementById("status-execucao").textContent = "rodando";
+        document.getElementById("log-fechamento").innerHTML = "";
+        tabelaFechamento.innerHTML = "";
+        primeiraLinha = true;
+
+        const fonte = new EventSource(`/api/pagamento/run?limite=${limite}`);
+
+        fonte.onmessage = (mensagem) => {
+          const evento = JSON.parse(mensagem.data);
+
+          if (evento.tipo === "inicio") {
+            logar(
+              `${evento.total} O.S. na planilha · ${evento.aVisitar} serão abertas · ${evento.ignoradas} ignoradas`,
+              "info",
+            );
+            document.getElementById("progresso-contagem").textContent =
+              `0 / ${evento.aVisitar}`;
+          }
+
+          if (evento.tipo === "login") logar("Entrando no Field…", "info");
+          if (evento.tipo === "logado") logar("Autenticado.", "ok");
+
+          if (evento.tipo === "os-inicio") {
+            const porcentagem = Math.round((evento.atual / evento.total) * 100);
+            document.getElementById("barra-progresso").style.width =
+              `${porcentagem}%`;
+            document.getElementById("progresso-contagem").textContent =
+              `${evento.atual} / ${evento.total}`;
+            document.getElementById("progresso-texto").textContent =
+              evento.identificador;
+          }
+
+          if (evento.tipo === "os-ok") {
+            logar(
+              `${evento.identificador} · ${evento.respostas} respostas lidas`,
+              "ok",
+            );
+            adicionarLinha(
+              evento.identificador,
+              evento.categoria,
+              evento.respostas,
+              '<span class="log-ok">OK</span>',
+            );
+          }
+
+          if (evento.tipo === "os-erro") {
+            logar(`${evento.identificador} · ${evento.erro}`, "erro");
+            adicionarLinha(
+              evento.identificador,
+              evento.categoria,
+              0,
+              `<span class="log-erro">${escapar(evento.erro)}</span>`,
+            );
+          }
+
+          if (evento.tipo === "parado") {
+            logar(
+              `Interrompido em ${evento.processadas} O.S. · ${evento.restantes} não foram abertas`,
+              "info",
+            );
+            document.getElementById("progresso-texto").textContent =
+              "Interrompido";
+          }
+
+          if (evento.tipo === "fim") {
+            logar(
+              `${evento.interrompida ? "Parado" : "Concluído"} · ` +
+                `${evento.ordens} O.S. · ${evento.respostas} respostas na planilha`,
+              evento.interrompida ? "info" : "ok",
+            );
+            if (!evento.interrompida) {
+              document.getElementById("barra-progresso").style.width = "100%";
+              document.getElementById("progresso-texto").textContent =
+                "Concluído";
+            }
+            document.getElementById("status-execucao").textContent =
+              evento.interrompida ? "parado" : "concluído";
+            botaoFechamento.disabled = false;
+            restaurarBotaoParar(botaoParar);
+            fonte.close();
+          }
+
+          if (evento.tipo === "erro") {
+            logar(evento.erro, "erro");
+            document.getElementById("status-execucao").textContent = "erro";
+            botaoFechamento.disabled = false;
+            restaurarBotaoParar(botaoParar);
+            fonte.close();
+          }
+        };
+
+        fonte.onerror = () => {
+          logar("Conexão com o servidor encerrada.", "erro");
+          document.getElementById("status-execucao").textContent = "parado";
+          botaoFechamento.disabled = false;
+          restaurarBotaoParar(botaoParar);
+          fonte.close();
+        };
+      });
+
+      // ---------- Consulta de placas ----------
+      const botaoPlacas = document.getElementById("btn-rodar-placas");
+      const botaoPararPlacas = document.getElementById("btn-parar-placas");
+
+      botaoPararPlacas.addEventListener("click", () =>
+        pedirParada(botaoPararPlacas, () => {
+          document.getElementById("status-placas").textContent =
+            "Parando — encerrando após a placa atual…";
+        }).catch((erro) => {
+          document.getElementById("status-placas").textContent =
+            `Falha ao parar: ${erro.message}`;
+        }),
+      );
+
+      botaoPlacas.addEventListener("click", async () => {
+        const placas = document
+          .getElementById("campo-placas")
+          .value.split(/[\n,;]+/)
+          .map((placa) => placa.trim())
+          .filter(Boolean);
+
+        const status = document.getElementById("status-placas");
+
+        if (!placas.length) {
+          status.textContent = "Informe ao menos uma placa.";
+          return;
+        }
+
+        botaoPlacas.disabled = true;
+        botaoPararPlacas.disabled = false;
+        status.textContent = `Consultando ${placas.length} placa(s)…`;
+
+        try {
+          const resposta = await fetch("/api/run", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ placas }),
           });
+          const dados = await resposta.json();
 
-          const payload = await response.json();
+          if (!dados.ok) throw new Error(dados.error);
 
-          if (!response.ok || !payload.ok) {
-            throw new Error(payload.error || "Erro ao executar automação.");
-          }
+          const corpo = document.getElementById("tabela-placas");
+          corpo.innerHTML = dados.resultados
+            .map(
+              (item) => `
+                <tr>
+                  <td>${escapar(item.Placa)}</td>
+                  <td>${escapar(item.Situacao)}</td>
+                  <td>${escapar(item["Data de criacao"])}</td>
+                </tr>`,
+            )
+            .join("");
 
-          // Exibe o caminho do arquivo salvo e os resultados retornados.
-          status.textContent = `Arquivo salvo em: ${payload.outputPath}`;
-
-          payload.resultados.forEach((item) => {
-            const li = document.createElement("li");
-            li.textContent = `${item.Placa} | ${item.Situacao} | ${item["Data de criacao"]}`;
-            resultados.appendChild(li);
-          });
-        } catch (error) {
-          status.textContent = error.message;
+          status.textContent = dados.interrompida
+            ? `Parado — ${dados.resultados.length} de ${placas.length} placa(s) consultada(s).`
+            : `${dados.resultados.length} placa(s) consultada(s).`;
+        } catch (erro) {
+          status.textContent = `Erro: ${erro.message}`;
         } finally {
-          btnExecutar.disabled = false;
+          botaoPlacas.disabled = false;
+          restaurarBotaoParar(botaoPararPlacas);
         }
       });
     </script>

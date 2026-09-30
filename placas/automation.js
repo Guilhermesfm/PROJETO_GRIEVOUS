@@ -1,62 +1,35 @@
 const path = require("node:path");
 const { chromium } = require("playwright");
 const XLSX = require("xlsx");
-const { email_Login, password_Login } = require("../variaveis.js");
+const { carregarCredenciais } = require("../variaveis.js");
+const { filtrarPorIdentificador } = require("../filtro-field.js");
+const { fecharPopups } = require("../popups-field.js");
 
-const OUTPUT_DIR = path.resolve(
-  __dirname,
-  "..",
-  "thisisnotthedroidyouarelookingfor",
-);
+// Tudo da automacao de placas fica nesta pasta.
+const OUTPUT_DIR = __dirname;
 
 function resolveOutputPath(filename = "situacoes_placas.xlsx") {
   return path.join(OUTPUT_DIR, filename);
 }
 
-async function runAutomation(placas = []) {
-  if (!email_Login || !password_Login) {
+async function runAutomation(placas = [], deveParar = () => false) {
+  // Marca se a execucao foi interrompida pelo usuario.
+  let interrompida = false;
+  const { email, senha } = carregarCredenciais();
+  if (!email || !senha) {
     throw new Error(
-      "Credenciais nao configuradas. Defina EMAIL e PASSWORD no arquivo .env.",
+      "Credenciais nao configuradas. Informe o login do Field na tela inicial.",
     );
   }
 
   const resultados = [];
 
+  // Sem executablePath: o Playwright acha o Chromium que ele mesmo instalou,
+  // em qualquer maquina. HEADLESS=false abre o navegador para acompanhar.
   const browser = await chromium.launch({
-    headless: true,
-    executablePath: chromium.executablePath(),
+    headless: process.env.HEADLESS !== "false",
   });
   const page = await browser.newPage();
-
-  async function fecharPopups() {
-    const botoesFechamento = page.locator(
-      '.cdk-overlay-container palantir-button[icon="close-outline"]',
-    );
-    for (let tentativa = 0; tentativa < 2; tentativa += 1) {
-      const botaoFechamento = botoesFechamento.last();
-      if (
-        await botaoFechamento
-          .waitFor({ state: "visible", timeout: 10000 })
-          .then(() => true)
-          .catch(() => false)
-      ) {
-        await botaoFechamento.click({ force: true });
-        await page.waitForTimeout(500);
-      }
-    }
-
-    const maisTarde = page.locator('button[data-cy="fc-modal-right-button"]');
-    const botaoMaisTarde = maisTarde.filter({ hasText: "Mais tarde" });
-    if (
-      await botaoMaisTarde
-        .waitFor({ state: "visible", timeout: 10000 })
-        .then(() => true)
-        .catch(() => false)
-    ) {
-      await botaoMaisTarde.click({ force: true });
-      await page.waitForTimeout(500);
-    }
-  }
 
   try {
     // 1. Acessa a página de login
@@ -66,14 +39,14 @@ async function runAutomation(placas = []) {
 
     // 2. Clica no campo de e-mail e preenche
     await page.click('input[name="email"]');
-    await page.fill('input[name="email"]', email_Login);
+    await page.fill('input[name="email"]', email);
 
     // 3. Clica em "Continuar"
     await page.click('palantir-button:has-text("Continuar")');
 
     // 4. Clica no campo de senha e preenche
     await page.click('input[aria-label="password"]');
-    await page.fill('input[aria-label="password"]', password_Login);
+    await page.fill('input[aria-label="password"]', senha);
 
     // 5. Clica em "Continuar" de novo
     await page.click('palantir-button:has-text("Continuar")');
@@ -83,77 +56,20 @@ async function runAutomation(placas = []) {
 
     // 7. Aguarda e fecha todos os pop-ups conhecidos
     await page.waitForTimeout(1000);
-    await fecharPopups();
+    await fecharPopups(page);
     await page.waitForTimeout(5000);
 
     // 8. Repete a busca para cada placa da lista
     for (const placa of placas) {
-      // Clica no ícone de filtro
-      const filtros = page.locator(
-        'palantir-button[data-cy="filter-button"]:visible',
-      );
-      const filtroPorIdentificador = page
-        .locator('palantir-text[type="title"]')
-        .filter({ hasText: /^Por identificador$/ })
-        .locator("xpath=ancestor::palantir-accordion[1]");
-      const campoBusca = filtroPorIdentificador.locator(
-        'input[placeholder="Buscar..."]',
-      );
-      let filtroAberto = await campoBusca.isVisible().catch(() => false);
-      const quantidadeFiltros = await filtros.count();
-
-      if (!filtroAberto) {
-        for (let indice = 0; indice < quantidadeFiltros; indice += 1) {
-          const filtro = filtros.nth(indice);
-          await filtro.getByText("Filtrar", { exact: true }).click({
-            force: true,
-          });
-          await page.waitForTimeout(2500);
-          if (
-            await campoBusca
-              .waitFor({ state: "visible", timeout: 10000 })
-              .then(() => true)
-              .catch(() => false)
-          ) {
-            filtroAberto = true;
-            break;
-          }
-        }
+      // Parada solicitada: para na placa atual e salva o que ja foi consultado.
+      if (deveParar()) {
+        interrompida = true;
+        console.log("Execucao interrompida pelo usuario.");
+        break;
       }
 
-      if (!filtroAberto) {
-        console.log(
-          "Aguardando o campo Buscar...; se necessario, abra Filtrar na janela do navegador.",
-        );
-        filtroAberto = await campoBusca
-          .waitFor({ state: "visible", timeout: 30000 })
-          .then(() => true)
-          .catch(() => false);
-      }
-
-      if (!filtroAberto) {
-        const estruturaFiltro = quantidadeFiltros
-          ? await filtros.first().evaluate((elemento) => {
-              const pais = [];
-              let atual = elemento;
-              for (let nivel = 0; nivel < 4 && atual; nivel += 1) {
-                pais.push(atual.outerHTML);
-                atual = atual.parentElement;
-              }
-              return pais.join("\n---\n");
-            })
-          : "nenhum filtro encontrado";
-        throw new Error(
-          `Nao foi possivel abrir o filtro de placas. URL: ${page.url()} | ` +
-            `Titulo: ${await page.title()} | Filtros: ${quantidadeFiltros}\n${estruturaFiltro}`,
-        );
-      }
-
-      // Preenche diretamente o campo exibido dentro do acordeao de filtros.
-      await campoBusca.waitFor({ state: "visible", timeout: 10000 });
-      await campoBusca.click({ force: true });
-      await campoBusca.fill(placa);
-      await page.waitForTimeout(2000);
+      // Filtro "Identificador" da barra nova do Field (modulo compartilhado).
+      await filtrarPorIdentificador(page, placa);
 
       const candidatosResultado = [
         page.getByText(placa, { exact: true }),
@@ -236,7 +152,7 @@ async function runAutomation(placas = []) {
 
   console.log(`Planilha gerada: ${outputPath}`);
 
-  return { outputPath, resultados };
+  return { outputPath, resultados, interrompida };
 }
 
 async function main() {

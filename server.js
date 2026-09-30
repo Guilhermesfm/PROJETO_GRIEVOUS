@@ -1,12 +1,24 @@
-// Server simples em Node.js para servir o front e receber as placas via API.
+// Server simples em Node.js para servir o front do Grievous e rodar as automacoes.
 const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
-const { runAutomation } = require("./files/automation.js");
+const { runAutomation } = require("./placas/automation.js");
+const { carregarCredenciais, salvarCredenciais } = require("./variaveis.js");
+const {
+  runPagamento,
+  lerOrdensServico,
+  classificarOs,
+  descobrirPlanilhaEntrada,
+  SAIDA_PADRAO,
+} = require("./folha-de-pagamento/Pagamento.js");
 
-// Porta em que o front será exibido.
-const PORT = 3000;
+// Porta em que o front será exibido. Por padrão só aceita conexões da própria
+// máquina, já que a tela de login trafega a senha do Field sem HTTPS.
+// Para abrir na rede (HOST=0.0.0.0) seria preciso antes proteger o acesso.
+const PORT = Number(process.env.PORT) || 3000;
+const HOST = process.env.HOST || "127.0.0.1";
 const PUBLIC_DIR = path.join(__dirname, "public");
+const SAIDA_PLACAS = path.join(__dirname, "placas", "situacoes_placas.xlsx");
 
 // Mapeia a extensão do arquivo para o tipo correto do HTTP.
 const MIME_TYPES = {
@@ -14,6 +26,9 @@ const MIME_TYPES = {
   ".css": "text/css; charset=utf-8",
   ".js": "application/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
+  ".svg": "image/svg+xml",
+  ".png": "image/png",
+  ".ico": "image/x-icon",
 };
 
 // Lê um arquivo do diretório público e envia para o navegador.
@@ -33,48 +48,230 @@ function serveStaticFile(res, filePath) {
   });
 }
 
-// Cria o servidor HTTP e trata rota do front + rota da API.
+// Responde JSON com o status informado.
+function responderJson(res, status, corpo) {
+  res.writeHead(status, { "Content-Type": "application/json; charset=utf-8" });
+  res.end(JSON.stringify(corpo));
+}
+
+// Lê o corpo de uma requisição POST.
+function lerCorpo(req) {
+  return new Promise((resolve) => {
+    let corpo = "";
+    req.on("data", (pedaco) => {
+      corpo += pedaco;
+    });
+    req.on("end", () => resolve(corpo));
+  });
+}
+
+// Envia um arquivo para download.
+function enviarDownload(res, caminho, nome) {
+  if (!fs.existsSync(caminho)) {
+    responderJson(res, 404, { ok: false, error: "Planilha ainda não gerada." });
+    return;
+  }
+  res.writeHead(200, {
+    "Content-Type":
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "Content-Disposition": `attachment; filename="${nome}"`,
+  });
+  fs.createReadStream(caminho).pipe(res);
+}
+
+/**
+ * Estado da execução em andamento, para o botão Parar.
+ *
+ * A automação consulta `parar` entre uma O.S. (ou placa) e a próxima: ela
+ * termina a que já começou e encerra, em vez de morrer no meio e perder o
+ * que foi lido.
+ */
+const execucao = { ativa: false, parar: false, tipo: null };
+
+function iniciarExecucao(tipo) {
+  execucao.ativa = true;
+  execucao.parar = false;
+  execucao.tipo = tipo;
+}
+
+function encerrarExecucao() {
+  execucao.ativa = false;
+  execucao.parar = false;
+  execucao.tipo = null;
+}
+
+/**
+ * Recarrega os módulos da automação do disco antes de cada execução.
+ *
+ * O Node guarda o módulo em cache na primeira vez que ele é exigido; sem isso,
+ * editar um seletor não teria efeito até reiniciar o servidor — e a execução
+ * rodaria com o código antigo sem avisar.
+ */
+function carregarAutomacaoPagamento() {
+  for (const modulo of [
+    "./folha-de-pagamento/Pagamento.js",
+    "./filtro-field.js",
+    "./popups-field.js",
+    "./variaveis.js",
+  ]) {
+    delete require.cache[require.resolve(modulo)];
+  }
+  return require("./folha-de-pagamento/Pagamento.js");
+}
+
+// Monta o resumo da planilha de entrada do fechamento.
+function resumirPlanilha() {
+  const entrada = descobrirPlanilhaEntrada();
+  if (!entrada) {
+    return { ok: false, error: "Nenhuma planilha em folha-de-pagamento/." };
+  }
+
+  const ordens = lerOrdensServico(entrada).map((os) => ({
+    ...os,
+    categoria: classificarOs(os) || "fora do escopo",
+  }));
+
+  const porCategoria = ordens.reduce((contagem, os) => {
+    contagem[os.categoria] = (contagem[os.categoria] || 0) + 1;
+    return contagem;
+  }, {});
+
+  return {
+    ok: true,
+    planilha: path.basename(entrada),
+    total: ordens.length,
+    porCategoria,
+    ordens,
+  };
+}
+
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
 
-  // Rota da API: recebe as placas do front e roda a automação.
+  // --- Execução: pedido de parada ------------------------------------------
+  if (req.method === "POST" && url.pathname === "/api/parar") {
+    if (!execucao.ativa) {
+      responderJson(res, 200, { ok: true, parando: false, motivo: "nada rodando" });
+      return;
+    }
+    execucao.parar = true;
+    console.log(`Parada solicitada (${execucao.tipo}).`);
+    responderJson(res, 200, { ok: true, parando: true, tipo: execucao.tipo });
+    return;
+  }
+
+  // --- Execução: status ----------------------------------------------------
+  if (req.method === "GET" && url.pathname === "/api/status") {
+    responderJson(res, 200, { ok: true, ...execucao });
+    return;
+  }
+
+  // --- Credenciais: estado atual (a senha nunca sai daqui) -----------------
+  if (req.method === "GET" && url.pathname === "/api/credenciais") {
+    const { email, senha } = carregarCredenciais();
+    responderJson(res, 200, {
+      ok: true,
+      configurado: Boolean(email && senha),
+      email,
+    });
+    return;
+  }
+
+  // --- Credenciais: grava EMAIL e PASSWORD no .env -------------------------
+  if (req.method === "POST" && url.pathname === "/api/credenciais") {
+    try {
+      const payload = JSON.parse((await lerCorpo(req)) || "{}");
+      salvarCredenciais(
+        String(payload.email || "").trim(),
+        String(payload.senha || ""),
+      );
+      console.log("Credenciais do Field atualizadas no .env.");
+      responderJson(res, 200, { ok: true, email: String(payload.email).trim() });
+    } catch (erro) {
+      responderJson(res, 400, { ok: false, error: erro.message });
+    }
+    return;
+  }
+
+  // --- Fechamento: resumo da planilha de entrada ---------------------------
+  if (req.method === "GET" && url.pathname === "/api/pagamento/planilha") {
+    try {
+      responderJson(res, 200, resumirPlanilha());
+    } catch (erro) {
+      responderJson(res, 500, { ok: false, error: erro.message });
+    }
+    return;
+  }
+
+  // --- Fechamento: execucao com progresso em tempo real (SSE) --------------
+  if (req.method === "GET" && url.pathname === "/api/pagamento/run") {
+    res.writeHead(200, {
+      "Content-Type": "text/event-stream; charset=utf-8",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive",
+    });
+
+    const enviar = (evento) => res.write(`data: ${JSON.stringify(evento)}\n\n`);
+
+    try {
+      const resumo = resumirPlanilha();
+      if (!resumo.ok) throw new Error(resumo.error);
+
+      // Permite rodar so um pedaco da planilha (util para testar).
+      const limite = Number(url.searchParams.get("limite")) || 0;
+      const ordens = limite ? resumo.ordens.slice(0, limite) : resumo.ordens;
+
+      // Pega a versão atual do código, não a que estava em memória.
+      const automacao = carregarAutomacaoPagamento();
+      iniciarExecucao("pagamento");
+      await automacao.runPagamento(
+        ordens,
+        automacao.SAIDA_PADRAO,
+        enviar,
+        () => execucao.parar,
+      );
+    } catch (erro) {
+      enviar({ tipo: "erro", erro: erro.message });
+    } finally {
+      encerrarExecucao();
+      res.end();
+    }
+    return;
+  }
+
+  // --- Fechamento: download da planilha gerada -----------------------------
+  if (req.method === "GET" && url.pathname === "/api/pagamento/download") {
+    enviarDownload(res, SAIDA_PADRAO, "pagamento_formularios.xlsx");
+    return;
+  }
+
+  // --- Placas: roda a automacao -------------------------------------------
   if (req.method === "POST" && url.pathname === "/api/run") {
-    let body = "";
+    try {
+      const payload = JSON.parse((await lerCorpo(req)) || "{}");
+      const placas = Array.isArray(payload.placas)
+        ? payload.placas.map((placa) => String(placa).trim()).filter(Boolean)
+        : [];
 
-    req.on("data", (chunk) => {
-      body += chunk;
-    });
+      iniciarExecucao("placas");
+      const resultado = await runAutomation(placas, () => execucao.parar);
+      responderJson(res, 200, {
+        ok: true,
+        outputPath: resultado.outputPath,
+        resultados: resultado.resultados,
+        interrompida: resultado.interrompida,
+      });
+    } catch (erro) {
+      responderJson(res, 500, { ok: false, error: erro.message });
+    } finally {
+      encerrarExecucao();
+    }
+    return;
+  }
 
-    req.on("end", async () => {
-      try {
-        // Converte as placas enviadas pelo front em uma lista limpa.
-        const payload = JSON.parse(body || "{}");
-        const placas = Array.isArray(payload.placas)
-          ? payload.placas.map((placa) => String(placa).trim()).filter(Boolean)
-          : [];
-
-        // Executa a automação com a lista recebida.
-        const resultado = await runAutomation(placas);
-
-        // Responde ao front com o caminho do arquivo gerado e os resultados.
-        res.writeHead(200, {
-          "Content-Type": "application/json; charset=utf-8",
-        });
-        res.end(
-          JSON.stringify({
-            ok: true,
-            outputPath: resultado.outputPath,
-            resultados: resultado.resultados,
-          }),
-        );
-      } catch (error) {
-        // Se der erro, devolve mensagem clara para o front exibir.
-        res.writeHead(500, {
-          "Content-Type": "application/json; charset=utf-8",
-        });
-        res.end(JSON.stringify({ ok: false, error: error.message }));
-      }
-    });
+  // --- Placas: download da planilha gerada ---------------------------------
+  if (req.method === "GET" && url.pathname === "/api/placas/download") {
+    enviarDownload(res, SAIDA_PLACAS, "situacoes_placas.xlsx");
     return;
   }
 
@@ -97,7 +294,6 @@ const server = http.createServer(async (req, res) => {
   res.end("Acesso negado.");
 });
 
-// Inicia o servidor.
-server.listen(PORT, () => {
-  console.log(`Front rodando em http://localhost:${PORT}`);
+server.listen(PORT, HOST, () => {
+  console.log(`Grievous rodando em http://localhost:${PORT}`);
 });
