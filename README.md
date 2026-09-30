@@ -21,19 +21,22 @@ Playwright. Sem esse segundo passo a automação não abre o navegador.
 
 ## Rodar
 
-No Windows, gere o executavel uma vez:
+No Windows basta abrir o **Grievous.exe** que ja vem no repositorio: ele sobe
+o servidor e abre o navegador na tela de login.
+
+Para deixar na Area de Trabalho, crie um atalho: botao direito no
+`Grievous.exe` > Enviar para > Area de trabalho. Assim ele continua ao lado
+do `iniciar.js` e funciona sem mais nada.
+
+Se preferir mover o proprio arquivo para fora da pasta, rode antes:
 
 ```powershell
 npm run exe
 ```
 
-Isso cria um **Grievous.exe** nesta pasta, com o icone do General. Ele sobe o
-servidor e abre o navegador na tela de login.
-
-Para deixar na Area de Trabalho, o recomendado e criar um atalho: botao
-direito no `Grievous.exe` > Enviar para > Area de trabalho. Se preferir mover
-o proprio arquivo, leve o `Grievous.txt` junto — e nele que fica o caminho do
-projeto.
+Isso regera o executavel e grava um `Grievous.txt` com o caminho do projeto;
+leve os dois juntos. O `Grievous.txt` nao e versionado porque guarda um
+caminho absoluto, que muda de maquina para maquina.
 
 Pelo terminal:
 
@@ -114,7 +117,8 @@ public/index.html        interface web
 assets/grievous.ico      icone do atalho do Windows
 public/grievous.svg      mascara usada no front e no favicon
 iniciar.js               sobe o servidor e abre o navegador
-criar-executavel.ps1     compila o Grievous.exe nesta pasta
+Grievous.exe             executavel do Windows (versionado)
+criar-executavel.ps1     recompila o Grievous.exe
 Grievous.bat             alternativa ao .exe, pelo terminal
 placas/                  automação de placas (código e planilha gerada)
 folha-de-pagamento/      fechamento (código, planilha de entrada e saída)
