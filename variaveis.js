@@ -73,4 +73,27 @@ function salvarCredenciais(email, senha) {
   return { email };
 }
 
-module.exports = { carregarCredenciais, salvarCredenciais, CAMINHO_ENV };
+// Enderecos do Field. Ficam no .env porque o Field troca de tela sem aviso e
+// nao da para depender de editar o codigo para acompanhar.
+const URLS_PADRAO = {
+  login:
+    "https://app.fieldcontrol.com.br/autenticador-v2/#/login?to=:hash:%2Fatividades",
+  listagem: "https://app.fieldcontrol.com.br/#/atividades",
+};
+
+/** Le as URLs do Field do .env, caindo nos padroes quando nao definidas. */
+function carregarUrlsField() {
+  dotenv.config({ path: CAMINHO_ENV, override: true, quiet: true });
+  return {
+    login: process.env.FIELD_URL_LOGIN || URLS_PADRAO.login,
+    listagem: process.env.FIELD_URL_LISTAGEM || URLS_PADRAO.listagem,
+  };
+}
+
+module.exports = {
+  carregarCredenciais,
+  salvarCredenciais,
+  carregarUrlsField,
+  URLS_PADRAO,
+  CAMINHO_ENV,
+};

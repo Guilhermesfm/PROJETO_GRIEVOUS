@@ -1,7 +1,7 @@
 const path = require("node:path");
 const { chromium } = require("playwright");
 const XLSX = require("xlsx");
-const { carregarCredenciais } = require("../variaveis.js");
+const { carregarCredenciais, carregarUrlsField } = require("../variaveis.js");
 const { filtrarPorIdentificador } = require("../filtro-field.js");
 const { fecharPopups } = require("../popups-field.js");
 
@@ -33,9 +33,7 @@ async function runAutomation(placas = [], deveParar = () => false) {
 
   try {
     // 1. Acessa a página de login
-    await page.goto(
-      "https://app.fieldcontrol.com.br/autenticador-v2/#/login?to=:hash:%2Fatividades",
-    );
+    await page.goto(carregarUrlsField().login);
 
     // 2. Clica no campo de e-mail e preenche
     await page.click('input[name="email"]');
