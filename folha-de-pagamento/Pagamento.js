@@ -45,10 +45,39 @@ const MAPA_PERGUNTAS = {
     ...new Set([...PERGUNTAS_INSTALACAO, ...PERGUNTAS_REMOCAO]),
   ].sort((a, b) => a - b),
   // Manutencao com avaria / violacao / extravio.
-  // 6 e 14 sao as perguntas de violacao na instalacao; a numeracao varia
-  // entre os formularios de manutencao, por isso as duas ficam na lista.
+  // 6 e 14 sao as perguntas de violacao; a numeracao muda conforme o
+  // formulario respondido, por isso as duas ficam na lista.
   manutencao: [...new Set([...PERGUNTAS_REMOCAO, 6, 14])].sort((a, b) => a - b),
 };
+
+/**
+ * Mapeamento por NOME do formulario, que tem precedencia sobre o tipo da O.S.
+ *
+ * O numero da pergunta vale dentro de um formulario, nao de um tipo: uma O.S.
+ * de manutencao pode responder "REVISAO ROUXINOL" em vez do formulario de
+ * manutencao, e ai a numeracao e outra. A chave e um trecho do nome, sem
+ * acento e em minusculas.
+ */
+const MAPA_POR_FORMULARIO = {
+  // "FORMULARIO DE INSTALACAO - TECNICOS INOPRIME"
+  "formulario de instalacao": PERGUNTAS_INSTALACAO,
+  // "FORMULARIO DE REMOCAO - GERAL"
+  "formulario de remocao": PERGUNTAS_REMOCAO,
+  // Preencher conforme os numeros forem confirmados em cada formulario:
+  // "formulario de manutencao": [...],
+  // "revisao rouxinol": [...],
+};
+
+/** Escolhe os numeros a exportar: pelo formulario, senao pelo tipo da O.S. */
+function perguntasDesejadas(nomeFormulario, categoria) {
+  const nome = normalizar(nomeFormulario);
+
+  for (const [trecho, numeros] of Object.entries(MAPA_POR_FORMULARIO)) {
+    if (nome.includes(trecho)) return numeros;
+  }
+
+  return MAPA_PERGUNTAS[categoria] || [];
+}
 
 /**
  * Perguntas do tipo "houve X?" cuja resposta afirmativa so tem valor com o
@@ -483,6 +512,23 @@ async function extrairFormularios(page, identificador) {
     "utf8",
   );
 
+  // Nome do formulario respondido: o numero da pergunta so faz sentido
+  // dentro de um formulario, e uma O.S. pode responder outro que nao o do
+  // seu tipo.
+  const nomeFormulario = await page
+    .evaluate(() => {
+      // O cartao do formulario e o unico que traz "Respondido por".
+      // Sem essa ancora, o seletor pegava o cartao da atividade, a direita,
+      // e o "nome do formulario" saia como o nome do tecnico.
+      for (const cartao of document.querySelectorAll("palantir-card-content")) {
+        if (!/Respondido por/i.test(cartao.textContent || "")) continue;
+        const titulo = cartao.querySelector('palantir-text[type="title"]');
+        if (titulo) return (titulo.textContent || "").replace(/\s+/g, " ").trim();
+      }
+      return "";
+    })
+    .catch(() => "");
+
   const itens = await page.evaluate(() => {
     const limpar = (valor) =>
       (valor || "")
@@ -635,7 +681,7 @@ async function extrairFormularios(page, identificador) {
     );
   }
 
-  return itens.map((item, indice) => {
+  const respostas = itens.map((item, indice) => {
     const { numero, pergunta } = separarNumeroPergunta(item.enunciado);
     const marcado = item.marcadas.join(" | ");
 
@@ -655,6 +701,9 @@ async function extrairFormularios(page, identificador) {
       ordem: indice + 1,
     };
   });
+
+  respostas.nomeFormulario = nomeFormulario;
+  return respostas;
 }
 
 // ---------------------------------------------------------------------------
@@ -761,9 +810,13 @@ async function runPagamento(
             );
           }
 
-          const numerosDesejados = MAPA_PERGUNTAS[os.categoria];
+          const nomeFormulario = formularios.nomeFormulario || "";
+          // O numero vale dentro do formulario; o tipo da O.S. e so o
+          // palpite quando o formulario nao esta mapeado.
+          const numerosDesejados = perguntasDesejadas(nomeFormulario, os.categoria);
 
           const linha = montarLinhaBase(os, os.categoria);
+          linha.Formulario = nomeFormulario;
           linha.Observacao = formularios.length
             ? ""
             : "Nenhuma resposta de formulario lida";
@@ -796,6 +849,7 @@ async function runPagamento(
               Identificador: os.identificador,
               Tipo: os.tipo,
               Categoria: os.categoria,
+              Formulario: nomeFormulario,
               Numero: item.numero ?? "",
               Ordem: item.ordem,
               Pergunta: item.pergunta,
@@ -813,7 +867,7 @@ async function runPagamento(
           resultados.push(linha);
           console.log(
             `${os.identificador} [${os.categoria}] ${formularios.length} respostas lidas, ` +
-              `${numerosDesejados.length} exportadas`,
+              `${numerosDesejados.length} exportadas | formulario: ${nomeFormulario || "?"}`,
           );
           emitir({
             tipo: "os-ok",
@@ -921,6 +975,8 @@ module.exports = {
   descobrirPlanilhaEntrada,
   // Exportados para poder testar a leitura sem abrir o Field.
   extrairFormularios,
+  perguntasDesejadas,
+  MAPA_POR_FORMULARIO,
   separarNumeroPergunta,
   carregarTodasAsRespostas,
   MAPA_PERGUNTAS,
