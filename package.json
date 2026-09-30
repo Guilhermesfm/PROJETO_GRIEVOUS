@@ -2,9 +2,14 @@
   "name": "grievous",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "Grievous.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node Grievous.js",
+    "setup": "npm install && playwright install chromium",
+    "web": "node server.js",
+    "pagamento": "node Grievous.js pagamento",
+    "placas": "node Grievous.js placas",
+    "login": "node Grievous.js login",
     "test": "playwright test"
   },
   "keywords": [],
