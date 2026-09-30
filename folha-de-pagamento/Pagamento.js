@@ -47,7 +47,12 @@ const MAPA_PERGUNTAS = {
 // Seletores do Field (marcacao Palantir).
 const SELETORES = {
   botaoEditarLinha: "palantir-button.palantir-table__action-button",
-  abaFormularios: 'div.tw-flex:has(palantir-badge):text-matches("Formul", "i")',
+  // A aba "Formularios" da gaveta, com o contador ao lado. O primeiro
+  // seletor veio da marcacao real; os outros sao alternativas.
+  abaFormularios:
+    'div.tw-flex:has(palantir-badge):text-matches("^\s*Formul", "i"), ' +
+    '[role="tab"]:has-text("Formul"), ' +
+    'palantir-tab:has-text("Formul")',
 };
 
 
@@ -193,7 +198,14 @@ async function voltarParaListagem(page) {
   await page.waitForTimeout(1500);
 }
 
-/** Localiza a linha do identificador na tabela e clica no botao de edicao. */
+/**
+ * Localiza a linha do identificador e abre a O.S. pelo botao de edicao.
+ *
+ * A O.S. abre como uma GAVETA por cima da listagem — mesma aba, mesma URL.
+ * A listagem continua no DOM atras dela, entao "ainda estou na listagem" nao
+ * serve como sinal de falha: o que confirma a abertura e a barra de abas da
+ * gaveta (Geral, Formularios, Vinculos...).
+ */
 async function abrirOs(page, identificador) {
   await filtrarPorIdentificador(page, identificador);
 
@@ -211,104 +223,93 @@ async function abrirOs(page, identificador) {
     throw new Error(`Identificador ${identificador} nao encontrado na listagem.`);
   }
 
-  // O botao de edicao fica na coluna "Editar" da propria linha.
+  // Um aviso do Field por cima engole o clique sem dar erro.
+  await fecharPopups(page);
+
   const botaoEditar = linha.locator(SELETORES.botaoEditarLinha).last();
-  const temBotao = await botaoEditar.count().catch(() => 0);
+  const alvo = (await botaoEditar.count().catch(() => 0)) ? botaoEditar : linha;
 
-  // O Field abre a O.S. em uma aba nova. Sem escutar esse evento, a automacao
-  // continuaria lendo a aba da listagem — que foi o que aconteceu antes:
-  // todas as paginas salvas ainda eram a lista, com zero formularios.
-  const novaAba = page
-    .context()
-    .waitForEvent("page", { timeout: 10000 })
-    .catch(() => null);
+  for (let tentativa = 1; tentativa <= 2; tentativa += 1) {
+    await alvo.click({ timeout: 5000 }).catch(async () => {
+      await alvo.click({ force: true }).catch(() => {});
+    });
 
-  const urlAntes = page.url();
-
-  if (temBotao) {
-    await botaoEditar.click({ force: true });
-  } else {
-    // Fallback: abre pela propria linha quando a coluna de acoes nao aparece.
-    await linha.click({ force: true });
+    if (await esperarGaveta(page)) return page;
+    await page.waitForTimeout(1500);
   }
 
-  const aba = await novaAba;
-  if (aba) {
-    await aba.waitForLoadState("domcontentloaded").catch(() => {});
-    await aba.waitForTimeout(4000);
-    await fecharPopups(aba);
-    return { pagina: aba, abaNova: true };
-  }
+  const caminho = await salvarDiagnostico(page, `nao-abriu-${identificador}`);
+  throw new Error(
+    `O clique em Editar nao abriu a O.S. ${identificador}` +
+      (caminho ? ` | Diagnostico: ${caminho}.png` : ""),
+  );
+}
 
-  await page.waitForTimeout(4000);
-
-  // Sem aba nova e sem mudar de endereco: o clique nao abriu nada.
-  if (page.url() === urlAntes) {
-    const aindaNaListagem = await page
-      .locator("task-list-filter-bar")
-      .first()
-      .isVisible()
-      .catch(() => false);
-
-    if (aindaNaListagem) {
-      const caminho = await salvarDiagnostico(
-        page,
-        `nao-abriu-${identificador}`,
-      );
-      throw new Error(
-        `O clique em Editar nao abriu a O.S. ${identificador}` +
-          (caminho ? ` | Diagnostico: ${caminho}.png` : ""),
-      );
-    }
-  }
-
-  return { pagina: page, abaNova: false };
+/** A gaveta da O.S. esta aberta? Confirma pela aba "Formularios". */
+async function esperarGaveta(page, timeout = 12000) {
+  return page
+    .locator(SELETORES.abaFormularios)
+    .first()
+    .waitFor({ state: "visible", timeout })
+    .then(() => true)
+    .catch(() => false);
 }
 
 /**
  * Separa o numero impresso ao lado da pergunta.
- * "11. Placa instalada" -> { numero: 11, pergunta: "Placa instalada" }
- * Sem numero impresso, numero fica null.
+ * "10. NECESSARIO TROCA DO EQUIPAMENTO *" -> { numero: 10, pergunta: "..." }
  */
 function separarNumeroPergunta(texto) {
-  const casamento = String(texto || "").match(/^\s*(\d{1,3})\s*[).:\-–]?\s+(.+)$/);
-  if (!casamento) return { numero: null, pergunta: String(texto || "").trim() };
+  const limpo = String(texto || "")
+    .replace(/\s+/g, " ")
+    .replace(/\s*\*\s*$/, "")
+    .trim();
+  const casamento = limpo.match(/^(\d{1,3})\s*[).:\-–]?\s+(.+)$/);
+  if (!casamento) return { numero: null, pergunta: limpo };
   return { numero: Number(casamento[1]), pergunta: casamento[2].trim() };
 }
 
 /**
- * Abre o campo "Formularios" (a aba com o badge de quantidade, a direita)
- * e extrai todos os pares pergunta/resposta, usando o numero impresso
- * ao lado de cada pergunta.
+ * Carrega todas as respostas do formulario.
+ *
+ * O Field mostra so as primeiras e deixa um "Carregar mais" no fim. Sem
+ * clicar ate o fim, perguntas de numero alto (34, 42, 45) nunca chegam ao
+ * DOM — e sairiam da planilha como se nao existissem.
+ */
+async function carregarTodasAsRespostas(page, limite = 30) {
+  for (let volta = 0; volta < limite; volta += 1) {
+    const botao = page
+      .locator("button, palantir-button")
+      .filter({ hasText: /^\s*Carregar mais\s*$/i })
+      .first();
+
+    if (!(await botao.isVisible().catch(() => false))) return volta;
+
+    await botao.click({ timeout: 5000 }).catch(async () => {
+      await botao.click({ force: true }).catch(() => {});
+    });
+    await page.waitForTimeout(1200);
+  }
+  return limite;
+}
+
+/**
+ * Abre a aba "Formularios" da gaveta e extrai as respostas.
+ *
+ * Retorna [{ numero, pergunta, resposta, marcado, comentario, fotos }]. O
+ * numero e o impresso ao lado da pergunta, que e o que o mapeamento por tipo
+ * de O.S. usa.
  */
 async function extrairFormularios(page, identificador) {
-  const aba = page
-    .locator("div.tw-flex.tw-items-center")
-    .filter({ hasText: /^\s*Formul[aá]rios/i })
-    .first();
-
-  const temAba = await aba
-    .waitFor({ state: "visible", timeout: 15000 })
-    .then(() => true)
-    .catch(() => false);
-  if (temAba) {
+  const aba = page.locator(SELETORES.abaFormularios).first();
+  if (await aba.isVisible().catch(() => false)) {
     await aba.click({ force: true }).catch(() => {});
     await page.waitForTimeout(2500);
   }
 
-  // Expande todos os acordeoes de formulario visiveis.
-  const acordeoes = page.locator("palantir-accordion:visible");
-  const totalAcordeoes = await acordeoes.count().catch(() => 0);
-  for (let indice = 0; indice < totalAcordeoes; indice += 1) {
-    await acordeoes
-      .nth(indice)
-      .click({ force: true })
-      .catch(() => {});
-    await page.waitForTimeout(300);
-  }
-  await page.waitForTimeout(1500);
+  await carregarTodasAsRespostas(page);
+  await page.waitForTimeout(800);
 
-  // Salva o HTML para calibrar os seletores caso a extracao venha vazia.
   fs.mkdirSync(DEBUG_DIR, { recursive: true });
   fs.writeFileSync(
     path.join(DEBUG_DIR, `${identificador.replace(/[\\/:*?"<>|]/g, "_")}.html`),
@@ -316,95 +317,119 @@ async function extrairFormularios(page, identificador) {
     "utf8",
   );
 
-  // Cada pergunta e um componente <app-form-*-question>.
   const itens = await page.evaluate(() => {
     const limpar = (valor) =>
       (valor || "")
         .replace(/\s+/g, " ")
-        // O Field imprime a pontuacao ao lado da opcao: "Cameras (0 pts.)".
+        // "SIM (0 pts.)" -> "SIM"
         .replace(/\(\s*-?\d+(?:[.,]\d+)?\s*pts?\.?\s*\)/gi, "")
         .trim();
 
-    const perguntas = Array.from(document.querySelectorAll("*")).filter((no) =>
-      /^APP-FORM-.*-QUESTION$/.test(no.tagName),
+    // O enunciado vem numerado: "10. NECESSARIO TROCA DO EQUIPAMENTO *".
+    const ENUNCIADO = /^\s*\d{1,3}\s*[).:\-–]?\s+\S/;
+
+    // Acha o cartao da pergunta: sobe do enunciado ate o elemento que tambem
+    // contem os campos de resposta. Nao depende do nome das classes, que o
+    // Field troca sem aviso.
+    function blocoDaPergunta(enunciado) {
+      let atual = enunciado.parentElement;
+      for (let nivel = 0; nivel < 6 && atual; nivel += 1) {
+        const temCampos = atual.querySelector(
+          'input, textarea, select, palantir-checkbox, palantir-radio, [role="radio"], [role="checkbox"], img',
+        );
+        if (temCampos) return atual;
+        atual = atual.parentElement;
+      }
+      return enunciado.parentElement || enunciado;
+    }
+
+    const vistos = new Set();
+    const resultado = [];
+
+    const candidatos = Array.from(
+      document.querySelectorAll("p, h1, h2, h3, h4, h5, span, div, legend, label"),
     );
 
-    return perguntas.map((bloco) => {
-      // Enunciado: primeiro <p>, sem o asterisco de campo obrigatorio.
-      const enunciado = bloco.querySelector("p");
-      const pergunta = limpar(enunciado ? enunciado.textContent : "").replace(
-        /\s*\*$/,
-        "",
-      );
+    for (const no of candidatos) {
+      const texto = (no.textContent || "").replace(/\s+/g, " ").trim();
+      if (!ENUNCIADO.test(texto) || texto.length > 200) continue;
+      // So o elemento que carrega o texto, nao os ancestrais nem os campos.
+      if (no.querySelector("input, textarea, select, img")) continue;
 
-      // 1) Opcoes marcadas (checkbox / radio / select).
-      const marcadas = Array.from(
-        bloco.querySelectorAll(
-          'palantir-checkbox[aria-selected="true"], palantir-radio[aria-selected="true"], [aria-selected="true"], [aria-checked="true"]',
-        ),
-      )
-        .map((marcada) => {
-          const botao = marcada.closest("button") || marcada.parentElement;
-          const rotulo = botao && botao.querySelector("span.tw-break-all");
-          return limpar(rotulo ? rotulo.textContent : botao && botao.textContent);
-        })
-        .filter(Boolean);
+      const bloco = blocoDaPergunta(no);
+      if (vistos.has(bloco)) continue;
+      vistos.add(bloco);
 
-      // Opcoes disponiveis, para mostrar o que existia e nao foi marcado.
-      const opcoes = Array.from(bloco.querySelectorAll("span.tw-break-all"))
-        .map((span) => limpar(span.textContent))
-        .filter(Boolean);
-
-      if (marcadas.length) {
-        const unicas = marcadas.filter((v, i) => marcadas.indexOf(v) === i);
-        return {
-          pergunta,
-          resposta: unicas.join(" | "),
-          tipo: "selecao",
-          opcoes: opcoes.join(" | "),
-        };
+      // 1. Opcoes marcadas (radio SIM/NAO, checkbox de multipla escolha).
+      const marcadas = [];
+      for (const campo of bloco.querySelectorAll(
+        'input[type="radio"], input[type="checkbox"]',
+      )) {
+        if (!campo.checked) continue;
+        const rotulo =
+          campo.closest("label") ||
+          (campo.id && bloco.querySelector(`label[for="${campo.id}"]`)) ||
+          campo.parentElement;
+        marcadas.push(limpar(rotulo ? rotulo.textContent : campo.value));
+      }
+      for (const campo of bloco.querySelectorAll(
+        '[aria-selected="true"], [aria-checked="true"]',
+      )) {
+        const botao = campo.closest("button") || campo.parentElement;
+        const rotulo = botao && botao.querySelector("span");
+        marcadas.push(
+          limpar(rotulo ? rotulo.textContent : botao && botao.textContent),
+        );
       }
 
-      // 2) Sem nada marcado: le o que foi escrito (observacao, texto, numero).
-      const escritos = Array.from(
-        bloco.querySelectorAll("input, textarea"),
-      )
-        .map((campo) => limpar(campo.value))
-        .filter(Boolean);
-
-      if (escritos.length) {
-        return {
-          pergunta,
-          resposta: escritos.join(" | "),
-          tipo: "texto",
-          opcoes: "",
-        };
+      // 2. Texto escrito (observacao, comentario, valor digitado).
+      const escritos = [];
+      for (const campo of bloco.querySelectorAll("textarea, input")) {
+        if (campo.type === "radio" || campo.type === "checkbox") continue;
+        if (campo.value && campo.value.trim()) escritos.push(limpar(campo.value));
       }
 
-      // 3) Ultimo recurso: texto do bloco sem o enunciado (valores ja salvos).
-      const corpo = limpar(bloco.innerText || bloco.textContent)
-        .replace(pergunta, "")
-        .replace(/^\s*\*\s*/, "")
-        .trim();
+      // 3. Fotos: a resposta e a propria imagem; registra quantas.
+      const fotos = bloco.querySelectorAll('img:not([src^="data:image/svg"])')
+        .length;
 
-      return {
-        pergunta,
-        resposta: opcoes.length ? "" : corpo,
-        tipo: opcoes.length ? "selecao" : "texto",
-        opcoes: opcoes.join(" | "),
-      };
-    });
+      // Todas as opcoes oferecidas, para conferir o que ficou sem marcar.
+      const opcoes = Array.from(
+        bloco.querySelectorAll("label, span.tw-break-all"),
+      )
+        .map((e) => limpar(e.textContent))
+        .filter((t) => t && t.length < 80);
+
+      const unicas = (lista) => lista.filter((v, i) => v && lista.indexOf(v) === i);
+
+      resultado.push({
+        enunciado: texto,
+        marcadas: unicas(marcadas),
+        comentario: unicas(escritos).join(" | "),
+        fotos,
+        opcoes: unicas(opcoes).join(" | "),
+      });
+    }
+
+    return resultado;
   });
 
   return itens.map((item, indice) => {
-    const { numero, pergunta } = separarNumeroPergunta(item.pergunta);
+    const { numero, pergunta } = separarNumeroPergunta(item.enunciado);
+    const marcado = item.marcadas.join(" | ");
+
+    // A resposta util e o que foi marcado; sem marcacao, o que foi escrito;
+    // sem nenhum dos dois, a contagem de fotos.
+    const resposta =
+      marcado || item.comentario || (item.fotos ? `${item.fotos} foto(s)` : "");
+
     return {
-      // Quando o enunciado nao traz o numero impresso, cai na posicao.
-      numero: numero ?? indice + 1,
-      numeroImpresso: numero,
+      numero,
       pergunta,
-      resposta: item.resposta,
-      tipoCampo: item.tipo,
+      resposta,
+      marcado,
+      comentario: item.comentario,
+      fotos: item.fotos,
       opcoes: item.opcoes,
       ordem: indice + 1,
     };
@@ -503,15 +528,8 @@ async function runPagamento(
           total: paraVisitar.length,
         });
         try {
-          const { pagina, abaNova } = await abrirOs(page, os.identificador);
-
-          let formularios;
-          try {
-            formularios = await extrairFormularios(pagina, os.identificador);
-          } finally {
-            // A aba da O.S. nao pode ficar acumulando entre as 213 iteracoes.
-            if (abaNova) await pagina.close().catch(() => {});
-          }
+          const pagina = await abrirOs(page, os.identificador);
+          const formularios = await extrairFormularios(pagina, os.identificador);
 
           // Zero respostas quase sempre significa seletor errado, nao O.S.
           // vazia — antes isso era reportado como "OK" e passava batido.
@@ -532,7 +550,12 @@ async function runPagamento(
           for (const numero of numerosDesejados) {
             const item = formularios.find((form) => form.numero === numero);
             const rotulo = `F${numero} - ${item ? item.pergunta : "nao encontrada"}`;
-            linha[rotulo] = item ? item.resposta : "";
+            // Uma pergunta pode ter marcacao E comentario ("NAO" mais a
+            // observacao do tecnico); os dois importam para o lancamento.
+            linha[rotulo] = item
+              ? [item.marcado, item.comentario].filter(Boolean).join(" — ") ||
+                item.resposta
+              : "";
           }
 
           // Guarda tudo que veio do formulario, inclusive o que nao foi mapeado.
@@ -541,12 +564,13 @@ async function runPagamento(
               Identificador: os.identificador,
               Tipo: os.tipo,
               Categoria: os.categoria,
-              Numero: item.numero,
-              "Numero impresso": item.numeroImpresso ?? "",
+              Numero: item.numero ?? "",
               Ordem: item.ordem,
               Pergunta: item.pergunta,
               Resposta: item.resposta,
-              "Tipo do campo": item.tipoCampo,
+              Marcado: item.marcado,
+              Comentario: item.comentario,
+              Fotos: item.fotos || "",
               "Opcoes disponiveis": item.opcoes,
               "Entra na folha": numerosDesejados.includes(item.numero)
                 ? "Sim"
@@ -663,6 +687,10 @@ module.exports = {
   lerOrdensServico,
   classificarOs,
   descobrirPlanilhaEntrada,
+  // Exportados para poder testar a leitura sem abrir o Field.
+  extrairFormularios,
+  separarNumeroPergunta,
+  carregarTodasAsRespostas,
   MAPA_PERGUNTAS,
   SAIDA_PADRAO,
 };
