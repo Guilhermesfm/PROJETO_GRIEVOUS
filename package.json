@@ -6,11 +6,12 @@
   "scripts": {
     "start": "node Grievous.js",
     "setup": "npm install && playwright install chromium",
-    "web": "node server.js",
+    "web": "node iniciar.js",
     "pagamento": "node Grievous.js pagamento",
     "placas": "node Grievous.js placas",
     "login": "node Grievous.js login",
-    "test": "playwright test"
+    "test": "playwright test",
+    "exe": "powershell -ExecutionPolicy Bypass -File criar-executavel.ps1"
   },
   "keywords": [],
   "author": "",

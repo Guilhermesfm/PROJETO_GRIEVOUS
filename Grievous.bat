@@ -1,5 +1,5 @@
 @echo off
-rem Sobe o Grievous e abre o navegador na tela de login.
+rem Alternativa ao Grievous.exe, para quem prefere rodar pelo .bat.
 title Grievous
 cd /d "%~dp0"
 
@@ -15,18 +15,5 @@ if not exist "node_modules" (
   call npm run setup
 )
 
-echo Iniciando o Grievous...
-start "" /b node server.js
-
-rem Espera o servidor responder antes de abrir o navegador.
-for /l %%i in (1,1,20) do (
-  timeout /t 1 /nobreak >nul
-  curl -s -o nul http://localhost:3000/ && goto :abrir
-)
-
-:abrir
-start "" http://localhost:3000/
-echo.
-echo Grievous rodando em http://localhost:3000
-echo Feche esta janela para encerrar.
-pause >nul
+node iniciar.js
+pause
