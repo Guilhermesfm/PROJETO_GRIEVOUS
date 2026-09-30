@@ -1076,8 +1076,11 @@
             dados.email || "não configurado";
           if (!dados.configurado) abrirLogin(dados.email);
           return dados.configurado;
-        } catch {
+        } catch (erro) {
+          // Sem servidor nao da nem para saber se ha credenciais.
+          document.getElementById("conta-email").textContent = "sem conexão";
           abrirLogin();
+          mostrarErroLogin(explicarErro(erro));
           return false;
         }
       }
@@ -1125,7 +1128,7 @@
             telaLogin.classList.remove("aberta");
             carregarResumo();
           } catch (erro) {
-            mostrarErroLogin(erro.message);
+            mostrarErroLogin(explicarErro(erro));
           } finally {
             botao.disabled = false;
           }
@@ -1177,6 +1180,22 @@
 
       function agora() {
         return new Date().toLocaleTimeString("pt-BR");
+      }
+
+      /**
+       * "Failed to fetch" é o que o navegador diz quando o servidor não
+       * responde — normalmente porque o Grievous foi fechado com a aba
+       * aberta. A mensagem crua não ajuda ninguém.
+       */
+      function explicarErro(erro) {
+        const texto = String(erro?.message || erro);
+        if (/failed to fetch|networkerror|load failed/i.test(texto)) {
+          return (
+            "O Grievous não está respondendo. Verifique se a janela dele " +
+            "continua aberta (Grievous.exe) e recarregue esta página."
+          );
+        }
+        return texto;
       }
 
       function logar(mensagem, nivel = "neutro") {
@@ -1242,7 +1261,7 @@
         try {
           desenharResumo(await (await fetch("/api/pagamento/planilha")).json());
         } catch (erro) {
-          alvo.innerHTML = `<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i>${escapar(erro.message)}</div>`;
+          alvo.innerHTML = `<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i>${escapar(explicarErro(erro))}</div>`;
         }
       }
 
@@ -1291,7 +1310,7 @@
           desenharResumo(dados);
           mostrarAviso(`${arquivo.name} enviada · ${dados.total} O.S. lidas`);
         } catch (erro) {
-          mostrarAviso(erro.message, true);
+          mostrarAviso(explicarErro(erro), true);
         } finally {
           botaoEnviar.disabled = false;
           botaoEnviar.innerHTML = rotulo;
@@ -1371,7 +1390,16 @@
         ).catch((erro) => logar(`Falha ao parar: ${erro.message}`, "erro")),
       );
 
+      // Guarda o fluxo aberto: sem isso, um segundo clique (ou um retorno a
+      // esta aba) abriria outro EventSource e pediria outra execucao.
+      let fonteAtual = null;
+
       botaoFechamento.addEventListener("click", () => {
+        if (fonteAtual) {
+          logar("Já existe um fechamento em andamento nesta janela.", "erro");
+          return;
+        }
+
         const limite = Number(document.getElementById("campo-limite").value) || 0;
 
         botaoFechamento.disabled = true;
@@ -1382,6 +1410,15 @@
         primeiraLinha = true;
 
         const fonte = new EventSource(`/api/pagamento/run?limite=${limite}`);
+        fonteAtual = fonte;
+
+        // Fecha o fluxo e libera os botoes, em qualquer desfecho.
+        const encerrar = () => {
+          fonte.close();
+          fonteAtual = null;
+          botaoFechamento.disabled = false;
+          restaurarBotaoParar(botaoParar);
+        };
 
         fonte.onmessage = (mensagem) => {
           const evento = JSON.parse(mensagem.data);
@@ -1453,26 +1490,24 @@
             }
             document.getElementById("status-execucao").textContent =
               evento.interrompida ? "parado" : "concluído";
-            botaoFechamento.disabled = false;
-            restaurarBotaoParar(botaoParar);
-            fonte.close();
+            encerrar();
           }
 
           if (evento.tipo === "erro") {
             logar(evento.erro, "erro");
             document.getElementById("status-execucao").textContent = "erro";
-            botaoFechamento.disabled = false;
-            restaurarBotaoParar(botaoParar);
-            fonte.close();
+            encerrar();
           }
         };
 
         fonte.onerror = () => {
-          logar("Conexão com o servidor encerrada.", "erro");
+          logar(
+            "Conexão com o servidor encerrada — verifique se a janela do " +
+              "Grievous continua aberta.",
+            "erro",
+          );
           document.getElementById("status-execucao").textContent = "parado";
-          botaoFechamento.disabled = false;
-          restaurarBotaoParar(botaoParar);
-          fonte.close();
+          encerrar();
         };
       });
 
@@ -1534,7 +1569,7 @@
             ? `Parado — ${dados.resultados.length} de ${placas.length} placa(s) consultada(s).`
             : `${dados.resultados.length} placa(s) consultada(s).`;
         } catch (erro) {
-          status.textContent = `Erro: ${erro.message}`;
+          status.textContent = `Erro: ${explicarErro(erro)}`;
         } finally {
           botaoPlacas.disabled = false;
           restaurarBotaoParar(botaoPararPlacas);
