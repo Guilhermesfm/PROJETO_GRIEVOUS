@@ -21,6 +21,18 @@ Playwright. Sem esse segundo passo a automação não abre o navegador.
 
 ## Rodar
 
+No Windows, o jeito mais simples e o atalho:
+
+```powershell
+.\criar-atalho.ps1
+```
+
+Isso cria um **Grievous** na Area de Trabalho, com o icone do General. Um
+duplo clique sobe o servidor e abre o navegador ja na tela de login. Na
+primeira vez ele instala as dependencias sozinho.
+
+Pelo terminal:
+
 ```bash
 npm start
 ```
@@ -92,6 +104,10 @@ server.js                servidor da interface web
 variaveis.js             leitura e gravação das credenciais no .env
 filtro-field.js          filtro "Identificador" da listagem (usado pelas duas)
 public/index.html        interface web
+assets/grievous.ico      icone do atalho do Windows
+public/grievous.svg      mascara usada no front e no favicon
+Grievous.bat             sobe o servidor e abre o navegador
+criar-atalho.ps1         cria o atalho na Area de Trabalho
 placas/                  automação de placas (código e planilha gerada)
 folha-de-pagamento/      fechamento (código, planilha de entrada e saída)
 ```

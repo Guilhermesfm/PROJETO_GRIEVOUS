@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 260" role="img" aria-label="Máscara do General Grievous">
+  <g fill="currentColor">
+    <!-- Lâmina externa esquerda: sobe, abre para fora e desce em ponta -->
+    <path d="M60 40 40 74c-8 14-10 30-7 46l8 44c1 8 5 14 11 18l-3-22c-6-6-9-14-10-24l-6-38c-2-13 0-25 7-36z"/>
+    <!-- Gancho interno esquerdo -->
+    <path d="M74 96c-9 6-14 16-13 28l5 40c1 9 5 16 12 21l-2-24c-3-4-5-9-6-15l-4-30c-1-8 2-14 8-19z"/>
+    <!-- Ponta inferior esquerda -->
+    <path d="M62 150c-2 22 2 40 12 54l4-6c-7-13-10-29-9-46z"/>
+
+    <!-- Espelho do lado direito -->
+    <path d="M160 40 180 74c8 14 10 30 7 46l-8 44c-1 8-5 14-11 18l3-22c6-6 9-14 10-24l6-38c2-13 0-25-7-36z"/>
+    <path d="M146 96c9 6 14 16 13 28l-5 40c-1 9-5 16-12 21l2-24c3-4 5-9 6-15l4-30c1-8-2-14-8-19z"/>
+    <path d="M158 150c2 22-2 40-12 54l-4-6c7-13 10-29 9-46z"/>
+
+    <!-- Crânio: dome largo afunilando num focinho longo -->
+    <path d="M110 12c21 0 34 13 37 34l4 46c1 14-1 26-6 37l-13 30-12 40c-2 7-6 11-10 11s-8-4-10-11l-12-40-13-30c-5-11-7-23-6-37l4-46c3-21 16-34 37-34Z"/>
+  </g>
+
+  <!-- Ranhuras da testa -->
+  <path fill="#0a0d0b" d="M96 30c-4 8-6 18-6 28v30h10V58c0-11 1-20 4-28zM124 30c4 8 6 18 6 28v30h-10V58c0-11-1-20-4-28z"/>
+
+  <!-- Olhos: amêndoa inclinada, íris âmbar -->
+  <path fill="#0a0d0b" d="M103 106c-1 12-11 22-24 23-8 1-13-3-12-10 1-12 11-22 24-23 8-1 13 3 12 10Z"/>
+  <path fill="#0a0d0b" d="M117 106c1 12 11 22 24 23 8 1 13-3 12-10-1-12-11-22-24-23-8-1-13 3-12 10Z"/>
+  <ellipse cx="86" cy="119" rx="9" ry="8" fill="#f5c518"/>
+  <ellipse cx="134" cy="119" rx="9" ry="8" fill="#f5c518"/>
+
+  <!-- Grelha do focinho -->
+  <path fill="#0a0d0b" d="M96 168h6v44h-6zM106 168h6v46h-6zM116 168h6v44h-6z"/>
+
+  <!-- Queixo bifurcado -->
+  <path fill="#0a0d0b" d="M93 222c5 12 11 18 17 18s12-6 17-18l-5 24c-3 9-7 14-12 14s-9-5-12-14z"/>
+</svg>
