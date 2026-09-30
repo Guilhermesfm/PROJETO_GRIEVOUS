@@ -16,7 +16,31 @@ const SELETORES = {
   itemLabel: ".filter-item__label",
   // O placeholder ja foi "Buscar..."; hoje e "Busque aqui...".
   busca: 'input[placeholder="Busque aqui..."], input[placeholder="Buscar..."]',
+  // O painel de filtro e um overlay do CDK. Procurar o campo na pagina toda
+  // faz a automacao digitar em outra caixa de busca (a pesquisa global, a de
+  // coluna) quando o Field muda o filtro de lugar — foi o que aconteceu ao
+  // rodar em outra maquina.
+  painel: ".cdk-overlay-container",
 };
+
+/**
+ * Retorna o campo de busca do painel de filtro, ou null.
+ *
+ * A busca e restrita ao painel de proposito. Procurar na pagina inteira faz a
+ * automacao achar a caixa de pesquisa global — que tem o mesmo placeholder e
+ * vem antes no DOM — e digitar nela: o filtro nunca e aplicado e a listagem
+ * continua inteira. Foi o que aconteceu ao rodar em outra maquina.
+ */
+async function acharCampoBusca(page, timeout = 6000) {
+  const campo = page.locator(`${SELETORES.painel} ${SELETORES.busca}`).first();
+
+  const visivel = await campo
+    .waitFor({ state: "visible", timeout })
+    .then(() => true)
+    .catch(() => false);
+
+  return visivel ? campo : null;
+}
 
 /** Salva tela e HTML para descobrir o que o Field mostrou no momento da falha. */
 async function salvarDiagnostico(page, nome) {
@@ -95,16 +119,9 @@ async function abrirMenuFiltros(page) {
  * Deixa o campo de busca do filtro "Identificador" visivel e retorna o locator.
  */
 async function abrirFiltroIdentificador(page) {
-  const busca = page.locator(SELETORES.busca).first();
-
-  const buscaVisivel = (timeout = 6000) =>
-    busca
-      .waitFor({ state: "visible", timeout })
-      .then(() => true)
-      .catch(() => false);
-
   // 1. Painel ja aberto da iteracao anterior.
-  if (await busca.isVisible().catch(() => false)) return busca;
+  const jaAberto = await acharCampoBusca(page, 1500);
+  if (jaAberto) return jaAberto;
 
   // 2. Filtro fixado como chip na barra (botao de pin do Field).
   const chip = page
@@ -116,7 +133,8 @@ async function abrirFiltroIdentificador(page) {
       .locator(SELETORES.chipTrigger)
       .click({ force: true })
       .catch(() => {});
-    if (await buscaVisivel(4000)) return busca;
+    const campo = await acharCampoBusca(page, 4000);
+    if (campo) return campo;
   }
 
   // 3. Caminho completo: "Mais filtros" -> item "Identificador".
@@ -156,7 +174,8 @@ async function abrirFiltroIdentificador(page) {
   await alvo.click({ force: true });
   await page.waitForTimeout(1200);
 
-  if (!(await buscaVisivel(8000))) {
+  const campo = await acharCampoBusca(page, 8000);
+  if (!campo) {
     const caminho = await salvarDiagnostico(page, "sem-campo-busca");
     throw new Error(
       "Campo de busca do filtro Identificador nao apareceu depois do clique." +
@@ -164,7 +183,7 @@ async function abrirFiltroIdentificador(page) {
     );
   }
 
-  return busca;
+  return campo;
 }
 
 /**
