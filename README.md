@@ -73,7 +73,10 @@ preciso antes colocar uma senha de acesso no próprio Grievous.
 
 1. Exporte a planilha de O.S. do Field (colunas `Identificador`, `Tipo`,
    `Status`, `Cliente`, `Técnico`, `Avaria`).
-2. Coloque o arquivo em `folha-de-pagamento/`.
+2. Envie o arquivo pelo botão **Enviar planilha** da interface (ou arraste-o
+   sobre o painel). Ele é gravado em `folha-de-pagamento/` e conferido na
+   hora — se a planilha não servir, o erro aparece antes de começar.
+   Copiar o arquivo direto para a pasta também funciona.
 3. Rode o fechamento. O Grievous pega a planilha mais recente da pasta.
 
 O resultado sai em `folha-de-pagamento/pagamento_formularios.xlsx`, com duas

@@ -405,6 +405,31 @@
         color: var(--app-eye);
       }
 
+      /* ---------- Envio da planilha ---------- */
+      .area-solta {
+        border: 1px dashed transparent;
+        border-radius: 4px;
+        padding: 2px;
+        transition:
+          border-color 0.15s ease,
+          background 0.15s ease;
+      }
+
+      .area-solta.arrastando {
+        border-color: var(--app-blade);
+        background: var(--app-blade-dim);
+      }
+
+      .dica-solta {
+        margin: 14px 0 0;
+        font-size: 0.76rem;
+        color: var(--app-muted);
+      }
+
+      .area-solta.arrastando .dica-solta {
+        color: var(--app-blade);
+      }
+
       /* ---------- Progresso e log ---------- */
       /* Barra de progresso como uma lâmina acendendo. */
       .progress {
@@ -824,16 +849,33 @@
               <h4 class="panel-title">
                 <i class="fa-solid fa-table-list me-2"></i>Planilha de entrada
               </h4>
-              <button class="btn btn-sm btn-ghost" id="btn-recarregar">
-                <i class="fa-solid fa-rotate me-1"></i>Recarregar
-              </button>
+              <div class="d-flex gap-2">
+                <input
+                  type="file"
+                  id="campo-arquivo"
+                  accept=".xlsx,.xlsm,.csv"
+                  hidden
+                />
+                <button class="btn btn-sm btn-saber" id="btn-enviar-planilha">
+                  <i class="fa-solid fa-file-arrow-up me-1"></i>Enviar planilha
+                </button>
+                <button class="btn btn-sm btn-ghost" id="btn-recarregar">
+                  <i class="fa-solid fa-rotate me-1"></i>Recarregar
+                </button>
+              </div>
             </div>
             <div class="panel-body">
-              <div id="resumo-planilha">
-                <div class="empty-state">
-                  <i class="fa-solid fa-spinner fa-spin"></i>
-                  Lendo a planilha…
+              <div id="area-solta" class="area-solta">
+                <div id="resumo-planilha">
+                  <div class="empty-state">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    Lendo a planilha…
+                  </div>
                 </div>
+                <p class="dica-solta">
+                  <i class="fa-solid fa-arrow-down-to-line me-1"></i>
+                  Arraste a planilha aqui ou use <strong>Enviar planilha</strong>
+                </p>
               </div>
             </div>
           </div>
@@ -1147,19 +1189,16 @@
       }
 
       // ---------- Resumo da planilha ----------
-      async function carregarResumo() {
+      // Desenha os cartões a partir do resumo devolvido pelo servidor.
+      function desenharResumo(dados) {
         const alvo = document.getElementById("resumo-planilha");
-        alvo.innerHTML = `<div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i>Lendo a planilha…</div>`;
 
-        try {
-          const resposta = await fetch("/api/pagamento/planilha");
-          const dados = await resposta.json();
+        if (!dados.ok) {
+          alvo.innerHTML = `<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i>${escapar(dados.error)}</div>`;
+          return;
+        }
 
-          if (!dados.ok) {
-            alvo.innerHTML = `<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i>${escapar(dados.error)}</div>`;
-            return;
-          }
-
+        {
           const ordem = [
             ["instalacao", "is-green"],
             ["remocao", "is-green"],
@@ -1193,6 +1232,15 @@
               </div>
               ${cartoes}
             </div>`;
+        }
+      }
+
+      async function carregarResumo() {
+        const alvo = document.getElementById("resumo-planilha");
+        alvo.innerHTML = `<div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i>Lendo a planilha…</div>`;
+
+        try {
+          desenharResumo(await (await fetch("/api/pagamento/planilha")).json());
         } catch (erro) {
           alvo.innerHTML = `<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i>${escapar(erro.message)}</div>`;
         }
@@ -1201,6 +1249,77 @@
       document
         .getElementById("btn-recarregar")
         .addEventListener("click", carregarResumo);
+
+      // ---------- Envio da planilha ----------
+      const campoArquivo = document.getElementById("campo-arquivo");
+      const botaoEnviar = document.getElementById("btn-enviar-planilha");
+      const areaSolta = document.getElementById("area-solta");
+
+      function mostrarAviso(mensagem, erro = false) {
+        const alvo = document.getElementById("resumo-planilha");
+        alvo.insertAdjacentHTML(
+          "afterbegin",
+          `<div class="mb-3 small ${erro ? "log-erro" : "log-ok"}">
+             <i class="fa-solid ${erro ? "fa-triangle-exclamation" : "fa-check"} me-1"></i>
+             ${escapar(mensagem)}
+           </div>`,
+        );
+      }
+
+      async function enviarPlanilha(arquivo) {
+        if (!arquivo) return;
+
+        botaoEnviar.disabled = true;
+        const rotulo = botaoEnviar.innerHTML;
+        botaoEnviar.innerHTML =
+          '<i class="fa-solid fa-spinner fa-spin me-1"></i>Enviando…';
+
+        try {
+          // O corpo vai cru e o nome no cabecalho: evita depender de um
+          // parser de multipart no servidor.
+          const resposta = await fetch("/api/pagamento/planilha", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/octet-stream",
+              "X-Nome-Arquivo": encodeURIComponent(arquivo.name),
+            },
+            body: await arquivo.arrayBuffer(),
+          });
+          const dados = await resposta.json();
+          if (!dados.ok) throw new Error(dados.error);
+
+          desenharResumo(dados);
+          mostrarAviso(`${arquivo.name} enviada · ${dados.total} O.S. lidas`);
+        } catch (erro) {
+          mostrarAviso(erro.message, true);
+        } finally {
+          botaoEnviar.disabled = false;
+          botaoEnviar.innerHTML = rotulo;
+          campoArquivo.value = "";
+        }
+      }
+
+      botaoEnviar.addEventListener("click", () => campoArquivo.click());
+      campoArquivo.addEventListener("change", () =>
+        enviarPlanilha(campoArquivo.files[0]),
+      );
+
+      // Arrastar e soltar sobre o painel.
+      for (const evento of ["dragenter", "dragover"]) {
+        areaSolta.addEventListener(evento, (e) => {
+          e.preventDefault();
+          areaSolta.classList.add("arrastando");
+        });
+      }
+      for (const evento of ["dragleave", "drop"]) {
+        areaSolta.addEventListener(evento, (e) => {
+          e.preventDefault();
+          areaSolta.classList.remove("arrastando");
+        });
+      }
+      areaSolta.addEventListener("drop", (e) =>
+        enviarPlanilha(e.dataTransfer.files[0]),
+      );
 
       verificarCredenciais();
       carregarResumo();

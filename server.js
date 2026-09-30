@@ -119,6 +119,59 @@ function carregarAutomacaoPagamento() {
   return require("./folha-de-pagamento/Pagamento.js");
 }
 
+const PASTA_PAGAMENTO = path.join(__dirname, "folha-de-pagamento");
+const EXTENSOES_PLANILHA = [".xlsx", ".xlsm", ".csv"];
+const TAMANHO_MAXIMO = 30 * 1024 * 1024; // 30 MB
+
+/**
+ * Limpa o nome do arquivo enviado.
+ *
+ * O nome vem do navegador e não pode ser usado direto: "..\\..\\algo.xlsx"
+ * gravaria fora da pasta. Aqui fica só o nome, sem caminho e sem caractere
+ * que o Windows recuse.
+ */
+function nomeSeguro(nomeOriginal) {
+  // O front envia o nome codificado, para suportar acento e espaço no header.
+  let bruto = String(nomeOriginal || "").trim();
+  try {
+    bruto = decodeURIComponent(bruto);
+  } catch {
+    // Nome que não decodifica segue como veio; a limpeza abaixo resolve.
+  }
+
+  const apenasNome = path.basename(bruto);
+  const limpo = apenasNome.replace(/[<>:"/\\|?*\x00-\x1f]/g, "_");
+  const extensao = path.extname(limpo).toLowerCase();
+
+  if (!EXTENSOES_PLANILHA.includes(extensao)) {
+    throw new Error(
+      `Formato não aceito (${extensao || "sem extensão"}). Envie .xlsx, .xlsm ou .csv.`,
+    );
+  }
+
+  return limpo || `planilha${extensao}`;
+}
+
+// Lê o corpo binário da requisição, com limite de tamanho.
+function lerCorpoBinario(req, limite = TAMANHO_MAXIMO) {
+  return new Promise((resolve, reject) => {
+    const pedacos = [];
+    let total = 0;
+
+    req.on("data", (pedaco) => {
+      total += pedaco.length;
+      if (total > limite) {
+        reject(new Error(`Arquivo maior que ${Math.round(limite / 1024 / 1024)} MB.`));
+        req.destroy();
+        return;
+      }
+      pedacos.push(pedaco);
+    });
+    req.on("end", () => resolve(Buffer.concat(pedacos)));
+    req.on("error", reject);
+  });
+}
+
 // Monta o resumo da planilha de entrada do fechamento.
 function resumirPlanilha() {
   const entrada = descobrirPlanilhaEntrada();
@@ -187,6 +240,39 @@ const server = http.createServer(async (req, res) => {
       );
       console.log("Credenciais do Field atualizadas no .env.");
       responderJson(res, 200, { ok: true, email: String(payload.email).trim() });
+    } catch (erro) {
+      responderJson(res, 400, { ok: false, error: erro.message });
+    }
+    return;
+  }
+
+  // --- Fechamento: envio da planilha ---------------------------------------
+  if (req.method === "POST" && url.pathname === "/api/pagamento/planilha") {
+    if (execucao.ativa) {
+      responderJson(res, 409, {
+        ok: false,
+        error: "Há uma execução em andamento. Pare antes de trocar a planilha.",
+      });
+      return;
+    }
+
+    try {
+      const nome = nomeSeguro(req.headers["x-nome-arquivo"]);
+      const conteudo = await lerCorpoBinario(req);
+
+      if (!conteudo.length) throw new Error("Arquivo vazio.");
+
+      const destino = path.join(PASTA_PAGAMENTO, nome);
+      fs.mkdirSync(PASTA_PAGAMENTO, { recursive: true });
+      fs.writeFileSync(destino, conteudo);
+
+      // Lê de volta para avisar na hora se a planilha não serve, em vez de
+      // deixar o erro aparecer só quando a execução começar.
+      const resumo = resumirPlanilha();
+      if (!resumo.ok) throw new Error(resumo.error);
+
+      console.log(`Planilha recebida: ${nome} (${conteudo.length} bytes)`);
+      responderJson(res, 200, { ...resumo, enviada: nome });
     } catch (erro) {
       responderJson(res, 400, { ok: false, error: erro.message });
     }
