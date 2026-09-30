@@ -20,6 +20,6 @@ folha-de-pagamento/*.xlsm
 folha-de-pagamento/*.csv
 placas/*.xlsx
 
-# Executavel gerado localmente
-Grievous.exe
+# Grievous.exe vai versionado, para ser puxado em qualquer maquina.
+# Grievous.txt nao: guarda o caminho absoluto DESTA maquina.
 Grievous.txt
