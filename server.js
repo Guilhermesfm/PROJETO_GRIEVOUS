@@ -299,6 +299,27 @@ const server = http.createServer(async (req, res) => {
 
     const enviar = (evento) => res.write(`data: ${JSON.stringify(evento)}\n\n`);
 
+    // Uma execução por vez.
+    //
+    // Sem esta trava, duas rodavam em paralelo com dois navegadores no mesmo
+    // Field: basta recarregar a página no meio (o EventSource do navegador
+    // reconecta sozinho quando o fluxo cai e o servidor começaria tudo de
+    // novo) ou abrir a interface em duas abas.
+    if (execucao.ativa) {
+      enviar({
+        tipo: "erro",
+        erro:
+          "Já existe um fechamento em andamento. Acompanhe a janela que o " +
+          "iniciou, ou use o botão Parar antes de começar outro.",
+      });
+      res.end();
+      return;
+    }
+
+    // Marca antes de qualquer espera, para não abrir brecha entre a checagem
+    // e o início de fato.
+    iniciarExecucao("pagamento");
+
     try {
       const resumo = resumirPlanilha();
       if (!resumo.ok) throw new Error(resumo.error);
@@ -309,7 +330,6 @@ const server = http.createServer(async (req, res) => {
 
       // Pega a versão atual do código, não a que estava em memória.
       const automacao = carregarAutomacaoPagamento();
-      iniciarExecucao("pagamento");
       await automacao.runPagamento(
         ordens,
         automacao.SAIDA_PADRAO,
@@ -333,6 +353,14 @@ const server = http.createServer(async (req, res) => {
 
   // --- Placas: roda a automacao -------------------------------------------
   if (req.method === "POST" && url.pathname === "/api/run") {
+    if (execucao.ativa) {
+      responderJson(res, 409, {
+        ok: false,
+        error: `Já existe uma execução em andamento (${execucao.tipo}).`,
+      });
+      return;
+    }
+
     try {
       const payload = JSON.parse((await lerCorpo(req)) || "{}");
       const placas = Array.isArray(payload.placas)
