@@ -45,8 +45,41 @@ const MAPA_PERGUNTAS = {
     ...new Set([...PERGUNTAS_INSTALACAO, ...PERGUNTAS_REMOCAO]),
   ].sort((a, b) => a - b),
   // Manutencao com avaria / violacao / extravio.
-  manutencao: PERGUNTAS_REMOCAO,
+  // 6 e 14 sao as perguntas de violacao na instalacao; a numeracao varia
+  // entre os formularios de manutencao, por isso as duas ficam na lista.
+  manutencao: [...new Set([...PERGUNTAS_REMOCAO, 6, 14])].sort((a, b) => a - b),
 };
+
+/**
+ * Perguntas do tipo "houve X?" cuja resposta afirmativa so tem valor com o
+ * detalhe que vem logo depois ("qual foi?"). Saber que houve violacao sem
+ * saber qual nao serve para o lancamento.
+ */
+const DETALHE_QUANDO_AFIRMATIVO = [6, 14, 37, 42];
+
+/** A resposta indica que sim? Vazio e "nao" nao contam. */
+function ehAfirmativa(resposta) {
+  const texto = normalizar(resposta);
+  if (!texto) return false;
+  return !/^(nao|n|nenhum[ao]?|nada|negativo)$/.test(texto);
+}
+
+/**
+ * Detalhe de uma pergunta afirmativa: a proxima pergunta do formulario, que
+ * e onde o tecnico descreve o caso. Se ela tambem for um "nao", nao ha
+ * detalhe a registrar.
+ */
+function detalharResposta(formularios, item) {
+  if (!item || !ehAfirmativa(item.resposta)) return "";
+
+  const seguinte = formularios
+    .filter((form) => form.ordem > item.ordem)
+    .sort((a, b) => a.ordem - b.ordem)[0];
+
+  if (!seguinte || !seguinte.resposta) return "";
+
+  return `${seguinte.pergunta}: ${seguinte.resposta}`;
+}
 
 // Seletores do Field (marcacao Palantir).
 const SELETORES = {
@@ -749,6 +782,12 @@ async function runPagamento(
                 item.resposta
               : "";
             linha[`${rotulo} (pergunta)`] = item ? item.pergunta : "";
+
+            // "Houve violacao? SIM" sozinho nao permite lancar nada: o que
+            // importa e qual violacao foi.
+            if (DETALHE_QUANDO_AFIRMATIVO.includes(numero)) {
+              linha[`${rotulo} (detalhe)`] = detalharResposta(formularios, item);
+            }
           }
 
           // Guarda tudo que veio do formulario, inclusive o que nao foi mapeado.
