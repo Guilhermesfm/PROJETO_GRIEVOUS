@@ -481,29 +481,54 @@
       }
 
       /* ---------- Tabelas ---------- */
+      /* O Bootstrap pinta a tabela pelas proprias variaveis; definir so o
+         "color" no .table nao adianta — o texto sai preto sobre o fundo
+         escuro e some. Por isso as variaveis sao redefinidas aqui. */
       .table {
+        --bs-table-color: var(--app-text);
+        --bs-table-bg: transparent;
+        --bs-table-border-color: var(--app-line);
+        --bs-table-striped-color: var(--app-text);
+        --bs-table-striped-bg: transparent;
+        --bs-table-hover-color: var(--app-bone);
+        --bs-table-hover-bg: rgba(255, 255, 255, 0.04);
+        --bs-table-active-color: var(--app-bone);
         color: var(--app-text);
         margin: 0;
-        font-size: 0.82rem;
+        font-size: 0.86rem;
       }
 
       .table > :not(caption) > * > * {
+        color: var(--app-text);
         background: transparent;
         border-bottom-color: var(--app-line);
-        padding: 9px 12px;
+        padding: 10px 12px;
+      }
+
+      /* A primeira coluna e o identificador: fica em osso, mais forte. */
+      .table tbody td:first-child {
+        color: var(--app-bone);
+        font-weight: 500;
+      }
+
+      /* Na tabela o vermelho do log fica apertado contra o fundo; aqui vai
+         um tom mais claro, que sobra contraste. */
+      .table .log-erro {
+        color: #ff9195;
       }
 
       .table thead th {
-        color: var(--app-muted);
+        color: #a3ad98;
         font-weight: 600;
         text-transform: uppercase;
-        font-size: 0.7rem;
+        font-size: 0.72rem;
         letter-spacing: 0.8px;
         border-bottom: 1px solid var(--app-line);
       }
 
       .table tbody tr:hover > * {
-        background: rgba(255, 255, 255, 0.03);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--app-bone);
       }
 
       .table-wrap {
