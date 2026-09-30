@@ -570,6 +570,28 @@
         color: var(--app-muted);
       }
 
+      /* Situação das placas, nas cores do tema. */
+      .sit-concluida {
+        background: rgba(123, 240, 106, 0.16);
+        color: var(--app-blade);
+      }
+      .sit-impedida {
+        background: rgba(229, 72, 77, 0.16);
+        color: #ff9195;
+      }
+      .sit-remocao {
+        background: rgba(82, 196, 255, 0.18);
+        color: var(--app-saber);
+      }
+      .sit-remanejamento {
+        background: rgba(186, 122, 255, 0.18);
+        color: #c795ff;
+      }
+      .sit-outra {
+        background: rgba(245, 185, 33, 0.14);
+        color: var(--app-eye);
+      }
+
       .tab-pane {
         display: none;
       }
@@ -1189,6 +1211,33 @@
         return `<span class="badge-cat ${classe}">${categoria}</span>`;
       }
 
+      /**
+       * Cor da situação das placas. O texto vem do Field com acento e
+       * variação de gênero ("Impedido"/"Impedida"), então a comparação é
+       * feita sem acento e por trecho.
+       */
+      function badgeSituacao(situacao) {
+        const texto = String(situacao ?? "").trim();
+        if (!texto) return "";
+
+        const chave = texto
+          .normalize("NFD")
+          .replace(/[̀-ͯ]/g, "")
+          .toLowerCase();
+
+        const regras = [
+          [/conclu/, "sit-concluida"],
+          [/impedid/, "sit-impedida"],
+          [/remanejamento/, "sit-remanejamento"],
+          [/remocao|remoc/, "sit-remocao"],
+        ];
+
+        const classe =
+          (regras.find(([padrao]) => padrao.test(chave)) || [])[1] || "sit-outra";
+
+        return `<span class="badge-cat ${classe}">${escapar(texto)}</span>`;
+      }
+
       function escapar(texto) {
         return String(texto ?? "").replace(
           /[&<>"']/g,
@@ -1584,7 +1633,7 @@
               (item) => `
                 <tr>
                   <td>${escapar(item.Placa)}</td>
-                  <td>${escapar(item.Situacao)}</td>
+                  <td>${badgeSituacao(item.Situacao)}</td>
                   <td>${escapar(item["Data de criacao"])}</td>
                 </tr>`,
             )
