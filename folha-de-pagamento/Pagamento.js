@@ -15,8 +15,8 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { chromium } = require("playwright");
 const XLSX = require("xlsx");
-const { carregarCredenciais } = require("../variaveis.js");
-const { filtrarPorIdentificador } = require("../filtro-field.js");
+const { carregarCredenciais, carregarUrlsField } = require("../variaveis.js");
+const { filtrarPorIdentificador, salvarDiagnostico } = require("../filtro-field.js");
 const { fecharPopups } = require("../popups-field.js");
 
 // ---------------------------------------------------------------------------
@@ -50,7 +50,6 @@ const SELETORES = {
   abaFormularios: 'div.tw-flex:has(palantir-badge):text-matches("Formul", "i")',
 };
 
-const URL_ATIVIDADES = "https://app.fieldcontrol.com.br/#/atividades";
 
 const HEADLESS = process.env.HEADLESS !== "false";
 const TIMEOUT_LOGIN = 30000;
@@ -155,9 +154,7 @@ function descobrirPlanilhaEntrada() {
 async function login(page) {
   const { email, senha } = carregarCredenciais();
 
-  await page.goto(
-    "https://app.fieldcontrol.com.br/autenticador-v2/#/login?to=:hash:%2Fatividades",
-  );
+  await page.goto(carregarUrlsField().login);
 
   await page.click('input[name="email"]');
   await page.fill('input[name="email"]', email);
@@ -180,6 +177,7 @@ async function login(page) {
  * O.S. seguintes em cascata.
  */
 async function voltarParaListagem(page) {
+  const URL_ATIVIDADES = carregarUrlsField().listagem;
   // Fecha um painel ou modal que tenha ficado aberto.
   await page.keyboard.press("Escape").catch(() => {});
   await page.waitForTimeout(500);
@@ -213,16 +211,58 @@ async function abrirOs(page, identificador) {
     throw new Error(`Identificador ${identificador} nao encontrado na listagem.`);
   }
 
-  // O botao de edicao fica na coluna "Acoes" da propria linha.
+  // O botao de edicao fica na coluna "Editar" da propria linha.
   const botaoEditar = linha.locator(SELETORES.botaoEditarLinha).last();
-  if (await botaoEditar.count().catch(() => 0)) {
+  const temBotao = await botaoEditar.count().catch(() => 0);
+
+  // O Field abre a O.S. em uma aba nova. Sem escutar esse evento, a automacao
+  // continuaria lendo a aba da listagem — que foi o que aconteceu antes:
+  // todas as paginas salvas ainda eram a lista, com zero formularios.
+  const novaAba = page
+    .context()
+    .waitForEvent("page", { timeout: 10000 })
+    .catch(() => null);
+
+  const urlAntes = page.url();
+
+  if (temBotao) {
     await botaoEditar.click({ force: true });
   } else {
     // Fallback: abre pela propria linha quando a coluna de acoes nao aparece.
     await linha.click({ force: true });
   }
 
+  const aba = await novaAba;
+  if (aba) {
+    await aba.waitForLoadState("domcontentloaded").catch(() => {});
+    await aba.waitForTimeout(4000);
+    await fecharPopups(aba);
+    return { pagina: aba, abaNova: true };
+  }
+
   await page.waitForTimeout(4000);
+
+  // Sem aba nova e sem mudar de endereco: o clique nao abriu nada.
+  if (page.url() === urlAntes) {
+    const aindaNaListagem = await page
+      .locator("task-list-filter-bar")
+      .first()
+      .isVisible()
+      .catch(() => false);
+
+    if (aindaNaListagem) {
+      const caminho = await salvarDiagnostico(
+        page,
+        `nao-abriu-${identificador}`,
+      );
+      throw new Error(
+        `O clique em Editar nao abriu a O.S. ${identificador}` +
+          (caminho ? ` | Diagnostico: ${caminho}.png` : ""),
+      );
+    }
+  }
+
+  return { pagina: page, abaNova: false };
 }
 
 /**
@@ -463,8 +503,25 @@ async function runPagamento(
           total: paraVisitar.length,
         });
         try {
-          await abrirOs(page, os.identificador);
-          const formularios = await extrairFormularios(page, os.identificador);
+          const { pagina, abaNova } = await abrirOs(page, os.identificador);
+
+          let formularios;
+          try {
+            formularios = await extrairFormularios(pagina, os.identificador);
+          } finally {
+            // A aba da O.S. nao pode ficar acumulando entre as 213 iteracoes.
+            if (abaNova) await pagina.close().catch(() => {});
+          }
+
+          // Zero respostas quase sempre significa seletor errado, nao O.S.
+          // vazia — antes isso era reportado como "OK" e passava batido.
+          if (!formularios.length) {
+            throw new Error(
+              "A O.S. abriu, mas nenhuma resposta de formulario foi lida " +
+                "(conferir os seletores no HTML salvo em debug-formularios/)",
+            );
+          }
+
           const numerosDesejados = MAPA_PERGUNTAS[os.categoria];
 
           const linha = montarLinhaBase(os, os.categoria);
