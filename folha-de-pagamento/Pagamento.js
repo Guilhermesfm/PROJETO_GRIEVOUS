@@ -737,13 +737,18 @@ async function runPagamento(
 
           for (const numero of numerosDesejados) {
             const item = formularios.find((form) => form.numero === numero);
-            const rotulo = `F${numero} - ${item ? item.pergunta : "nao encontrada"}`;
+            // Rotulo fixo: incluir o texto da pergunta criava uma coluna
+            // diferente por O.S. (a pergunta muda de forma entre formularios)
+            // e a planilha virava uma colcha de retalhos. O texto vai na
+            // coluna ao lado e, completo, na aba Formularios.
+            const rotulo = `F${numero}`;
             // Uma pergunta pode ter marcacao E comentario ("NAO" mais a
             // observacao do tecnico); os dois importam para o lancamento.
             linha[rotulo] = item
               ? [item.marcado, item.comentario].filter(Boolean).join(" — ") ||
                 item.resposta
               : "";
+            linha[`${rotulo} (pergunta)`] = item ? item.pergunta : "";
           }
 
           // Guarda tudo que veio do formulario, inclusive o que nao foi mapeado.
