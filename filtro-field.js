@@ -159,7 +159,7 @@ async function abrirMenuFiltros(page) {
  */
 async function abrirFiltroIdentificador(page) {
   // 1. Painel ja aberto da iteracao anterior.
-  const jaAberto = await acharCampoBusca(page, 1500);
+  const jaAberto = await acharCampoBusca(page, 400);
   if (jaAberto) return jaAberto;
 
   // 2. A listagem precisa estar carregada; senao a barra de filtros nem
@@ -238,7 +238,10 @@ async function filtrarPorIdentificador(page, valor) {
   await busca.click({ force: true });
   await busca.fill("");
   await busca.fill(valor);
-  await page.waitForTimeout(2500);
+
+  // Espera a tabela responder, em vez de um tempo fixo: o filtro aplica em
+  // menos de um segundo na maioria das vezes.
+  await esperarTabelaFiltrada(page, valor);
 
   // Alguns filtros listam as opcoes encontradas para marcar; se for o caso,
   // seleciona a que corresponde ao valor buscado.
@@ -247,18 +250,34 @@ async function filtrarPorIdentificador(page, valor) {
     .filter({ hasText: valor })
     .first();
 
-  if (await opcao.count().catch(() => 0)) {
+  if (await opcao.isVisible().catch(() => false)) {
     await opcao.click({ force: true }).catch(() => {});
-    await page.waitForTimeout(1200);
-    // Fecha o painel para liberar a tabela.
     await page.keyboard.press("Escape").catch(() => {});
+    await esperarTabelaFiltrada(page, valor);
   }
+}
 
-  await page.waitForTimeout(1500);
+/**
+ * Espera a linha do valor buscado aparecer na tabela.
+ *
+ * Substitui as esperas fixas que somavam mais de 5s por filtro: o Field
+ * costuma responder em menos de 1s, e so os casos lentos custam caro.
+ */
+async function esperarTabelaFiltrada(page, valor, timeout = 15000) {
+  const linha = page
+    .locator('tr, [role="row"], palantir-table-row')
+    .filter({ hasText: valor })
+    .first();
+
+  return linha
+    .waitFor({ state: "visible", timeout })
+    .then(() => true)
+    .catch(() => false);
 }
 
 module.exports = {
   filtrarPorIdentificador,
+  esperarTabelaFiltrada,
   esperarListagemPronta,
   abrirFiltroIdentificador,
   salvarDiagnostico,
