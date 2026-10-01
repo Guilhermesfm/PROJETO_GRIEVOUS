@@ -44,10 +44,9 @@ const MAPA_PERGUNTAS = {
   remanejamento: [
     ...new Set([...PERGUNTAS_INSTALACAO, ...PERGUNTAS_REMOCAO]),
   ].sort((a, b) => a - b),
-  // Manutencao com avaria / violacao / extravio.
-  // 6 e 14 sao as perguntas de violacao; a numeracao muda conforme o
-  // formulario respondido, por isso as duas ficam na lista.
-  manutencao: [...new Set([...PERGUNTAS_REMOCAO, 6, 14])].sort((a, b) => a - b),
+  // Manutencao com avaria / violacao / extravio. A 14 e a violacao no
+  // formulario de manutencao (a 6 e do "REVISAO ROUXINOL", mapeado por nome).
+  manutencao: [...new Set([...PERGUNTAS_REMOCAO, 14])].sort((a, b) => a - b),
 };
 
 /**
@@ -63,9 +62,10 @@ const MAPA_POR_FORMULARIO = {
   "formulario de instalacao": PERGUNTAS_INSTALACAO,
   // "FORMULARIO DE REMOCAO - GERAL"
   "formulario de remocao": PERGUNTAS_REMOCAO,
-  // Preencher conforme os numeros forem confirmados em cada formulario:
+  // "REVISAO ROUXINOL" — 6 e a violacao na instalacao.
+  "revisao rouxinol": [6],
+  // Preencher quando os numeros forem confirmados:
   // "formulario de manutencao": [...],
-  // "revisao rouxinol": [...],
 };
 
 /** Escolhe os numeros a exportar: pelo formulario, senao pelo tipo da O.S. */
@@ -115,6 +115,19 @@ const SELETORES = {
   botaoEditarLinha: "palantir-button.palantir-table__action-button",
 };
 
+
+// Cronometro das etapas, para achar onde o tempo esta indo: TEMPOS=1
+const MEDIR_TEMPOS = process.env.TEMPOS === "1";
+
+async function cronometrar(etapa, acao) {
+  if (!MEDIR_TEMPOS) return acao();
+  const inicio = Date.now();
+  try {
+    return await acao();
+  } finally {
+    console.log(`      [tempo] ${etapa}: ${((Date.now() - inicio) / 1000).toFixed(1)}s`);
+  }
+}
 
 const HEADLESS = process.env.HEADLESS !== "false";
 const TIMEOUT_LOGIN = 30000;
@@ -264,7 +277,10 @@ async function voltarParaListagem(page) {
     return;
   }
 
-  await page.waitForTimeout(1500);
+  // Confirma que a gaveta fechou, em vez de esperar um tempo fixo.
+  await localizarAbaFormularios(page)
+    .waitFor({ state: "hidden", timeout: 5000 })
+    .catch(() => {});
 }
 
 /**
@@ -366,7 +382,14 @@ async function abrirAbaFormularios(page, identificador) {
     await aba.click({ timeout: 5000 }).catch(async () => {
       await aba.click({ force: true }).catch(() => {});
     });
-    await page.waitForTimeout(2000);
+
+    // Espera a aba ficar ativa, em vez de um tempo fixo.
+    const ate = Date.now() + 5000;
+    while (Date.now() < ate) {
+      await page.waitForTimeout(200);
+      const atual = (await aba.getAttribute("class").catch(() => "")) || "";
+      if (atual.includes("palantir-tabs__button--active")) break;
+    }
   }
 
   const pronto = await page
@@ -459,7 +482,7 @@ async function esperarRespostasRenderizadas(page, timeout = 40000) {
     }
 
     anterior = atual;
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(400);
   }
 
   return anterior > 0 ? anterior : 0;
@@ -481,10 +504,20 @@ async function carregarTodasAsRespostas(page, limite = 30) {
 
     if (!(await botao.isVisible().catch(() => false))) return volta;
 
+    const antes = await contarPerguntasNaTela(page);
+
     await botao.click({ timeout: 5000 }).catch(async () => {
       await botao.click({ force: true }).catch(() => {});
     });
-    await page.waitForTimeout(1200);
+
+    // Espera a lista crescer de verdade. Com tempo fixo por clique, uma O.S.
+    // com muitas respostas gastava quase 20s so aqui.
+    const limiteEspera = Date.now() + 8000;
+    while (Date.now() < limiteEspera) {
+      await page.waitForTimeout(250);
+      if ((await contarPerguntasNaTela(page)) > antes) break;
+      if (!(await botao.isVisible().catch(() => false))) break;
+    }
   }
   return limite;
 }
@@ -497,20 +530,24 @@ async function carregarTodasAsRespostas(page, limite = 30) {
  * de O.S. usa.
  */
 async function extrairFormularios(page, identificador) {
-  const declaradas = await abrirAbaFormularios(page, identificador);
+  const declaradas = await cronometrar("aba Formularios", () =>
+    abrirAbaFormularios(page, identificador),
+  );
 
   // Os cartoes chegam depois do cabecalho; sem esperar, a leitura acontece
   // numa tela ainda vazia.
-  await esperarRespostasRenderizadas(page);
-  await carregarTodasAsRespostas(page);
-  await esperarRespostasRenderizadas(page);
+  await cronometrar("renderizar", () => esperarRespostasRenderizadas(page));
+  await cronometrar("carregar mais", () => carregarTodasAsRespostas(page));
+  await cronometrar("renderizar 2", () => esperarRespostasRenderizadas(page));
 
-  fs.mkdirSync(DEBUG_DIR, { recursive: true });
-  fs.writeFileSync(
-    path.join(DEBUG_DIR, `${identificador.replace(/[\\/:*?"<>|]/g, "_")}.html`),
-    await page.content(),
-    "utf8",
-  );
+  await cronometrar("salvar HTML", async () => {
+    fs.mkdirSync(DEBUG_DIR, { recursive: true });
+    fs.writeFileSync(
+      path.join(DEBUG_DIR, `${identificador.replace(/[\\/:*?"<>|]/g, "_")}.html`),
+      await page.content(),
+      "utf8",
+    );
+  });
 
   // Nome do formulario respondido: o numero da pergunta so faz sentido
   // dentro de um formulario, e uma O.S. pode responder outro que nao o do
@@ -529,7 +566,7 @@ async function extrairFormularios(page, identificador) {
     })
     .catch(() => "");
 
-  const itens = await page.evaluate(() => {
+  const itens = await cronometrar("extrair", () => page.evaluate(() => {
     const limpar = (valor) =>
       (valor || "")
         .replace(/\s+/g, " ")
@@ -672,7 +709,7 @@ async function extrairFormularios(page, identificador) {
     }
 
     return resultado;
-  });
+  }));
 
   if (declaradas && itens.length < declaradas) {
     console.warn(
@@ -798,7 +835,9 @@ async function runPagamento(
           total: paraVisitar.length,
         });
         try {
-          const pagina = await abrirOs(page, os.identificador);
+          const pagina = await cronometrar("abrir O.S.", () =>
+            abrirOs(page, os.identificador),
+          );
           const formularios = await extrairFormularios(pagina, os.identificador);
 
           // Zero respostas quase sempre significa seletor errado, nao O.S.
@@ -890,7 +929,7 @@ async function runPagamento(
           });
         }
 
-        await voltarParaListagem(page);
+        await cronometrar("voltar", () => voltarParaListagem(page));
       }
     } finally {
       await browser.close();
