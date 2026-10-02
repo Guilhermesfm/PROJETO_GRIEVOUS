@@ -63,7 +63,11 @@ async function salvarDiagnostico(page, nome) {
  * primeira O.S., com "Mais filtros nao encontrado" — o botao nem existia
  * ainda. Aproveita para fechar avisos, que costumam aparecer nesse intervalo.
  */
-async function esperarListagemPronta(page, tentativas = 3, porTentativa = 45000) {
+async function esperarListagemPronta(
+  page,
+  tentativas = 3,
+  porTentativa = 45000,
+) {
   for (let tentativa = 1; tentativa <= tentativas; tentativa += 1) {
     const limite = Date.now() + porTentativa;
 
@@ -121,7 +125,13 @@ async function abrirMenuFiltros(page) {
 
   for (let tentativa = 1; tentativa <= 3; tentativa += 1) {
     // Se ja estiver aberto, nao clica de novo: o clique fecharia o menu.
-    if (await itens.first().isVisible().catch(() => false)) return itens;
+    if (
+      await itens
+        .first()
+        .isVisible()
+        .catch(() => false)
+    )
+      return itens;
 
     // Um modal do Field ("Boas-vindas", avisos) cobre a tela e engole o
     // clique sem dar erro — o menu simplesmente nao abre.

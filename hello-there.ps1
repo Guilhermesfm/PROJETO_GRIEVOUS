@@ -2,7 +2,7 @@
 # O executavel nao e copiado para lugar nenhum: mova-o voce mesmo para a
 # Area de Trabalho, ou crie um atalho para ele.
 #
-# Uso:  powershell -ExecutionPolicy Bypass -File criar-executavel.ps1
+# Uso:  powershell -ExecutionPolicy Bypass -File hello-there.ps1
 
 $ErrorActionPreference = 'Stop'
 $raiz  = Split-Path -Parent $MyInvocation.MyCommand.Path

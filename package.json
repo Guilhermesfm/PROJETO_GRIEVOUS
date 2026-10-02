@@ -11,7 +11,7 @@
     "placas": "node Grievous.js placas",
     "login": "node Grievous.js login",
     "test": "playwright test",
-    "exe": "powershell -ExecutionPolicy Bypass -File criar-executavel.ps1"
+    "exe": "powershell -ExecutionPolicy Bypass -File hello-there.ps1"
   },
   "keywords": [],
   "author": "",

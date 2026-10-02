@@ -118,7 +118,7 @@ assets/grievous.ico      icone do atalho do Windows
 public/grievous.svg      mascara usada no front e no favicon
 iniciar.js               sobe o servidor e abre o navegador
 Grievous.exe             executavel do Windows (versionado)
-criar-executavel.ps1     recompila o Grievous.exe
+hello-there.ps1     recompila o Grievous.exe
 Grievous.bat             alternativa ao .exe, pelo terminal
 placas/                  automação de placas (código e planilha gerada)
 folha-de-pagamento/      fechamento (código, planilha de entrada e saída)
