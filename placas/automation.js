@@ -4,6 +4,7 @@ const XLSX = require("xlsx");
 const { carregarCredenciais, carregarUrlsField } = require("../variaveis.js");
 const { filtrarPorIdentificador } = require("../filtro-field.js");
 const { fecharPopups } = require("../popups-field.js");
+const { capturarLinkOs } = require("../link-field.js");
 
 // Tudo da automacao de placas fica nesta pasta.
 const OUTPUT_DIR = __dirname;
@@ -129,9 +130,14 @@ async function runAutomation(placas = [], deveParar = () => false) {
           .innerText()
       ).trim();
 
+      // So as concluidas interessam para o link: abrir o compartilhamento
+      // em todas custaria alguns segundos por placa a toa.
+      const link = /conclu/i.test(situacao) ? await capturarLinkOs(page) : "";
+
       resultados.push({
         Placa: placa,
         Situacao: situacao,
+        Link: link,
         "Data de criacao": dataCriacao,
       });
 

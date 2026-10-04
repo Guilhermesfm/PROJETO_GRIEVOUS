@@ -536,6 +536,17 @@
         overflow: auto;
       }
 
+      .link-os {
+        color: var(--app-saber);
+        text-decoration: none;
+        font-size: 0.8rem;
+      }
+
+      .link-os:hover {
+        color: var(--app-blade);
+        text-decoration: underline;
+      }
+
       .badge-cat {
         font-size: 0.68rem;
         font-weight: 600;
@@ -1074,12 +1085,13 @@
                     <tr>
                       <th>Placa</th>
                       <th>Situação</th>
+                      <th>Link da O.S.</th>
                       <th>Data de criação</th>
                     </tr>
                   </thead>
                   <tbody id="tabela-placas">
                     <tr>
-                      <td colspan="3">
+                      <td colspan="4">
                         <div class="empty-state">
                           <i class="fa-solid fa-inbox"></i>
                           Nenhuma consulta feita ainda.
@@ -1236,6 +1248,17 @@
           (regras.find(([padrao]) => padrao.test(chave)) || [])[1] || "sit-outra";
 
         return `<span class="badge-cat ${classe}">${escapar(texto)}</span>`;
+      }
+
+      /** Link da O.S., so para as concluidas; abre em outra aba. */
+      function linkDaOs(url) {
+        const endereco = String(url || "").trim();
+        if (!endereco) return '<span class="text-muted">—</span>';
+        return (
+          `<a href="${escapar(endereco)}" target="_blank" rel="noopener" ` +
+          `class="link-os" title="${escapar(endereco)}">` +
+          '<i class="fa-solid fa-arrow-up-right-from-square me-1"></i>abrir</a>'
+        );
       }
 
       function escapar(texto) {
@@ -1634,6 +1657,7 @@
                 <tr>
                   <td>${escapar(item.Placa)}</td>
                   <td>${badgeSituacao(item.Situacao)}</td>
+                  <td>${linkDaOs(item.Link)}</td>
                   <td>${escapar(item["Data de criacao"])}</td>
                 </tr>`,
             )
