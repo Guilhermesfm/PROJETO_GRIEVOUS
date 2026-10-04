@@ -2,7 +2,6 @@
 const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
-const { runAutomation } = require("./placas/automation.js");
 const { carregarCredenciais, salvarCredenciais } = require("./variaveis.js");
 const {
   runPagamento,
@@ -107,16 +106,32 @@ function encerrarExecucao() {
  * editar um seletor não teria efeito até reiniciar o servidor — e a execução
  * rodaria com o código antigo sem avisar.
  */
-function carregarAutomacaoPagamento() {
-  for (const modulo of [
-    "./folha-de-pagamento/Pagamento.js",
-    "./filtro-field.js",
-    "./popups-field.js",
-    "./variaveis.js",
-  ]) {
+// Modulos compartilhados pelas duas automacoes.
+const MODULOS_COMUNS = [
+  "./filtro-field.js",
+  "./popups-field.js",
+  "./gaveta-field.js",
+  "./link-field.js",
+  "./variaveis.js",
+];
+
+function recarregar(modulos, principal) {
+  for (const modulo of [...modulos, principal]) {
     delete require.cache[require.resolve(modulo)];
   }
-  return require("./folha-de-pagamento/Pagamento.js");
+  return require(principal);
+}
+
+function carregarAutomacaoPagamento() {
+  return recarregar(MODULOS_COMUNS, "./folha-de-pagamento/Pagamento.js");
+}
+
+/**
+ * A rota de placas usava o runAutomation carregado na inicializacao: o
+ * servidor ficava semanas de pe e rodava codigo antigo sem avisar.
+ */
+function carregarAutomacaoPlacas() {
+  return recarregar(MODULOS_COMUNS, "./placas/automation.js");
 }
 
 const PASTA_PAGAMENTO = path.join(__dirname, "folha-de-pagamento");
@@ -368,7 +383,8 @@ const server = http.createServer(async (req, res) => {
         : [];
 
       iniciarExecucao("placas");
-      const resultado = await runAutomation(placas, () => execucao.parar);
+      const automacao = carregarAutomacaoPlacas();
+      const resultado = await automacao.runAutomation(placas, () => execucao.parar);
       responderJson(res, 200, {
         ok: true,
         outputPath: resultado.outputPath,
