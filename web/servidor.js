@@ -2,14 +2,14 @@
 const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
-const { carregarCredenciais, salvarCredenciais } = require("./variaveis.js");
+const { carregarCredenciais, salvarCredenciais } = require("../field/credenciais.js");
 const {
   runPagamento,
   lerOrdensServico,
   classificarOs,
   descobrirPlanilhaEntrada,
   SAIDA_PADRAO,
-} = require("./folha-de-pagamento/Pagamento.js");
+} = require("../folha-de-pagamento/Pagamento.js");
 
 // Porta em que o front será exibido. Por padrão só aceita conexões da própria
 // máquina, já que a tela de login trafega a senha do Field sem HTTPS.
@@ -17,7 +17,9 @@ const {
 const PORT = Number(process.env.PORT) || 3000;
 const HOST = process.env.HOST || "127.0.0.1";
 const PUBLIC_DIR = path.join(__dirname, "public");
-const SAIDA_PLACAS = path.join(__dirname, "placas", "situacoes_placas.xlsx");
+// As automacoes e as planilhas ficam na raiz do projeto.
+const RAIZ = path.join(__dirname, "..");
+const SAIDA_PLACAS = path.join(RAIZ, "placas", "situacoes_placas.xlsx");
 
 // Mapeia a extensão do arquivo para o tipo correto do HTTP.
 const MIME_TYPES = {
@@ -108,11 +110,11 @@ function encerrarExecucao() {
  */
 // Modulos compartilhados pelas duas automacoes.
 const MODULOS_COMUNS = [
-  "./filtro-field.js",
-  "./popups-field.js",
-  "./gaveta-field.js",
-  "./link-field.js",
-  "./variaveis.js",
+  "../field/filtro.js",
+  "../field/popups.js",
+  "../field/gaveta.js",
+  "../field/link.js",
+  "../field/credenciais.js",
 ];
 
 function recarregar(modulos, principal) {
@@ -123,7 +125,7 @@ function recarregar(modulos, principal) {
 }
 
 function carregarAutomacaoPagamento() {
-  return recarregar(MODULOS_COMUNS, "./folha-de-pagamento/Pagamento.js");
+  return recarregar(MODULOS_COMUNS, "../folha-de-pagamento/Pagamento.js");
 }
 
 /**
@@ -131,10 +133,10 @@ function carregarAutomacaoPagamento() {
  * servidor ficava semanas de pe e rodava codigo antigo sem avisar.
  */
 function carregarAutomacaoPlacas() {
-  return recarregar(MODULOS_COMUNS, "./placas/automation.js");
+  return recarregar(MODULOS_COMUNS, "../placas/automation.js");
 }
 
-const PASTA_PAGAMENTO = path.join(__dirname, "folha-de-pagamento");
+const PASTA_PAGAMENTO = path.join(RAIZ, "folha-de-pagamento");
 const EXTENSOES_PLANILHA = [".xlsx", ".xlsm", ".csv"];
 const TAMANHO_MAXIMO = 30 * 1024 * 1024; // 30 MB
 

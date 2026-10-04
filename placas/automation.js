@@ -1,11 +1,11 @@
 const path = require("node:path");
 const { chromium } = require("playwright");
 const XLSX = require("xlsx");
-const { carregarCredenciais, carregarUrlsField } = require("../variaveis.js");
-const { filtrarPorIdentificador } = require("../filtro-field.js");
-const { fecharPopups } = require("../popups-field.js");
-const { capturarLinkOs } = require("../link-field.js");
-const { abrirGaveta, fecharGaveta } = require("../gaveta-field.js");
+const { carregarCredenciais, carregarUrlsField } = require("../field/credenciais.js");
+const { filtrarPorIdentificador } = require("../field/filtro.js");
+const { fecharPopups } = require("../field/popups.js");
+const { capturarLinkOs } = require("../field/link.js");
+const { abrirGaveta, fecharGaveta } = require("../field/gaveta.js");
 
 // Tudo da automacao de placas fica nesta pasta.
 const OUTPUT_DIR = __dirname;

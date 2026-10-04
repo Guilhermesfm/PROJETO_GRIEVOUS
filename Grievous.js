@@ -10,7 +10,7 @@
 
 const readline = require("node:readline");
 const path = require("node:path");
-const { carregarCredenciais, salvarCredenciais } = require("./variaveis.js");
+const { carregarCredenciais, salvarCredenciais } = require("./field/credenciais.js");
 
 const OPCOES = [
   {
@@ -103,7 +103,7 @@ async function executarPlacas() {
 }
 
 async function executarWeb() {
-  require("./server.js");
+  require("./web/servidor.js");
 }
 
 /** Pergunta no terminal. Com oculto = true, nao ecoa o que for digitado. */

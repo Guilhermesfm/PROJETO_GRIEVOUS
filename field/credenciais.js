@@ -3,7 +3,8 @@ const fs = require("node:fs");
 const path = require("node:path");
 const dotenv = require("dotenv");
 
-const CAMINHO_ENV = path.join(__dirname, ".env");
+// O .env fica na raiz do projeto, um nivel acima desta pasta.
+const CAMINHO_ENV = path.join(__dirname, "..", ".env");
 
 /**
  * Le o .env do disco a cada chamada, para que a tela de login altere as
