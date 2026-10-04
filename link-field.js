@@ -20,6 +20,35 @@ const SELETORES = {
     'palantir-button:has-text("Mais opções")',
 };
 
+/**
+ * Clica de verdade, com plano B.
+ *
+ * O botao Compartilhar fica no topo da gaveta e o Playwright recusava o
+ * clique com "Element is outside of the viewport" — nem o force resolve,
+ * porque ele ainda precisa da posicao na tela. O click pelo DOM funciona
+ * independente disso.
+ */
+async function clicar(alvo) {
+  await alvo.scrollIntoViewIfNeeded({ timeout: 3000 }).catch(() => {});
+
+  const tentativas = [
+    () => alvo.click({ timeout: 4000 }),
+    () => alvo.click({ force: true, timeout: 4000 }),
+    () => alvo.evaluate((elemento) => elemento.click()),
+  ];
+
+  for (const tentar of tentativas) {
+    try {
+      await tentar();
+      return true;
+    } catch {
+      // Tenta a proxima forma.
+    }
+  }
+
+  return false;
+}
+
 /** O texto parece um link de O.S. do Field? */
 function ehLinkDeOs(texto) {
   const achado = String(texto || "").match(PADRAO_LINK);
@@ -72,21 +101,31 @@ async function capturarLinkOs(page) {
     .grantPermissions(["clipboard-read", "clipboard-write"])
     .catch(() => {});
 
+  // A gaveta termina de montar depois de aparecer: a barra com o
+  // Compartilhar chega alguns segundos apos as abas. Checar na hora fazia a
+  // captura desistir antes de o botao existir, e o link saia sempre vazio.
   let botao = page.locator(SELETORES.compartilhar).first();
+  let visivel = await botao
+    .waitFor({ state: "visible", timeout: 15000 })
+    .then(() => true)
+    .catch(() => false);
 
-  if (!(await botao.isVisible().catch(() => false))) {
+  if (!visivel) {
     // Em telas mais estreitas o Compartilhar fica dentro de "Mais opcoes".
     const mais = page.locator(SELETORES.maisOpcoes).first();
     if (await mais.isVisible().catch(() => false)) {
-      await mais.click({ force: true }).catch(() => {});
-      await page.waitForTimeout(800);
+      await clicar(mais);
       botao = page.locator(SELETORES.compartilhar).first();
+      visivel = await botao
+        .waitFor({ state: "visible", timeout: 5000 })
+        .then(() => true)
+        .catch(() => false);
     }
   }
 
-  if (!(await botao.isVisible().catch(() => false))) return "";
+  if (!visivel) return "";
 
-  await botao.click({ force: true }).catch(() => {});
+  if (!(await clicar(botao))) return "";
 
   // O dialogo (ou a copia) leva um instante; tenta algumas vezes.
   let link = "";

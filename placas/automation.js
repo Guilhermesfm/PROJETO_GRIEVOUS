@@ -5,6 +5,7 @@ const { carregarCredenciais, carregarUrlsField } = require("../variaveis.js");
 const { filtrarPorIdentificador } = require("../filtro-field.js");
 const { fecharPopups } = require("../popups-field.js");
 const { capturarLinkOs } = require("../link-field.js");
+const { abrirGaveta, fecharGaveta } = require("../gaveta-field.js");
 
 // Tudo da automacao de placas fica nesta pasta.
 const OUTPUT_DIR = __dirname;
@@ -130,9 +131,18 @@ async function runAutomation(placas = [], deveParar = () => false) {
           .innerText()
       ).trim();
 
-      // So as concluidas interessam para o link: abrir o compartilhamento
-      // em todas custaria alguns segundos por placa a toa.
-      const link = /conclu/i.test(situacao) ? await capturarLinkOs(page) : "";
+      // So as concluidas interessam para o link. O botao Compartilhar vive
+      // dentro da gaveta da O.S., que ate aqui nao chegava a ser aberta —
+      // por isso o link saia sempre vazio.
+      let link = "";
+      if (/conclu/i.test(situacao)) {
+        if (await abrirGaveta(page, placa)) {
+          link = await capturarLinkOs(page);
+          await fecharGaveta(page);
+        } else {
+          console.log(`Nao foi possivel abrir a O.S. ${placa} para pegar o link.`);
+        }
+      }
 
       resultados.push({
         Placa: placa,
