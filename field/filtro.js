@@ -4,9 +4,10 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
-const { fecharPopups } = require("./popups-field.js");
+const { fecharPopups } = require("./popups.js");
 
-const DEBUG_DIR = path.join(__dirname, "debug-field");
+// Os diagnosticos ficam na raiz do projeto, nao dentro de field/.
+const DEBUG_DIR = path.join(__dirname, "..", "debug-field");
 
 const SELETORES = {
   maisFiltros: "button.palantir-filter-bar__more",

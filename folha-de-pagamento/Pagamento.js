@@ -15,13 +15,13 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { chromium } = require("playwright");
 const XLSX = require("xlsx");
-const { carregarCredenciais, carregarUrlsField } = require("../variaveis.js");
+const { carregarCredenciais, carregarUrlsField } = require("../field/credenciais.js");
 const {
   filtrarPorIdentificador,
   salvarDiagnostico,
   esperarListagemPronta,
-} = require("../filtro-field.js");
-const { fecharPopups } = require("../popups-field.js");
+} = require("../field/filtro.js");
+const { fecharPopups } = require("../field/popups.js");
 
 // ---------------------------------------------------------------------------
 // Configuracao

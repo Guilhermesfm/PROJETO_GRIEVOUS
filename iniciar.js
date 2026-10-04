@@ -93,7 +93,7 @@ async function main() {
   }
 
   console.log("Subindo o servidor...");
-  require("./server.js");
+  require("./web/servidor.js");
 
   if (!(await esperarServidor())) {
     console.error("O servidor nao respondeu a tempo. Veja o erro acima.");

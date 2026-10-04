@@ -109,19 +109,28 @@ registro. O mapeamento fica em `MAPA_PERGUNTAS`, no topo de
 ## Estrutura
 
 ```
-Grievous.js              menu principal
-server.js                servidor da interface web
-variaveis.js             leitura e gravação das credenciais no .env
-filtro-field.js          filtro "Identificador" da listagem (usado pelas duas)
-public/index.html        interface web
-assets/grievous.ico      icone do atalho do Windows
-public/grievous.svg      mascara usada no front e no favicon
+Grievous.js              menu do terminal
 iniciar.js               sobe o servidor e abre o navegador
 Grievous.exe             executavel do Windows (versionado)
-hello-there.ps1     recompila o Grievous.exe
+hello-there.ps1          recompila o Grievous.exe
 Grievous.bat             alternativa ao .exe, pelo terminal
-placas/                  automação de placas (código e planilha gerada)
-folha-de-pagamento/      fechamento (código, planilha de entrada e saída)
+
+field/                   conversa com o Field (usado pelas duas automacoes)
+  credenciais.js           le e grava EMAIL/PASSWORD e as URLs no .env
+  filtro.js                filtro "Identificador" da listagem
+  popups.js                fecha os avisos que bloqueiam a tela
+  gaveta.js                abre e fecha a O.S. pelo botao de edicao
+  link.js                  pega o link da O.S. pelo Compartilhar
+
+web/                     interface
+  servidor.js              rotas e execucao das automacoes
+  public/index.html        a tela
+  public/grievous.svg      mascara, usada no front e no favicon
+
+placas/                  consulta de placas (codigo e planilha gerada)
+folha-de-pagamento/      fechamento (codigo, planilha de entrada e saida)
+assets/                  icone do executavel
+ferramentas/             utilitarios avulsos, fora do fluxo principal
 ```
 
 ## Depuração

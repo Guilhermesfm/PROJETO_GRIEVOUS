@@ -4,7 +4,7 @@
 // A listagem continua no DOM atras dela, entao a confirmacao de que abriu e
 // a barra de abas da gaveta (Geral, Formularios, Vinculos...), nao a URL.
 
-const { fecharPopups } = require("./popups-field.js");
+const { fecharPopups } = require("./popups.js");
 
 const SELETOR_EDITAR = "palantir-button.palantir-table__action-button";
 
