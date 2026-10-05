@@ -11,8 +11,20 @@ const http = require("node:http");
 const net = require("node:net");
 const { spawn } = require("node:child_process");
 
-const PORTA = Number(process.env.PORT) || 3000;
-const ENDERECO = `http://localhost:${PORTA}/`;
+const PORTA_INICIAL = Number(process.env.PORT) || 3000;
+// Quantas portas tentar antes de desistir, para rodar mais de uma copia na
+// mesma maquina sem precisar configurar nada.
+const PORTAS_A_TENTAR = 10;
+
+let PORTA = PORTA_INICIAL;
+let ENDERECO = `http://localhost:${PORTA}/`;
+
+function usarPorta(porta) {
+  PORTA = porta;
+  ENDERECO = `http://localhost:${porta}/`;
+  // O servidor le a porta daqui.
+  process.env.PORT = String(porta);
+}
 
 /** A porta ja esta ocupada por alguem? */
 function portaOcupada(porta) {
@@ -71,12 +83,42 @@ function abrirNavegador(url) {
   }
 }
 
+/**
+ * A pasta esta dentro de um servico de sincronizacao?
+ *
+ * Rodar o projeto de dentro do OneDrive em mais de uma maquina e o caminho
+ * mais curto para executar codigo velho: a sincronizacao tem atraso e cria
+ * copias duplicadas ("arquivo (1).xlsx"). Cada maquina deve ter o seu clone.
+ */
+function avisarSePastaSincronizada() {
+  if (!/OneDrive|Dropbox|Google Drive|iCloud/i.test(__dirname)) return;
+
+  console.log("Atencao: o projeto esta numa pasta sincronizada.");
+  console.log(`  ${__dirname}`);
+  console.log("  Em mais de uma maquina isso faz rodar codigo desatualizado.");
+  console.log("  Prefira um clone do git fora da pasta sincronizada e use");
+  console.log("  'git pull' para atualizar cada maquina.\n");
+}
+
 async function main() {
   console.log("=== GRIEVOUS ===\n");
+  avisarSePastaSincronizada();
 
-  if (await portaOcupada(PORTA)) {
-    // Ja tem algo na porta. Se for o proprio Grievous, reaproveita em vez de
-    // subir outro que morreria com "endereco em uso" sem ninguem ver.
+  // Procura uma porta livre a partir da inicial. Antes o programa desistia
+  // quando a 3000 estava ocupada; abrir uma segunda copia exigia configurar
+  // PORT na mao.
+  let encontrou = false;
+
+  for (let tentativa = 0; tentativa < PORTAS_A_TENTAR; tentativa += 1) {
+    usarPorta(PORTA_INICIAL + tentativa);
+
+    if (!(await portaOcupada(PORTA))) {
+      encontrou = true;
+      break;
+    }
+
+    // Se quem esta na porta e o proprio Grievous, reaproveita em vez de subir
+    // outro, que morreria com "endereco em uso" sem ninguem ver.
     if (await grievousRespondendo()) {
       console.log(`Ja havia um Grievous rodando em ${ENDERECO}`);
       console.log("Abrindo o navegador na instancia existente.\n");
@@ -84,9 +126,13 @@ async function main() {
       return;
     }
 
+    console.log(`Porta ${PORTA} ocupada por outro programa, tentando a proxima...`);
+  }
+
+  if (!encontrou) {
     console.error(
-      `A porta ${PORTA} esta ocupada por outro programa.\n` +
-        `Feche-o, ou rode com outra porta:  set PORT=3001 && node iniciar.js\n`,
+      `Nenhuma porta livre entre ${PORTA_INICIAL} e ` +
+        `${PORTA_INICIAL + PORTAS_A_TENTAR - 1}.\n`,
     );
     process.exitCode = 1;
     return;
