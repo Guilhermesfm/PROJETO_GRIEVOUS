@@ -62,11 +62,18 @@ const MAPA_POR_FORMULARIO = {
   "formulario de instalacao": PERGUNTAS_INSTALACAO,
   // "FORMULARIO DE REMOCAO - GERAL"
   "formulario de remocao": PERGUNTAS_REMOCAO,
+  // "FORMULARIO DE MANUTENCAO - TECNICOS INOPRIME"
+  // 14 = ALGUMA VIOLACAO NA INSTALACAO ENCONTRADA?
+  "formulario de manutencao": [14],
   // "REVISAO ROUXINOL" — 6 e a violacao na instalacao.
   "revisao rouxinol": [6],
-  // Preencher quando os numeros forem confirmados:
-  // "formulario de manutencao": [...],
 };
+
+/** O formulario tem mapeamento proprio, ou caiu no palpite pelo tipo? */
+function formularioMapeado(nomeFormulario) {
+  const nome = normalizar(nomeFormulario);
+  return Object.keys(MAPA_POR_FORMULARIO).some((trecho) => nome.includes(trecho));
+}
 
 /** Escolhe os numeros a exportar: pelo formulario, senao pelo tipo da O.S. */
 function perguntasDesejadas(nomeFormulario, categoria) {
@@ -856,9 +863,14 @@ async function runPagamento(
 
           const linha = montarLinhaBase(os, os.categoria);
           linha.Formulario = nomeFormulario;
-          linha.Observacao = formularios.length
-            ? ""
-            : "Nenhuma resposta de formulario lida";
+          // Sem mapeamento proprio, os numeros vem do tipo da O.S. e quase
+          // sempre nao existem nesse formulario: as colunas saem vazias sem
+          // explicacao. Melhor dizer na planilha.
+          linha.Observacao = !formularios.length
+            ? "Nenhuma resposta de formulario lida"
+            : formularioMapeado(nomeFormulario)
+              ? ""
+              : `Formulario sem mapeamento proprio: ${nomeFormulario}`;
 
           for (const numero of numerosDesejados) {
             const item = formularios.find((form) => form.numero === numero);
@@ -1015,6 +1027,7 @@ module.exports = {
   // Exportados para poder testar a leitura sem abrir o Field.
   extrairFormularios,
   perguntasDesejadas,
+  formularioMapeado,
   MAPA_POR_FORMULARIO,
   separarNumeroPergunta,
   carregarTodasAsRespostas,
