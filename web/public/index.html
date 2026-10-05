@@ -1239,7 +1239,8 @@
 
         const regras = [
           [/conclu/, "sit-concluida"],
-          [/impedid/, "sit-impedida"],
+          // Impedida e cancelada sao os dois desfechos negativos: vermelho.
+          [/impedid|cancelad/, "sit-impedida"],
           [/remanejamento/, "sit-remanejamento"],
           [/remocao|remoc/, "sit-remocao"],
         ];
