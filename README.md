@@ -62,6 +62,29 @@ npm run placas      # consulta de placas pelo terminal
 npm run login       # grava/troca as credenciais
 ```
 
+## Em mais de uma maquina
+
+Cada maquina precisa do seu proprio clone, **fora** de pastas sincronizadas
+(OneDrive, Dropbox, Google Drive):
+
+```bash
+git clone <url-do-repositorio>
+cd GRIEVOUS
+npm run setup
+```
+
+Para atualizar depois de uma mudanca: `git pull` em cada maquina, e feche a
+janela do Grievous antes de abrir de novo.
+
+Rodar o projeto de dentro do OneDrive em duas maquinas e o caminho mais curto
+para executar codigo velho: a sincronizacao tem atraso e cria copias
+duplicadas ("arquivo (1).xlsx"), inclusive das planilhas de entrada. O
+Grievous avisa no inicio quando detecta isso.
+
+O servidor escuta so em `127.0.0.1`, entao cada maquina tem o seu, sem
+disputa de porta entre elas. Na mesma maquina, uma segunda copia sobe
+sozinha na porta seguinte (3001, 3002...).
+
 ## Credenciais
 
 Na primeira execução o Grievous pede o e-mail e a senha do Field e grava em um
