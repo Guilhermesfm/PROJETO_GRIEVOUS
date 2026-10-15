@@ -1,13 +1,17 @@
 const path = require("node:path");
 const { chromium } = require("playwright");
-const XLSX = require("xlsx");
 const { carregarCredenciais, carregarUrlsField } = require("../field/credenciais.js");
-const { filtrarPorIdentificador } = require("../field/filtro.js");
+const {
+  filtrarPorIdentificador,
+  esperarListagemPronta,
+} = require("../field/filtro.js");
 const { fecharPopups } = require("../field/popups.js");
 const { capturarLinkOs } = require("../field/link.js");
 const { abrirGaveta, fecharGaveta } = require("../field/gaveta.js");
 
 // Tudo da automacao de placas fica nesta pasta.
+const { gravarPlanilha, SEM_RETORNO } = require("../planilha.js");
+
 const OUTPUT_DIR = __dirname;
 
 function resolveOutputPath(filename = "situacoes_placas.xlsx") {
@@ -51,13 +55,15 @@ async function runAutomation(placas = [], deveParar = () => false) {
     // 5. Clica em "Continuar" de novo
     await page.click('palantir-button:has-text("Continuar")');
 
-    // 6. Aguarda 30 segundos para o login finalizar
-    await page.waitForTimeout(30000);
-
-    // 7. Aguarda e fecha todos os pop-ups conhecidos
-    await page.waitForTimeout(1000);
-    await fecharPopups(page);
+    // 6. Eram 36s de espera cega aqui. O esperarListagemPronta abaixo aguarda
+    //    a tela ficar pronta de fato, e recarrega se a consulta do Field
+    //    falhar; fica so o tempo de sair da tela de login.
     await page.waitForTimeout(5000);
+    await fecharPopups(page);
+
+    if (!(await esperarListagemPronta(page))) {
+      throw new Error("A listagem de atividades nao carregou depois do login.");
+    }
 
     // 8. Repete a busca para cada placa da lista
     for (const placa of placas) {
@@ -68,101 +74,96 @@ async function runAutomation(placas = [], deveParar = () => false) {
         break;
       }
 
-      // Filtro "Identificador" da barra nova do Field (modulo compartilhado).
-      await filtrarPorIdentificador(page, placa);
+      // Uma placa problematica nao pode derrubar o lote: antes qualquer
+      // falha encerrava a execucao e perdia as placas seguintes.
+      try {
+        // Filtro "Identificador" da barra nova do Field (modulo compartilhado).
+        await filtrarPorIdentificador(page, placa);
 
-      const candidatosResultado = [
-        page.getByText(placa, { exact: true }),
-        page.locator(`text=${placa}`),
-        page.locator("tr, li, div, palantir-item, palantir-card").filter({
-          hasText: placa,
-        }),
-        page
-          .locator(
-            '[role="row"], [role="option"], [data-cy*="row"], [data-cy*="item"]',
-          )
-          .filter({ hasText: placa }),
-      ];
+        const linha = page
+          .locator('tr, [role="row"], palantir-table-row')
+          .filter({ hasText: placa })
+          .first();
 
-      let placaSelecionada = false;
-      for (const candidato of candidatosResultado) {
-        const total = await candidato.count().catch(() => 0);
-        if (!total) continue;
+        const achou = await linha
+          .waitFor({ state: "visible", timeout: 20000 })
+          .then(() => true)
+          .catch(() => false);
 
-        const alvo = candidato.filter({ hasText: placa }).first();
-        if (
-          await alvo
-            .waitFor({ state: "visible", timeout: 15000 })
-            .then(() => true)
-            .catch(() => false)
-        ) {
-          await alvo.click({ force: true });
-          placaSelecionada = true;
-          break;
+        if (!achou) {
+          throw new Error("placa nao encontrada na listagem");
         }
-      }
 
-      if (!placaSelecionada) {
-        const pagina = await page.locator("body").innerText();
-        throw new Error(
-          `Nao foi possivel localizar a placa ${placa} na tela. ` +
-            `URL: ${page.url()}\nConteudo da pagina:\n${pagina.slice(0, 2000)}`,
+        await linha.click({ force: true });
+
+        // Espera a data aparecer em vez de um tempo fixo de 3s.
+        const padraoData = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}$/;
+        const textos = page.locator('palantir-text[type="text"]');
+        let dataCriacao = "";
+        const limite = Date.now() + 15000;
+
+        while (!dataCriacao && Date.now() < limite) {
+          dataCriacao =
+            (await textos.allInnerTexts().catch(() => []))
+              .map((texto) => texto.trim())
+              .find((texto) => padraoData.test(texto)) || "";
+          if (!dataCriacao) await page.waitForTimeout(400);
+        }
+
+        const situacao = (
+          await page
+            .locator('palantir-text[type="title"][size="xs"]')
+            .filter({ hasText: /\S/ })
+            .first()
+            .innerText()
+            .catch(() => "")
+        ).trim();
+
+        // So as concluidas interessam para o link. O botao Compartilhar vive
+        // dentro da gaveta da O.S., que ate aqui nao chegava a ser aberta.
+        let link = "";
+        if (/conclu/i.test(situacao)) {
+          if (await abrirGaveta(page, placa)) {
+            link = await capturarLinkOs(page);
+            await fecharGaveta(page);
+          }
+        }
+
+        resultados.push({
+          Placa: placa,
+          Situacao: situacao || SEM_RETORNO,
+          Link: link || (/conclu/i.test(situacao) ? SEM_RETORNO : ""),
+          "Data de criacao": dataCriacao || SEM_RETORNO,
+          Observacao: situacao ? "" : "Nada retornado para esta placa",
+        });
+
+        console.log(
+          `Placa ${placa} -> ${situacao || SEM_RETORNO} | ${dataCriacao || SEM_RETORNO}`,
         );
+      } catch (erro) {
+        console.error(`Falha em ${placa}: ${erro.message}`);
+        resultados.push({
+          Placa: placa,
+          Situacao: SEM_RETORNO,
+          Link: "",
+          "Data de criacao": SEM_RETORNO,
+          Observacao: `ERRO: ${erro.message}`,
+        });
       }
-
-      await page.waitForTimeout(3000);
-
-      const dataCriacao = (
-        await page.locator('palantir-text[type="text"]').allInnerTexts()
-      )
-        .map((texto) => texto.trim())
-        .find((texto) => /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}$/.test(texto));
-
-      if (!dataCriacao) {
-        throw new Error(`Data de criacao nao encontrada para a placa ${placa}`);
-      }
-
-      // Captura o texto da situação da OS
-      const situacao = (
-        await page
-          .locator('palantir-text[type="title"][size="xs"]')
-          .filter({ hasText: /\S/ })
-          .first()
-          .innerText()
-      ).trim();
-
-      // So as concluidas interessam para o link. O botao Compartilhar vive
-      // dentro da gaveta da O.S., que ate aqui nao chegava a ser aberta —
-      // por isso o link saia sempre vazio.
-      let link = "";
-      if (/conclu/i.test(situacao)) {
-        if (await abrirGaveta(page, placa)) {
-          link = await capturarLinkOs(page);
-          await fecharGaveta(page);
-        } else {
-          console.log(`Nao foi possivel abrir a O.S. ${placa} para pegar o link.`);
-        }
-      }
-
-      resultados.push({
-        Placa: placa,
-        Situacao: situacao,
-        Link: link,
-        "Data de criacao": dataCriacao,
-      });
-
-      console.log(`Placa ${placa} -> ${situacao} | Criada em ${dataCriacao}`);
     }
   } finally {
     await browser.close();
   }
 
   // 9. Gera a planilha Excel com os resultados
-  const planilha = XLSX.utils.json_to_sheet(resultados);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, planilha, "Situacoes");
   const outputPath = resolveOutputPath();
-  XLSX.writeFile(workbook, outputPath);
+  gravarPlanilha(outputPath, [
+    {
+      nome: "Situacoes",
+      linhas: resultados,
+      ordem: ["Placa", "Situacao", "Data de criacao", "Link", "Observacao"],
+    },
+  ]);
 
   console.log(`Planilha gerada: ${outputPath}`);
 

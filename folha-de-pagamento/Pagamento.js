@@ -22,6 +22,7 @@ const {
   esperarListagemPronta,
 } = require("../field/filtro.js");
 const { fecharPopups } = require("../field/popups.js");
+const { gravarPlanilha, SEM_RETORNO, NAO_EXISTE } = require("../planilha.js");
 
 // ---------------------------------------------------------------------------
 // Configuracao
@@ -249,7 +250,10 @@ async function login(page) {
   await page.fill('input[aria-label="password"]', senha);
   await page.click('palantir-button:has-text("Continuar")');
 
-  await page.waitForTimeout(TIMEOUT_LOGIN);
+  // Antes eram 30s de espera cega. O esperarListagemPronta logo abaixo ja
+  // aguarda a tela ficar pronta, com recarga se a consulta falhar; aqui fica
+  // so o tempo de sair da tela de login.
+  await page.waitForTimeout(5000);
   await fecharPopups(page);
 
   // Espera a listagem aparecer de fato, em vez de um tempo fixo: o Field
@@ -399,14 +403,35 @@ async function abrirAbaFormularios(page, identificador) {
     }
   }
 
-  const pronto = await page
-    .getByText(/Respostas\s*\(\s*\d+\s*\)/i)
-    .first()
-    .waitFor({ state: "visible", timeout: 20000 })
-    .then(() => true)
-    .catch(() => false);
+  // Espera o que vier primeiro: o cabecalho "Respostas (N)" ou o aviso de
+  // formulario vazio. Esperar so pelo primeiro fazia toda O.S. sem
+  // formulario gastar os 20s do limite antes de checar a outra hipotese.
+  const temRespostas = page.getByText(/Respostas\s*\(\s*\d+\s*\)/i).first();
+  const estaVazia = page.getByText(/Nenhum formul[aá]rio respondido/i).first();
+
+  const pronto = await Promise.race([
+    temRespostas
+      .waitFor({ state: "visible", timeout: 20000 })
+      .then(() => true)
+      .catch(() => false),
+    estaVazia
+      .waitFor({ state: "visible", timeout: 20000 })
+      .then(() => false)
+      .catch(() => false),
+  ]);
 
   if (!pronto) {
+    // O.S. sem formulario respondido e dado legitimo, nao falha: a aba
+    // mostra "Nenhum formulario respondido" e o contador fica em 0.
+    const vazia = await page
+      .getByText(/Nenhum formul[aá]rio respondido/i)
+      .first()
+      .isVisible()
+      .catch(() => false);
+
+    // null distingue "sem formulario respondido" de "zero respostas lidas".
+    if (vazia) return null;
+
     const caminho = await salvarDiagnostico(page, `sem-respostas-${identificador}`);
     throw new Error(
       `A aba "Formularios" nao carregou as respostas da O.S. ${identificador}` +
@@ -457,14 +482,41 @@ async function contarPerguntasNaTela(page) {
       // comeca com numero e entrava como se fosse a pergunta 56.
       const CONTADOR = /^\s*\d{1,4}\s*\/\s*\d{1,6}\s*$/;
 
+      const SELETOR_TEXTO =
+        "palantir-text, p, h1, h2, h3, h4, h5, span, div, legend, label";
+
+      const pareceEnunciado = (elemento) => {
+        const t = (elemento.textContent || "").replace(/\s+/g, " ").trim();
+        if (!ENUNCIADO.test(t) || t.length > 200) return false;
+        if (RUIDO.test(t) || CONTADOR.test(t)) return false;
+        return !elemento.querySelector("input, textarea, select, img");
+      };
+
+      // Mesmo criterio da extracao: so o rotulo mais interno conta. Antes
+      // qualquer texto numerado servia, e a contagem ficava estavel em um
+      // numero qualquer antes das perguntas renderizarem — a leitura comecava
+      // numa tela ainda vazia e devolvia zero respostas.
+      // Mesma checagem de visibilidade da extracao. Sem ela a contagem
+      // enxergava texto numerado oculto, dava a tela por pronta e a leitura
+      // comecava antes dos cartoes aparecerem.
+      const visivel = (elemento) =>
+        Boolean(
+          elemento.getClientRects().length &&
+            getComputedStyle(elemento).visibility !== "hidden",
+        );
+
       let total = 0;
-      for (const no of document.querySelectorAll("p, h1, h2, h3, h4, h5, span, div, legend, label")) {
-        const texto = (no.textContent || "").replace(/\s+/g, " ").trim();
-        if (!ENUNCIADO.test(texto) || texto.length > 200) continue;
-        if (no.querySelector("input, textarea, select, img")) continue;
-        if (RUIDO.test(texto) || CONTADOR.test(texto)) continue;
-        if (!no.getClientRects().length) continue;
-        total += 1;
+      for (const no of document.querySelectorAll(SELETOR_TEXTO)) {
+        if (!pareceEnunciado(no)) continue;
+        if (!visivel(no)) continue;
+        let interno = true;
+        for (const filho of no.querySelectorAll(SELETOR_TEXTO)) {
+          if (pareceEnunciado(filho)) {
+            interno = false;
+            break;
+          }
+        }
+        if (interno) total += 1;
       }
       return total;
     })
@@ -472,13 +524,16 @@ async function contarPerguntasNaTela(page) {
 }
 
 /** Espera os cartoes de pergunta aparecerem e pararem de crescer. */
-async function esperarRespostasRenderizadas(page, timeout = 40000) {
+async function esperarRespostasRenderizadas(page, timeout = 40000, declaradas = 0) {
   const limite = Date.now() + timeout;
   let anterior = -1;
   let estaveis = 0;
 
   while (Date.now() < limite) {
     const atual = await contarPerguntasNaTela(page);
+
+    // Com o total declarado pelo Field ja na tela, nao ha o que esperar.
+    if (declaradas && atual >= declaradas) return atual;
 
     if (atual > 0 && atual === anterior) {
       estaveis += 1;
@@ -543,18 +598,42 @@ async function extrairFormularios(page, identificador) {
 
   // Os cartoes chegam depois do cabecalho; sem esperar, a leitura acontece
   // numa tela ainda vazia.
-  await cronometrar("renderizar", () => esperarRespostasRenderizadas(page));
-  await cronometrar("carregar mais", () => carregarTodasAsRespostas(page));
-  await cronometrar("renderizar 2", () => esperarRespostasRenderizadas(page));
+  // Sem formulario respondido nao ha o que esperar: antes a O.S. gastava os
+  // 40s inteiros do limite aguardando cartoes que nunca viriam.
+  if (declaradas === null) {
+    const vazio = [];
+    vazio.nomeFormulario = "";
+    return vazio;
+  }
 
-  await cronometrar("salvar HTML", async () => {
-    fs.mkdirSync(DEBUG_DIR, { recursive: true });
-    fs.writeFileSync(
-      path.join(DEBUG_DIR, `${identificador.replace(/[\\/:*?"<>|]/g, "_")}.html`),
-      await page.content(),
-      "utf8",
+  await cronometrar("renderizar", () =>
+    esperarRespostasRenderizadas(page, 40000, declaradas),
+  );
+  const cliques = await cronometrar("carregar mais", () =>
+    carregarTodasAsRespostas(page),
+  );
+
+  // Sem clique nenhum a tela nao mudou: repetir a espera so custa tempo.
+  if (cliques > 0) {
+    await cronometrar("renderizar 2", () =>
+      esperarRespostasRenderizadas(page, 40000, declaradas),
     );
-  });
+  }
+
+  // O HTML da gaveta tem ~880 KB. Guardar um por O.S. enchia o disco com
+  // centenas de megabytes numa execucao completa. Agora so quando pedido
+  // (DEBUG=1) ou quando a leitura falha, que e quando ele serve.
+  const salvarHtml = () =>
+    cronometrar("salvar HTML", async () => {
+      fs.mkdirSync(DEBUG_DIR, { recursive: true });
+      fs.writeFileSync(
+        path.join(DEBUG_DIR, `${identificador.replace(/[\/:*?"<>|]/g, "_")}.html`),
+        await page.content(),
+        "utf8",
+      );
+    });
+
+  if (process.env.DEBUG === "1") await salvarHtml();
 
   // Nome do formulario respondido: o numero da pergunta so faz sentido
   // dentro de um formulario, e uma O.S. pode responder outro que nao o do
@@ -594,16 +673,38 @@ async function extrairFormularios(page, identificador) {
     const CAMPOS =
       'input, textarea, select, palantir-checkbox, palantir-radio, [role="radio"], [role="checkbox"], img';
 
-    /** Quantos enunciados existem dentro deste elemento. */
+    const SELETOR_TEXTO =
+      "palantir-text, p, h1, h2, h3, h4, h5, span, div, legend, label";
+
+    /** O texto deste elemento parece um enunciado numerado? */
+    function pareceEnunciado(elemento) {
+      const t = (elemento.textContent || "").replace(/\s+/g, " ").trim();
+      if (!ENUNCIADO.test(t) || t.length > 200) return false;
+      if (RUIDO.test(t) || CONTADOR.test(t)) return false;
+      return !elemento.querySelector("input, textarea, select, img");
+    }
+
+    /**
+     * O enunciado de verdade e o elemento mais interno.
+     *
+     * O Field aninha o rotulo ("<palantir-text><span>31. ...</span>") e o
+     * cartao inteiro tambem comeca com o numero. Contar os dois fazia o
+     * cartao parecer ter duas perguntas, e a busca pelo bloco parava antes
+     * de alcancar as opcoes: as respostas saiam vazias.
+     */
+    function ehEnunciado(elemento) {
+      if (!pareceEnunciado(elemento)) return false;
+      for (const filho of elemento.querySelectorAll(SELETOR_TEXTO)) {
+        if (pareceEnunciado(filho)) return false;
+      }
+      return true;
+    }
+
+    /** Quantas perguntas distintas existem dentro deste elemento. */
     function quantosEnunciados(elemento) {
       let total = 0;
-      for (const filho of elemento.querySelectorAll(
-        "p, h1, h2, h3, h4, h5, span, div, legend, label",
-      )) {
-        const t = (filho.textContent || "").replace(/\s+/g, " ").trim();
-        if (ENUNCIADO.test(t) && t.length <= 200 && !filho.querySelector(CAMPOS)) {
-          total += 1;
-        }
+      for (const filho of elemento.querySelectorAll(SELETOR_TEXTO)) {
+        if (ehEnunciado(filho)) total += 1;
       }
       return total;
     }
@@ -647,18 +748,15 @@ async function extrairFormularios(page, identificador) {
     const resultado = [];
 
     const candidatos = Array.from(
-      document.querySelectorAll("p, h1, h2, h3, h4, h5, span, div, legend, label"),
+      document.querySelectorAll("palantir-text, p, h1, h2, h3, h4, h5, span, div, legend, label"),
     );
 
     for (const no of candidatos) {
       const texto = (no.textContent || "").replace(/\s+/g, " ").trim();
-      if (!ENUNCIADO.test(texto) || texto.length > 200) continue;
-      // So o elemento que carrega o texto, nao os ancestrais nem os campos.
-      if (no.querySelector("input, textarea, select, img")) continue;
+      // So o rotulo mais interno: o cartao inteiro tambem comeca com o
+      // numero e traria a pergunta repetida e as opcoes coladas.
+      if (!ehEnunciado(no)) continue;
       if (!visivel(no)) continue;
-      // Rodape de paginacao ("1 de 1 Primeira pagina...") tambem comeca com
-      // numero e entrava como se fosse pergunta.
-      if (RUIDO.test(texto) || CONTADOR.test(texto)) continue;
 
       const bloco = blocoDaPergunta(no);
       if (vistos.has(bloco)) continue;
@@ -717,6 +815,8 @@ async function extrairFormularios(page, identificador) {
 
     return resultado;
   }));
+
+  if (!itens.length) await salvarHtml();
 
   if (declaradas && itens.length < declaradas) {
     console.warn(
@@ -784,6 +884,9 @@ async function runPagamento(
   const resultados = [];
   // Conteudo bruto dos formularios, para o usuario avaliar o que entra na folha.
   const respostasCompletas = [];
+  // Texto de cada pergunta, para o cabecalho da planilha sair legivel em vez
+  // de "F13". A primeira O.S. que trouxer a pergunta define o titulo.
+  const tituloDaPergunta = new Map();
 
   // O.S. impedidas e tipos fora do escopo nao precisam abrir o navegador.
   const paraVisitar = [];
@@ -847,15 +950,6 @@ async function runPagamento(
           );
           const formularios = await extrairFormularios(pagina, os.identificador);
 
-          // Zero respostas quase sempre significa seletor errado, nao O.S.
-          // vazia — antes isso era reportado como "OK" e passava batido.
-          if (!formularios.length) {
-            throw new Error(
-              "A O.S. abriu, mas nenhuma resposta de formulario foi lida " +
-                "(conferir os seletores no HTML salvo em debug-formularios/)",
-            );
-          }
-
           const nomeFormulario = formularios.nomeFormulario || "";
           // O numero vale dentro do formulario; o tipo da O.S. e so o
           // palpite quando o formulario nao esta mapeado.
@@ -867,7 +961,7 @@ async function runPagamento(
           // sempre nao existem nesse formulario: as colunas saem vazias sem
           // explicacao. Melhor dizer na planilha.
           linha.Observacao = !formularios.length
-            ? "Nenhuma resposta de formulario lida"
+            ? "Sem formulario respondido no Field"
             : formularioMapeado(nomeFormulario)
               ? ""
               : `Formulario sem mapeamento proprio: ${nomeFormulario}`;
@@ -881,11 +975,21 @@ async function runPagamento(
             const rotulo = `F${numero}`;
             // Uma pergunta pode ter marcacao E comentario ("NAO" mais a
             // observacao do tecnico); os dois importam para o lancamento.
-            linha[rotulo] = item
-              ? [item.marcado, item.comentario].filter(Boolean).join(" — ") ||
-                item.resposta
-              : "";
-            linha[`${rotulo} (pergunta)`] = item ? item.pergunta : "";
+            // Vazio nao diz nada: pode ser pergunta ausente no formulario,
+            // pergunta sem resposta, ou falha de leitura. A planilha passa a
+            // dizer qual dos casos e.
+            if (!item) {
+              linha[rotulo] = NAO_EXISTE;
+            } else {
+              const valor =
+                [item.marcado, item.comentario].filter(Boolean).join(" — ") ||
+                item.resposta;
+              linha[rotulo] = valor || SEM_RETORNO;
+            }
+
+            if (item?.pergunta && !tituloDaPergunta.has(rotulo)) {
+              tituloDaPergunta.set(rotulo, `${numero}. ${item.pergunta}`);
+            }
 
             // "Houve violacao? SIM" sozinho nao permite lancar nada: o que
             // importa e qual violacao foi.
@@ -948,20 +1052,65 @@ async function runPagamento(
     }
   }
 
-  const workbook = XLSX.utils.book_new();
-  // Aba 1: uma linha por O.S., so com as perguntas mapeadas.
-  XLSX.utils.book_append_sheet(
-    workbook,
-    XLSX.utils.json_to_sheet(resultados),
-    "Pagamento",
-  );
-  // Aba 2: tudo que veio dos formularios, para avaliacao manual.
-  XLSX.utils.book_append_sheet(
-    workbook,
-    XLSX.utils.json_to_sheet(respostasCompletas),
-    "Formularios",
-  );
-  XLSX.writeFile(workbook, saidaPath);
+  /**
+   * Troca "F13" pelo texto da pergunta no cabecalho.
+   *
+   * A coluna so ganha nome depois da leitura, porque a pergunta vem do
+   * formulario. Numeros soltos obrigavam a consultar o mapeamento para
+   * entender a planilha.
+   */
+  const renomearColunas = (linha) =>
+    Object.fromEntries(
+      Object.entries(linha).map(([chave, valor]) => {
+        const base = chave.replace(/ \(detalhe\)$/, "");
+        const titulo = tituloDaPergunta.get(base);
+        if (!titulo) return [chave, valor];
+        return [chave.endsWith("(detalhe)") ? `${titulo} — detalhe` : titulo, valor];
+      }),
+    );
+
+  // Identificacao primeiro, depois as perguntas. Sem ordem definida, as
+  // colunas seguiam a primeira O.S. lida e mudavam a cada execucao.
+  const COLUNAS_PAGAMENTO = [
+    "Identificador",
+    "Tipo",
+    "Categoria",
+    "Cliente",
+    "Tecnico",
+    "Status",
+    "Avaria",
+    "Formulario",
+    "Observacao",
+  ];
+
+  const COLUNAS_FORMULARIOS = [
+    "Identificador",
+    "Tipo",
+    "Categoria",
+    "Formulario",
+    "Numero",
+    "Pergunta",
+    "Resposta",
+    "Marcado",
+    "Comentario",
+    "Fotos",
+    "Entra na folha",
+    "Opcoes disponiveis",
+    "Ordem",
+  ];
+
+  gravarPlanilha(saidaPath, [
+    {
+      nome: "Pagamento",
+      linhas: resultados.map(renomearColunas),
+      ordem: COLUNAS_PAGAMENTO,
+    },
+    {
+      nome: "Formularios",
+      linhas: respostasCompletas,
+      ordem: COLUNAS_FORMULARIOS,
+    },
+  ]);
   console.log(
     `Planilha gerada: ${saidaPath} ` +
       `(${resultados.length} O.S., ${respostasCompletas.length} respostas)`,
