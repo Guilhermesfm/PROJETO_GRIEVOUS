@@ -22,6 +22,7 @@ async function runAutomation(placas = [], deveParar = () => false) {
   // Marca se a execucao foi interrompida pelo usuario.
   let interrompida = false;
   const { email, senha } = carregarCredenciais();
+  const urls = carregarUrlsField();
   if (!email || !senha) {
     throw new Error(
       "Credenciais nao configuradas. Informe o login do Field na tela inicial.",
@@ -39,7 +40,7 @@ async function runAutomation(placas = [], deveParar = () => false) {
 
   try {
     // 1. Acessa a página de login
-    await page.goto(carregarUrlsField().login);
+    await page.goto(urls.login);
 
     // 2. Clica no campo de e-mail e preenche
     await page.click('input[name="email"]');
@@ -59,6 +60,9 @@ async function runAutomation(placas = [], deveParar = () => false) {
     //    a tela ficar pronta de fato, e recarrega se a consulta do Field
     //    falhar; fica so o tempo de sair da tela de login.
     await page.waitForTimeout(5000);
+    if (!page.url().startsWith(urls.listagem)) {
+      await page.goto(urls.listagem, { waitUntil: "domcontentloaded" });
+    }
     await fecharPopups(page);
 
     if (!(await esperarListagemPronta(page))) {

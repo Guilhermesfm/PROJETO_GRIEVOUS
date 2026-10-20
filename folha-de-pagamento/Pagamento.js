@@ -239,8 +239,9 @@ function descobrirPlanilhaEntrada() {
 
 async function login(page) {
   const { email, senha } = carregarCredenciais();
+  const urls = carregarUrlsField();
 
-  await page.goto(carregarUrlsField().login);
+  await page.goto(urls.login);
 
   await page.click('input[name="email"]');
   await page.fill('input[name="email"]', email);
@@ -254,6 +255,9 @@ async function login(page) {
   // aguarda a tela ficar pronta, com recarga se a consulta falhar; aqui fica
   // so o tempo de sair da tela de login.
   await page.waitForTimeout(5000);
+  if (!page.url().startsWith(urls.listagem)) {
+    await page.goto(urls.listagem, { waitUntil: "domcontentloaded" });
+  }
   await fecharPopups(page);
 
   // Espera a listagem aparecer de fato, em vez de um tempo fixo: o Field
