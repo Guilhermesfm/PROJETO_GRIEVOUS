@@ -23,6 +23,7 @@ async function runAutomation(placas = [], deveParar = () => false) {
   let interrompida = false;
   const { email, senha } = carregarCredenciais();
   const urls = carregarUrlsField();
+  const destinoListagem = new URL(urls.listagem);
   if (!email || !senha) {
     throw new Error(
       "Credenciais nao configuradas. Informe o login do Field na tela inicial.",
@@ -56,13 +57,14 @@ async function runAutomation(placas = [], deveParar = () => false) {
     // 5. Clica em "Continuar" de novo
     await page.click('palantir-button:has-text("Continuar")');
 
-    // 6. Eram 36s de espera cega aqui. O esperarListagemPronta abaixo aguarda
-    //    a tela ficar pronta de fato, e recarrega se a consulta do Field
-    //    falhar; fica so o tempo de sair da tela de login.
-    await page.waitForTimeout(5000);
-    if (!page.url().startsWith(urls.listagem)) {
-      await page.goto(urls.listagem, { waitUntil: "domcontentloaded" });
-    }
+    // O redirecionamento depois da senha pode levar mais de 5s. Navegar para a
+    // listagem antes dele terminar interrompe o fluxo de autenticacao.
+    await page.waitForURL(
+      (url) =>
+        url.origin === destinoListagem.origin &&
+        url.hash.startsWith(destinoListagem.hash),
+      { timeout: 60000 },
+    );
     await fecharPopups(page);
 
     if (!(await esperarListagemPronta(page))) {

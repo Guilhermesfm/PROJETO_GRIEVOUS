@@ -240,6 +240,7 @@ function descobrirPlanilhaEntrada() {
 async function login(page) {
   const { email, senha } = carregarCredenciais();
   const urls = carregarUrlsField();
+  const destinoListagem = new URL(urls.listagem);
 
   await page.goto(urls.login);
 
@@ -251,13 +252,14 @@ async function login(page) {
   await page.fill('input[aria-label="password"]', senha);
   await page.click('palantir-button:has-text("Continuar")');
 
-  // Antes eram 30s de espera cega. O esperarListagemPronta logo abaixo ja
-  // aguarda a tela ficar pronta, com recarga se a consulta falhar; aqui fica
-  // so o tempo de sair da tela de login.
-  await page.waitForTimeout(5000);
-  if (!page.url().startsWith(urls.listagem)) {
-    await page.goto(urls.listagem, { waitUntil: "domcontentloaded" });
-  }
+  // O redirecionamento depois da senha pode levar mais de 5s. Navegar para a
+  // listagem antes dele terminar interrompe o fluxo de autenticacao.
+  await page.waitForURL(
+    (url) =>
+      url.origin === destinoListagem.origin &&
+      url.hash.startsWith(destinoListagem.hash),
+    { timeout: 60000 },
+  );
   await fecharPopups(page);
 
   // Espera a listagem aparecer de fato, em vez de um tempo fixo: o Field
