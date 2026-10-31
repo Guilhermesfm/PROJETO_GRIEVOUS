@@ -1,6 +1,17 @@
+/**
+ * placas/automation.js - consulta de placas no Field.
+ *
+ * Para cada placa: filtra a listagem pelo identificador, le a situacao e a
+ * data de criacao e, se a O.S. estiver concluida, pega o link de
+ * compartilhamento. O resultado vai para placas/situacoes_placas.xlsx.
+ */
+
 const path = require("node:path");
 const { chromium } = require("playwright");
-const { carregarCredenciais, carregarUrlsField } = require("../field/credenciais.js");
+const {
+  carregarCredenciais,
+  carregarUrlsField,
+} = require("../field/credenciais.js");
 const {
   filtrarPorIdentificador,
   esperarListagemPronta,
@@ -14,10 +25,17 @@ const { gravarPlanilha, SEM_RETORNO } = require("../planilha.js");
 
 const OUTPUT_DIR = __dirname;
 
+/** Caminho da planilha de saida, dentro desta pasta. */
 function resolveOutputPath(filename = "situacoes_placas.xlsx") {
   return path.join(OUTPUT_DIR, filename);
 }
 
+/**
+ * Faz login no Field, consulta cada placa e grava a planilha.
+ * deveParar e chamada antes de cada placa; quando devolve true, a execucao
+ * para e grava o que ja foi consultado.
+ * Retorna { outputPath, resultados, interrompida }.
+ */
 async function runAutomation(placas = [], deveParar = () => false) {
   // Marca se a execucao foi interrompida pelo usuario.
   let interrompida = false;
@@ -125,8 +143,7 @@ async function runAutomation(placas = [], deveParar = () => false) {
             .catch(() => "")
         ).trim();
 
-        // So as concluidas interessam para o link. O botao Compartilhar vive
-        // dentro da gaveta da O.S., que ate aqui nao chegava a ser aberta.
+        // So as concluidas interessam para o link.
         let link = "";
         if (/conclu/i.test(situacao)) {
           if (await abrirGaveta(page, placa)) {
@@ -176,6 +193,7 @@ async function runAutomation(placas = [], deveParar = () => false) {
   return { outputPath, resultados, interrompida };
 }
 
+/** Execucao direta pelo terminal (as placas vem pelo Grievous.js). */
 async function main() {
   await runAutomation([]);
 }

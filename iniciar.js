@@ -19,6 +19,7 @@ const PORTAS_A_TENTAR = 10;
 let PORTA = PORTA_INICIAL;
 let ENDERECO = `http://localhost:${PORTA}/`;
 
+/** Passa a usar esta porta aqui e no servidor. */
 function usarPorta(porta) {
   PORTA = porta;
   ENDERECO = `http://localhost:${porta}/`;
@@ -72,6 +73,7 @@ async function esperarServidor(tentativas = 40) {
   return false;
 }
 
+/** Abre a url no navegador padrao do sistema. */
 function abrirNavegador(url) {
   // start e um comando interno do cmd; o primeiro "" e o titulo da janela.
   if (process.platform === "win32") {
@@ -100,6 +102,10 @@ function avisarSePastaSincronizada() {
   console.log("  'git pull' para atualizar cada maquina.\n");
 }
 
+/**
+ * Acha uma porta livre (ou um Grievous ja rodando), sobe o servidor e abre
+ * o navegador quando ele responder.
+ */
 async function main() {
   console.log("=== GRIEVOUS ===\n");
   avisarSePastaSincronizada();

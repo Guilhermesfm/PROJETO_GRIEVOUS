@@ -109,25 +109,48 @@ preciso antes colocar uma senha de acesso no próprio Grievous.
    Copiar o arquivo direto para a pasta também funciona.
 3. Rode o fechamento. O Grievous pega a planilha mais recente da pasta.
 
-O resultado sai em `folha-de-pagamento/pagamento_formularios.xlsx`, com duas
-abas:
+Folhas já fechadas vão para `folha-de-pagamento/fechamentos/`: deixadas na
+pasta principal, podem ser lidas como entrada do próximo fechamento.
 
-- **Pagamento** — uma linha por O.S., com as perguntas mapeadas do tipo.
+O resultado sai em `folha-de-pagamento/pagamento_formularios.xlsx`:
+
+- **Pagamento** — a folha, no formato usado com as empresas: Cliente,
+  Identificador, Tipo, Status, Data Execução, Avaria, Violação, Obs, Link.
 - **Formularios** — todas as respostas lidas, para conferência manual.
+- **Fora do escopo** — tipos sem formulário de pagamento (preparação de
+  materiais, revisão preventiva, laudo), que não são abertos.
 
-### Quais formulários entram
+As respostas não são lidas da tela: o programa abre a O.S. e usa os dados que
+o próprio Field carrega (`formAnswers`), com todos os formulários da O.S.
 
-| Tipo da O.S.   | Perguntas                     |
-| -------------- | ----------------------------- |
-| Instalação     | 11, 15, 34, 45                |
-| Remoção        | 13, 31, 34, 37, 39, 40, 42    |
-| Manutenção     | 13, 31, 34, 37, 39, 40, 42    |
-| Remanejamento  | união de instalação + remoção |
+### O que entra na folha
 
-O.S. com status **Impedido** e tipos fora do escopo (preparação de materiais,
-revisão preventiva, laudo) não são abertas — entram na planilha só como
-registro. O mapeamento fica em `MAPA_PERGUNTAS`, no topo de
-`folha-de-pagamento/Pagamento.js`.
+As perguntas são localizadas pelo **texto**, não pelo número — o número muda
+entre formulários (o extravio é a 37 na "REMOÇÃO - GERAL" e a 34 na
+"REMANEJAMENTO - REMOÇÃO").
+
+| Formulário                          | Marca SIM em                     | Obs                                         |
+| ----------------------------------- | -------------------------------- | ------------------------------------------- |
+| Remoção / Remanejamento - Remoção   | Avaria: dano nos equipamentos    | equipamentos removidos, dano, extravio      |
+| Instalação / Remanejamento - Instal.| —                                | equipamentos instalados                     |
+| Manutenção                          | Violação: violação na instalação | descrição da violação, extravio             |
+| Impedimento de visita               | —                                | descrição do motivo + motivo sem assinatura |
+
+Avaria no veículo antes do serviço não entra na folha.
+
+Nomes dos equipamentos na Obs:
+
+| Marcado no formulário                  | Na folha                                |
+| -------------------------------------- | --------------------------------------- |
+| GalileoSky / JR12 / JR11               | telemetria                              |
+| Rastreador básico                      | telemetria basica                       |
+| GalileoSky (ou JR) + rastreador básico | telemetria basica e telemetria avançada |
+| Câmeras                                | cam                                     |
+
+Formulário enviado só com fotos, sem as respostas que a folha usa
+(equipamentos, dano, extravio, violação), recebe "Formulário incompleto" na
+Obs. Formulário aberto e não finalizado é ignorado, com aviso na Obs. As
+perguntas ficam em `PERGUNTAS`, no topo de `folha-de-pagamento/Pagamento.js`.
 
 ## Estrutura
 
@@ -137,6 +160,7 @@ iniciar.js               sobe o servidor e abre o navegador
 Grievous.exe             executavel do Windows (versionado)
 hello-there.ps1          recompila o Grievous.exe
 Grievous.bat             alternativa ao .exe, pelo terminal
+planilha.js              grava as planilhas (usado pelas duas automacoes)
 
 field/                   conversa com o Field (usado pelas duas automacoes)
   credenciais.js           le e grava EMAIL/PASSWORD e as URLs no .env
@@ -152,11 +176,11 @@ web/                     interface
 
 placas/                  consulta de placas (codigo e planilha gerada)
 folha-de-pagamento/      fechamento (codigo, planilha de entrada e saida)
+  fechamentos/             folhas ja fechadas; o programa nao le esta pasta
 assets/                  icone do executavel
-ferramentas/             utilitarios avulsos, fora do fluxo principal
 ```
 
-## Depuração
+## Ver o navegador
 
 Para acompanhar o navegador durante a execução:
 
@@ -164,5 +188,5 @@ Para acompanhar o navegador durante a execução:
 HEADLESS=false npm run pagamento
 ```
 
-O HTML de cada O.S. visitada fica em `folha-de-pagamento/debug-formularios/`,
-útil quando alguma resposta vem vazia.
+Quando uma O.S. não abre ou o Field não devolve os formulários, o motivo
+aparece na Obs da linha, com "ERRO:".

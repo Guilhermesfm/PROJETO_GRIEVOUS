@@ -91,9 +91,7 @@ async function lerAreaDeTransferencia(page) {
 }
 
 /**
- * Captura o link da O.S. com a gaveta ja aberta.
- * Devolve "" quando nao consegue — nunca derruba a execucao por causa disso.
- */
+ * Captura o link da O.S. com a gaveta ja aberta.*/
 async function capturarLinkOs(page) {
   // A permissao evita o navegador recusar a leitura da area de transferencia.
   await page
@@ -101,9 +99,7 @@ async function capturarLinkOs(page) {
     .grantPermissions(["clipboard-read", "clipboard-write"])
     .catch(() => {});
 
-  // A gaveta termina de montar depois de aparecer: a barra com o
-  // Compartilhar chega alguns segundos apos as abas. Checar na hora fazia a
-  // captura desistir antes de o botao existir, e o link saia sempre vazio.
+  // A gaveta termina de montar
   let botao = page.locator(SELETORES.compartilhar).first();
   let visivel = await botao
     .waitFor({ state: "visible", timeout: 15000 })
@@ -132,7 +128,8 @@ async function capturarLinkOs(page) {
   const limite = Date.now() + 6000;
   while (!link && Date.now() < limite) {
     await page.waitForTimeout(400);
-    link = (await procurarLinkNaTela(page)) || (await lerAreaDeTransferencia(page));
+    link =
+      (await procurarLinkNaTela(page)) || (await lerAreaDeTransferencia(page));
   }
 
   // Fecha o dialogo para nao atrapalhar a proxima O.S.

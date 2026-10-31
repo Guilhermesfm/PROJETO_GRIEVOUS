@@ -27,7 +27,7 @@ function larguraDaColuna(titulo, valores) {
  * depois, na ordem em que aparecer. Sem isso a ordem segue a primeira linha
  * e muda conforme a O.S. que for lida primeiro.
  */
-function montarAba(linhas, ordem = []) {
+function montarAba(linhas, ordem = [], formatos = {}) {
   if (!linhas.length) return XLSX.utils.json_to_sheet([]);
 
   const presentes = new Set();
@@ -54,6 +54,17 @@ function montarAba(linhas, ordem = []) {
     ),
   );
 
+  // Formato por coluna ({ "Data": "dd/mm/yyyy" }). Datas vao como serial do
+  // Excel: um Date passado ao SheetJS sai deslocado pelo fuso da maquina.
+  for (const [titulo, formato] of Object.entries(formatos)) {
+    const coluna = cabecalho.indexOf(titulo);
+    if (coluna === -1) continue;
+    for (let r = 1; r <= normalizadas.length; r += 1) {
+      const celula = aba[XLSX.utils.encode_cell({ r, c: coluna })];
+      if (celula && celula.t === "n") celula.z = formato;
+    }
+  }
+
   // Filtro em cada coluna. Congelar o cabecalho nao entra aqui: o SheetJS
   // desta versao nao grava painel congelado no arquivo, entao o codigo so
   // daria a impressao de ter configurado.
@@ -70,8 +81,8 @@ function montarAba(linhas, ordem = []) {
 /** Grava o arquivo com uma ou mais abas ja formatadas. */
 function gravarPlanilha(caminho, abas) {
   const workbook = XLSX.utils.book_new();
-  for (const { nome, linhas, ordem } of abas) {
-    XLSX.utils.book_append_sheet(workbook, montarAba(linhas, ordem), nome);
+  for (const { nome, linhas, ordem, formatos } of abas) {
+    XLSX.utils.book_append_sheet(workbook, montarAba(linhas, ordem, formatos), nome);
   }
   XLSX.writeFile(workbook, caminho);
   return caminho;

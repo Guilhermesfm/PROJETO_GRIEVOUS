@@ -10,13 +10,17 @@
 
 const readline = require("node:readline");
 const path = require("node:path");
-const { carregarCredenciais, salvarCredenciais } = require("./field/credenciais.js");
+const {
+  carregarCredenciais,
+  salvarCredenciais,
+} = require("./field/credenciais.js");
 
 const OPCOES = [
   {
     chave: "pagamento",
     titulo: "Fechamento (folha de pagamento)",
-    descricao: "Le a planilha de folha-de-pagamento/ e extrai os formularios das O.S.",
+    descricao:
+      "Le a planilha de folha-de-pagamento/ e extrai os formularios das O.S.",
     executar: executarPagamento,
   },
   {
@@ -63,6 +67,7 @@ async function pedirCredenciais(forcar = false) {
   return true;
 }
 
+/** Roda o fechamento com a planilha mais recente de folha-de-pagamento/. */
 async function executarPagamento() {
   const {
     runPagamento,
@@ -83,6 +88,7 @@ async function executarPagamento() {
   await runPagamento(ordens);
 }
 
+/** Pede as placas no terminal e consulta cada uma no Field. */
 async function executarPlacas() {
   const { runAutomation } = require("./placas/automation.js");
   const placas = await perguntar(
@@ -102,11 +108,12 @@ async function executarPlacas() {
   await runAutomation(placas);
 }
 
+/** Sobe a interface web; o servidor comeca a escutar ao ser carregado. */
 async function executarWeb() {
   require("./web/servidor.js");
 }
 
-/** Pergunta no terminal. Com oculto = true, nao ecoa o que for digitado. */
+/** Pergunta no terminal*/
 function perguntar(texto, oculto = false) {
   const io = readline.createInterface({
     input: process.stdin,
@@ -115,7 +122,6 @@ function perguntar(texto, oculto = false) {
   });
 
   if (oculto) {
-    // Esconde a senha substituindo a escrita no terminal.
     io._writeToOutput = (trecho) => {
       io.output.write(trecho.startsWith(texto) ? texto : "");
     };
@@ -130,6 +136,10 @@ function perguntar(texto, oculto = false) {
   });
 }
 
+/**
+ * Mostra o menu e executa a opcao escolhida, pelo numero ou pelo nome.
+ * Opcao invalida mostra o menu de novo.
+ */
 async function menu() {
   console.log("\n=== GRIEVOUS ===\n");
   OPCOES.forEach((opcao, indice) => {
@@ -158,6 +168,7 @@ async function menu() {
   await opcao.executar();
 }
 
+/** Tira acentos, espacos e maiusculas: "Pagamento " vira "pagamento". */
 function normalizarEscolha(valor) {
   return String(valor || "")
     .normalize("NFD")
@@ -166,6 +177,7 @@ function normalizarEscolha(valor) {
     .trim();
 }
 
+/** Com argumento (node Grievous.js placas) vai direto a opcao; sem, abre o menu. */
 async function main() {
   const argumento = normalizarEscolha(process.argv[2]);
   if (!argumento) return menu();

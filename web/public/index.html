@@ -1492,14 +1492,15 @@
       // esta aba) abriria outro EventSource e pediria outra execucao.
       let fonteAtual = null;
 
-      botaoFechamento.addEventListener("click", () => {
-        if (fonteAtual) {
-          logar("Já existe um fechamento em andamento nesta janela.", "erro");
-          return;
-        }
-
-        const limite = Number(document.getElementById("campo-limite").value) || 0;
-
+      /**
+       * Conecta a tela ao progresso de um fechamento.
+       *
+       * Usada pelo botao "Rodar" (/api/pagamento/run, que inicia) e ao abrir
+       * ou recarregar a pagina (/api/pagamento/acompanhar, que so acompanha o
+       * que ja esta rodando). Nos dois casos o servidor manda primeiro o
+       * historico da execucao, entao a tela se monta do zero com ele.
+       */
+      function acompanharFechamento(endereco) {
         botaoFechamento.disabled = true;
         botaoParar.disabled = false;
         document.getElementById("status-execucao").textContent = "rodando";
@@ -1507,7 +1508,7 @@
         tabelaFechamento.innerHTML = "";
         primeiraLinha = true;
 
-        const fonte = new EventSource(`/api/pagamento/run?limite=${limite}`);
+        const fonte = new EventSource(endereco);
         fonteAtual = fonte;
 
         // Fecha o fluxo e libera os botoes, em qualquer desfecho.
@@ -1520,6 +1521,13 @@
 
         fonte.onmessage = (mensagem) => {
           const evento = JSON.parse(mensagem.data);
+
+          // Abriu a pagina e nao ha fechamento rodando: volta ao estado inicial.
+          if (evento.tipo === "sem-execucao") {
+            document.getElementById("status-execucao").textContent = "parado";
+            encerrar();
+            return;
+          }
 
           if (evento.tipo === "inicio") {
             logar(
@@ -1566,6 +1574,9 @@
             );
           }
 
+          // Ex.: planilha anterior aberta no Excel, resultado salvo em copia.
+          if (evento.tipo === "aviso") logar(evento.mensagem, "info");
+
           if (evento.tipo === "parado") {
             logar(
               `Interrompido em ${evento.processadas} O.S. · ${evento.restantes} não foram abertas`,
@@ -1607,7 +1618,31 @@
           document.getElementById("status-execucao").textContent = "parado";
           encerrar();
         };
+      }
+
+      botaoFechamento.addEventListener("click", () => {
+        if (fonteAtual) {
+          logar("Já existe um fechamento em andamento nesta janela.", "erro");
+          return;
+        }
+        const limite = Number(document.getElementById("campo-limite").value) || 0;
+        acompanharFechamento(`/api/pagamento/run?limite=${limite}`);
       });
+
+      // Ao abrir ou recarregar a pagina: se o servidor ja esta rodando um
+      // fechamento (iniciado nesta ou em outra aba), mostra o progresso e
+      // libera o botao Parar.
+      fetch("/api/status")
+        .then((resposta) => resposta.json())
+        .then((status) => {
+          if (status.ativa && status.tipo === "pagamento" && !fonteAtual) {
+            acompanharFechamento("/api/pagamento/acompanhar");
+            logar("Fechamento em andamento — acompanhando.", "info");
+          }
+        })
+        .catch(() => {
+          // Sem status, a tela segue no estado inicial.
+        });
 
       // ---------- Consulta de placas ----------
       const botaoPlacas = document.getElementById("btn-rodar-placas");

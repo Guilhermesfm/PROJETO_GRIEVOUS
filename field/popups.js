@@ -34,11 +34,10 @@ const ICONES_FECHAR = [
   ...CONTAINERS.map((c) => `${c} [aria-label="close" i]`),
 ].join(", ");
 
-// Marca os botoes ja acionados nesta passagem, para nao insistir no mesmo
-// quando o clique nao faz o aviso sumir — foi o que travava a limpeza antes
-// de chegar no segundo modal da fila.
+// Marca os botoes ja acionados nesta passagem
 const MARCA = "data-grievous-fechado";
 
+/** Tira a marca de todos os botoes, para eles poderem ser clicados de novo. */
 async function limparMarcas(page) {
   await page
     .evaluate((marca) => {
@@ -49,6 +48,7 @@ async function limparMarcas(page) {
     .catch(() => {});
 }
 
+/** Marca o botao como ja acionado. */
 async function marcar(alvo) {
   await alvo
     .evaluate((elemento, marca) => elemento.setAttribute(marca, "1"), MARCA)
@@ -56,12 +56,7 @@ async function marcar(alvo) {
 }
 
 /**
- * Acha o primeiro botao de fechamento visivel ainda nao acionado.
- *
- * A comparacao do texto e feita aqui, e nao no filtro do Playwright, porque o
- * texto real vem com quebra de linha em volta ("\nFechar") e um regex
- * ancorado nunca casaria.
- */
+ * Acha o primeiro botao de fechamento visivel ainda nao acionado.*/
 async function acharBotaoPorTexto(page) {
   const botoes = page.locator(BOTOES);
   const total = await botoes.count().catch(() => 0);
@@ -120,9 +115,7 @@ async function clicar(alvo) {
 }
 
 /**
- * Fecha os popups visiveis. Retorna quantos foram realmente fechados.
- * Nunca lanca erro: fechar popup e melhor-esforco.
- */
+ * Fecha os popups visiveis. Retorna quantos foram realmente fechados.*/
 async function fecharPopups(page, tentativas = 6) {
   let fechados = 0;
 
@@ -131,7 +124,8 @@ async function fecharPopups(page, tentativas = 6) {
 
   for (let volta = 0; volta < tentativas; volta += 1) {
     // Botao com texto primeiro; o "X" so quando nao houver.
-    const alvo = (await acharBotaoPorTexto(page)) || (await acharIconeFechar(page));
+    const alvo =
+      (await acharBotaoPorTexto(page)) || (await acharIconeFechar(page));
     if (!alvo) break;
 
     // Marca antes de clicar: se o aviso nao sumir, a proxima volta tenta
@@ -148,7 +142,7 @@ async function fecharPopups(page, tentativas = 6) {
   return fechados;
 }
 
-/** Sobrou algum overlay bloqueando a tela? */
+/** Checa se sobrou overlay bloqueando a tela */
 async function temOverlayBloqueando(page) {
   return page
     .locator(

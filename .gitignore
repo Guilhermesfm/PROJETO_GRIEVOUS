@@ -10,10 +10,6 @@ node_modules/
 /playwright/.cache/
 /playwright/.auth/
 
-# Diagnósticos de execução
-debug-field/
-folha-de-pagamento/debug-formularios/
-
 # Planilhas com dados reais de clientes (ficam so na maquina)
 folha-de-pagamento/*.xlsx
 folha-de-pagamento/*.xlsm

@@ -2,7 +2,10 @@
 const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
-const { carregarCredenciais, salvarCredenciais } = require("../field/credenciais.js");
+const {
+  carregarCredenciais,
+  salvarCredenciais,
+} = require("../field/credenciais.js");
 const {
   runPagamento,
   lerOrdensServico,
@@ -13,7 +16,6 @@ const {
 
 // Porta em que o front será exibido. Por padrão só aceita conexões da própria
 // máquina, já que a tela de login trafega a senha do Field sem HTTPS.
-// Para abrir na rede (HOST=0.0.0.0) seria preciso antes proteger o acesso.
 const PORT = Number(process.env.PORT) || 3000;
 const HOST = process.env.HOST || "127.0.0.1";
 const PUBLIC_DIR = path.join(__dirname, "public");
@@ -81,20 +83,17 @@ function enviarDownload(res, caminho, nome) {
 }
 
 /**
- * Estado da execução em andamento, para o botão Parar.
- *
- * A automação consulta `parar` entre uma O.S. (ou placa) e a próxima: ela
- * termina a que já começou e encerra, em vez de morrer no meio e perder o
- * que foi lido.
- */
+ * Estado da execução em andamento, para o botão Parar. */
 const execucao = { ativa: false, parar: false, tipo: null };
 
+/** Marca que uma automacao ("pagamento" ou "placas") comecou a rodar. */
 function iniciarExecucao(tipo) {
   execucao.ativa = true;
   execucao.parar = false;
   execucao.tipo = tipo;
 }
 
+/** Libera o servidor para a proxima execucao e zera o pedido de parada. */
 function encerrarExecucao() {
   execucao.ativa = false;
   execucao.parar = false;
@@ -102,12 +101,41 @@ function encerrarExecucao() {
 }
 
 /**
- * Recarrega os módulos da automação do disco antes de cada execução.
- *
- * O Node guarda o módulo em cache na primeira vez que ele é exigido; sem isso,
- * editar um seletor não teria efeito até reiniciar o servidor — e a execução
- * rodaria com o código antigo sem avisar.
- */
+ * Progresso do fechamento, compartilhado entre as abas.*/
+const progressoPagamento = {
+  // Eventos da execucao atual, na ordem, para repassar a quem chegar depois.
+  eventos: [],
+  // Conexoes SSE abertas (res) acompanhando o fechamento.
+  ouvintes: new Set(),
+  // Planilha gerada pelo ultimo fechamento (null = a padrao).
+  ultimaSaida: null,
+};
+
+/** Grava o evento no historico e repassa para todas as abas conectadas. */
+function emitirProgressoPagamento(evento) {
+  if (evento.tipo === "fim" && evento.outputPath) {
+    progressoPagamento.ultimaSaida = evento.outputPath;
+  }
+  progressoPagamento.eventos.push(evento);
+  const linha = `data: ${JSON.stringify(evento)}\n\n`;
+  for (const res of progressoPagamento.ouvintes) res.write(linha);
+}
+
+/*Fechar a aba so desconecta — o fechamento continua rodando no servidor.*/
+function acompanharPagamento(req, res) {
+  for (const evento of progressoPagamento.eventos) {
+    res.write(`data: ${JSON.stringify(evento)}\n\n`);
+  }
+  progressoPagamento.ouvintes.add(res);
+  req.on("close", () => progressoPagamento.ouvintes.delete(res));
+}
+
+/** Fim do fechamento: encerra as conexoes de todas as abas. */
+function encerrarProgressoPagamento() {
+  for (const res of progressoPagamento.ouvintes) res.end();
+  progressoPagamento.ouvintes.clear();
+}
+
 // Modulos compartilhados pelas duas automacoes.
 const MODULOS_COMUNS = [
   "../field/filtro.js",
@@ -117,6 +145,9 @@ const MODULOS_COMUNS = [
   "../field/credenciais.js",
 ];
 
+/**
+ * Recarrega os módulos da automação do disco antes de cada execução.
+ */
 function recarregar(modulos, principal) {
   for (const modulo of [...modulos, principal]) {
     delete require.cache[require.resolve(modulo)];
@@ -124,14 +155,11 @@ function recarregar(modulos, principal) {
   return require(principal);
 }
 
+/** Pagamento.js recem-lido do disco, com os modulos do Field. */
 function carregarAutomacaoPagamento() {
   return recarregar(MODULOS_COMUNS, "../folha-de-pagamento/Pagamento.js");
 }
 
-/**
- * A rota de placas usava o runAutomation carregado na inicializacao: o
- * servidor ficava semanas de pe e rodava codigo antigo sem avisar.
- */
 function carregarAutomacaoPlacas() {
   return recarregar(MODULOS_COMUNS, "../placas/automation.js");
 }
@@ -140,20 +168,14 @@ const PASTA_PAGAMENTO = path.join(RAIZ, "folha-de-pagamento");
 const EXTENSOES_PLANILHA = [".xlsx", ".xlsm", ".csv"];
 const TAMANHO_MAXIMO = 30 * 1024 * 1024; // 30 MB
 
-/**
- * Limpa o nome do arquivo enviado.
- *
- * O nome vem do navegador e não pode ser usado direto: "..\\..\\algo.xlsx"
- * gravaria fora da pasta. Aqui fica só o nome, sem caminho e sem caractere
- * que o Windows recuse.
- */
+/* Limpa o nome do arquivo enviado.*/
 function nomeSeguro(nomeOriginal) {
   // O front envia o nome codificado, para suportar acento e espaço no header.
   let bruto = String(nomeOriginal || "").trim();
   try {
     bruto = decodeURIComponent(bruto);
   } catch {
-    // Nome que não decodifica segue como veio; a limpeza abaixo resolve.
+    // Nome que não decodifica segue como veio
   }
 
   const apenasNome = path.basename(bruto);
@@ -178,7 +200,11 @@ function lerCorpoBinario(req, limite = TAMANHO_MAXIMO) {
     req.on("data", (pedaco) => {
       total += pedaco.length;
       if (total > limite) {
-        reject(new Error(`Arquivo maior que ${Math.round(limite / 1024 / 1024)} MB.`));
+        reject(
+          new Error(
+            `Arquivo maior que ${Math.round(limite / 1024 / 1024)} MB.`,
+          ),
+        );
         req.destroy();
         return;
       }
@@ -221,7 +247,11 @@ const server = http.createServer(async (req, res) => {
   // --- Execução: pedido de parada ------------------------------------------
   if (req.method === "POST" && url.pathname === "/api/parar") {
     if (!execucao.ativa) {
-      responderJson(res, 200, { ok: true, parando: false, motivo: "nada rodando" });
+      responderJson(res, 200, {
+        ok: true,
+        parando: false,
+        motivo: "nada rodando",
+      });
       return;
     }
     execucao.parar = true;
@@ -256,7 +286,10 @@ const server = http.createServer(async (req, res) => {
         String(payload.senha || ""),
       );
       console.log("Credenciais do Field atualizadas no .env.");
-      responderJson(res, 200, { ok: true, email: String(payload.email).trim() });
+      responderJson(res, 200, {
+        ok: true,
+        email: String(payload.email).trim(),
+      });
     } catch (erro) {
       responderJson(res, 400, { ok: false, error: erro.message });
     }
@@ -306,6 +339,25 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // --- Fechamento: acompanhar o que ja esta rodando (SSE) ------------------
+  // Usada pela tela ao abrir/recarregar: se ha fechamento em andamento, a aba
+  // recebe o historico e o progresso; se nao ha, avisa e fecha.
+  if (req.method === "GET" && url.pathname === "/api/pagamento/acompanhar") {
+    res.writeHead(200, {
+      "Content-Type": "text/event-stream; charset=utf-8",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive",
+    });
+
+    if (execucao.ativa && execucao.tipo === "pagamento") {
+      acompanharPagamento(req, res);
+    } else {
+      res.write(`data: ${JSON.stringify({ tipo: "sem-execucao" })}\n\n`);
+      res.end();
+    }
+    return;
+  }
+
   // --- Fechamento: execucao com progresso em tempo real (SSE) --------------
   if (req.method === "GET" && url.pathname === "/api/pagamento/run") {
     res.writeHead(200, {
@@ -314,21 +366,19 @@ const server = http.createServer(async (req, res) => {
       Connection: "keep-alive",
     });
 
-    const enviar = (evento) => res.write(`data: ${JSON.stringify(evento)}\n\n`);
-
     // Uma execução por vez.
-    //
-    // Sem esta trava, duas rodavam em paralelo com dois navegadores no mesmo
-    // Field: basta recarregar a página no meio (o EventSource do navegador
-    // reconecta sozinho quando o fluxo cai e o servidor começaria tudo de
-    // novo) ou abrir a interface em duas abas.
     if (execucao.ativa) {
-      enviar({
-        tipo: "erro",
-        erro:
-          "Já existe um fechamento em andamento. Acompanhe a janela que o " +
-          "iniciou, ou use o botão Parar antes de começar outro.",
-      });
+      // Ja e um fechamento: em vez de recusar, esta aba passa a acompanha-lo.
+      if (execucao.tipo === "pagamento") {
+        acompanharPagamento(req, res);
+        return;
+      }
+      res.write(
+        `data: ${JSON.stringify({
+          tipo: "erro",
+          erro: `Já existe uma execução em andamento (${execucao.tipo}). Pare-a antes de começar o fechamento.`,
+        })}\n\n`,
+      );
       res.end();
       return;
     }
@@ -336,6 +386,11 @@ const server = http.createServer(async (req, res) => {
     // Marca antes de qualquer espera, para não abrir brecha entre a checagem
     // e o início de fato.
     iniciarExecucao("pagamento");
+
+    // Execucao nova: historico zerado, e esta aba e a primeira a acompanhar.
+    progressoPagamento.eventos = [];
+    acompanharPagamento(req, res);
+    const enviar = emitirProgressoPagamento;
 
     try {
       const resumo = resumirPlanilha();
@@ -357,14 +412,20 @@ const server = http.createServer(async (req, res) => {
       enviar({ tipo: "erro", erro: erro.message });
     } finally {
       encerrarExecucao();
-      res.end();
+      // Fecha a conexao de todas as abas, inclusive a que iniciou.
+      encerrarProgressoPagamento();
     }
     return;
   }
 
   // --- Fechamento: download da planilha gerada -----------------------------
   if (req.method === "GET" && url.pathname === "/api/pagamento/download") {
-    enviarDownload(res, SAIDA_PADRAO, "pagamento_formularios.xlsx");
+    const saida =
+      progressoPagamento.ultimaSaida &&
+      fs.existsSync(progressoPagamento.ultimaSaida)
+        ? progressoPagamento.ultimaSaida
+        : SAIDA_PADRAO;
+    enviarDownload(res, saida, path.basename(saida));
     return;
   }
 
@@ -386,7 +447,10 @@ const server = http.createServer(async (req, res) => {
 
       iniciarExecucao("placas");
       const automacao = carregarAutomacaoPlacas();
-      const resultado = await automacao.runAutomation(placas, () => execucao.parar);
+      const resultado = await automacao.runAutomation(
+        placas,
+        () => execucao.parar,
+      );
       responderJson(res, 200, {
         ok: true,
         outputPath: resultado.outputPath,

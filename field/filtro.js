@@ -2,12 +2,7 @@
 // Fica em um modulo separado porque o fechamento e a automacao de placas
 // usam a mesma tela — quando o Field muda esse filtro, so este arquivo muda.
 
-const fs = require("node:fs");
-const path = require("node:path");
 const { fecharPopups } = require("./popups.js");
-
-// Os diagnosticos ficam na raiz do projeto, nao dentro de field/.
-const DEBUG_DIR = path.join(__dirname, "..", "debug-field");
 
 const SELETORES = {
   maisFiltros: "button.palantir-filter-bar__more",
@@ -43,26 +38,11 @@ async function acharCampoBusca(page, timeout = 6000) {
   return visivel ? campo : null;
 }
 
-/** Salva tela e HTML para descobrir o que o Field mostrou no momento da falha. */
-async function salvarDiagnostico(page, nome) {
-  try {
-    fs.mkdirSync(DEBUG_DIR, { recursive: true });
-    const base = path.join(DEBUG_DIR, nome.replace(/[\\/:*?"<>|]/g, "_"));
-    await page.screenshot({ path: `${base}.png`, fullPage: true });
-    fs.writeFileSync(`${base}.html`, await page.content(), "utf8");
-    return base;
-  } catch {
-    return null;
-  }
-}
-
 /**
  * Espera a listagem terminar de carregar.
  *
  * O Field desenha primeiro um esqueleto com a barra antiga ("Filtrar") e so
- * depois troca pela barra nova. Agir antes disso derrubava tudo logo na
- * primeira O.S., com "Mais filtros nao encontrado" — o botao nem existia
- * ainda. Aproveita para fechar avisos, que costumam aparecer nesse intervalo.
+ * depois troca pela barra nova.
  */
 async function esperarListagemPronta(
   page,
@@ -88,8 +68,7 @@ async function esperarListagemPronta(
     }
 
     // A consulta que traz a lista as vezes volta erro e o Field fica no
-    // esqueleto para sempre, sem tentar de novo. Recarregar resolve; desistir
-    // derrubaria a execucao inteira por uma falha passageira.
+    // esqueleto para sempre, sem tentar de novo.
     if (tentativa < tentativas) {
       await page.reload({ waitUntil: "domcontentloaded" }).catch(() => {});
       await page.waitForTimeout(4000);
@@ -101,10 +80,6 @@ async function esperarListagemPronta(
 
 /**
  * Abre o menu "Mais filtros".
- *
- * O menu é um overlay do CDK: ele só existe no DOM depois que o botão é
- * acionado, e o botão alterna (um segundo clique fecharia). Por isso a
- * confirmação é o aria-expanded do botão mais a presença dos itens.
  */
 async function abrirMenuFiltros(page) {
   const botao = page.locator(SELETORES.maisFiltros).first();
@@ -115,11 +90,7 @@ async function abrirMenuFiltros(page) {
     .catch(() => false);
 
   if (!visivel) {
-    const caminho = await salvarDiagnostico(page, "sem-botao-mais-filtros");
-    throw new Error(
-      `Botao "Mais filtros" nao encontrado. URL: ${page.url()}` +
-        (caminho ? ` | Diagnostico: ${caminho}.png` : ""),
-    );
+    throw new Error(`Botao "Mais filtros" nao encontrado. URL: ${page.url()}`);
   }
 
   const itens = page.locator(SELETORES.item);
@@ -134,8 +105,6 @@ async function abrirMenuFiltros(page) {
     )
       return itens;
 
-    // Um modal do Field ("Boas-vindas", avisos) cobre a tela e engole o
-    // clique sem dar erro — o menu simplesmente nao abre.
     await fecharPopups(page);
 
     // Clique normal primeiro (espera o elemento ficar acionavel de verdade);
@@ -157,11 +126,9 @@ async function abrirMenuFiltros(page) {
   }
 
   const expandido = await botao.getAttribute("aria-expanded").catch(() => null);
-  const caminho = await salvarDiagnostico(page, "menu-filtros-nao-abriu");
   throw new Error(
     `Menu "Mais filtros" nao abriu apos 3 tentativas ` +
-      `(aria-expanded=${expandido}). URL: ${page.url()}` +
-      (caminho ? ` | Diagnostico: ${caminho}.png` : ""),
+      `(aria-expanded=${expandido}). URL: ${page.url()}`,
   );
 }
 
@@ -173,8 +140,7 @@ async function abrirFiltroIdentificador(page) {
   const jaAberto = await acharCampoBusca(page, 400);
   if (jaAberto) return jaAberto;
 
-  // 2. A listagem precisa estar carregada; senao a barra de filtros nem
-  //    existe no DOM.
+  // 2. A listagem precisa estar carregada;
   await esperarListagemPronta(page);
 
   // 3. Filtro fixado como chip na barra (botao de pin do Field).
@@ -211,15 +177,12 @@ async function abrirFiltroIdentificador(page) {
       .locator(SELETORES.itemLabel)
       .allInnerTexts()
       .catch(() => []);
-    const caminho = await salvarDiagnostico(page, "sem-filtro-identificador");
     throw new Error(
       `Filtro "Identificador" nao encontrado. ` +
-        `Disponiveis: ${disponiveis.map((t) => t.trim()).join(" | ") || "nenhum"}` +
-        (caminho ? ` | Diagnostico: ${caminho}.png` : ""),
+        `Disponiveis: ${disponiveis.map((t) => t.trim()).join(" | ") || "nenhum"}`,
     );
   }
 
-  // O clicavel e o div.filter-item (role="button"), nao o span do rotulo.
   const item = rotulo
     .locator('xpath=ancestor::*[contains(@class,"filter-item")][last()]')
     .first();
@@ -230,10 +193,8 @@ async function abrirFiltroIdentificador(page) {
 
   const campo = await acharCampoBusca(page, 8000);
   if (!campo) {
-    const caminho = await salvarDiagnostico(page, "sem-campo-busca");
     throw new Error(
-      "Campo de busca do filtro Identificador nao apareceu depois do clique." +
-        (caminho ? ` | Diagnostico: ${caminho}.png` : ""),
+      "Campo de busca do filtro Identificador nao apareceu depois do clique.",
     );
   }
 
@@ -291,7 +252,5 @@ module.exports = {
   esperarTabelaFiltrada,
   esperarListagemPronta,
   abrirFiltroIdentificador,
-  salvarDiagnostico,
   SELETORES,
-  DEBUG_DIR,
 };

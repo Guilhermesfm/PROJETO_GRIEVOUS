@@ -2,8 +2,30 @@
  * Pagamento.js - Fechamento da folha de pagamento.
  *
  * Le a planilha de O.S. exportada do Field (colocada nesta mesma pasta),
- * busca cada Identificador no filtro do Field, abre a O.S. pelo botao de
- * edicao e extrai as respostas dos formularios conforme o tipo de servico.
+ * busca cada Identificador no filtro do Field, abre a O.S. e le as respostas
+ * dos formularios. Gera a folha no formato usado com as empresas: Cliente,
+ * Identificador, Tipo, Status, Data Execucao, Avaria, Violacao, Obs e Link.
+ *
+ * Regra:
+ *   - Remocao / instalacao (e remanejamento, que e as duas): equipamentos
+ *     removidos/instalados, dano nos equipamentos e extravio.
+ *   - Manutencao: violacao (coluna Violacao) e extravio.
+ *   - Formulario enviado so com fotos, sem as informacoes: "Formulário
+ *     incompleto" na Obs.
+ *   - Impedimento: motivo do servico nao ter sido executado.
+ *
+ * Fluxo de cada O.S.:
+ *   1. lerOrdensServico     le a planilha de entrada (coluna Identificador).
+ *   2. classificarOs        separa o que entra na folha do que e fora do escopo.
+ *   3. abrirOs              filtra a listagem e abre a O.S. com o
+ *                           identificador exato.
+ *   4. lerDadosOs           clica em "Formularios" e pega, pelo coletor, os
+ *                           dados que o proprio Field carregou (atividade,
+ *                           O.S. e todos os formularios respondidos).
+ *   5. montarLinhaPagamento aplica a regra (analisarOs/analisarFormulario) e
+ *                           monta a linha da folha.
+ *   6. gravarPlanilha       grava as abas Pagamento, Formularios e Fora do
+ *                           escopo.
  *
  * Uso:
  *   node folha-de-pagamento/Pagamento.js [planilha.xlsx] [saida.xlsx]
@@ -15,134 +37,104 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { chromium } = require("playwright");
 const XLSX = require("xlsx");
-const { carregarCredenciais, carregarUrlsField } = require("../field/credenciais.js");
+const {
+  carregarCredenciais,
+  carregarUrlsField,
+} = require("../field/credenciais.js");
 const {
   filtrarPorIdentificador,
-  salvarDiagnostico,
   esperarListagemPronta,
 } = require("../field/filtro.js");
 const { fecharPopups } = require("../field/popups.js");
-const { gravarPlanilha, SEM_RETORNO, NAO_EXISTE } = require("../planilha.js");
+const { gravarPlanilha } = require("../planilha.js");
 
 // ---------------------------------------------------------------------------
 // Configuracao
 // ---------------------------------------------------------------------------
 
-// Tudo do pagamento fica nesta pasta: planilha de entrada, saida e debug.
+// Planilha de entrada e saida ficam nesta pasta.
 const BASE_DIR = __dirname;
-const DEBUG_DIR = path.join(BASE_DIR, "debug-formularios");
 const SAIDA_PADRAO = path.join(BASE_DIR, "pagamento_formularios.xlsx");
 
-// Numeros das perguntas de formulario retornadas por tipo de O.S.
-const PERGUNTAS_INSTALACAO = [11, 15, 34, 45];
-const PERGUNTAS_REMOCAO = [13, 31, 34, 37, 39, 40, 42];
-
-const MAPA_PERGUNTAS = {
-  instalacao: PERGUNTAS_INSTALACAO,
-  remocao: PERGUNTAS_REMOCAO,
-  // Remanejamento = instalacao + remocao. Regra definitiva ainda a definir;
-  // por enquanto exporta a uniao dos dois conjuntos.
-  remanejamento: [
-    ...new Set([...PERGUNTAS_INSTALACAO, ...PERGUNTAS_REMOCAO]),
-  ].sort((a, b) => a - b),
-  // Manutencao com avaria / violacao / extravio. A 14 e a violacao no
-  // formulario de manutencao (a 6 e do "REVISAO ROUXINOL", mapeado por nome).
-  manutencao: [...new Set([...PERGUNTAS_REMOCAO, 14])].sort((a, b) => a - b),
-};
-
-/**
- * Mapeamento por NOME do formulario, que tem precedencia sobre o tipo da O.S.
- *
- * O numero da pergunta vale dentro de um formulario, nao de um tipo: uma O.S.
- * de manutencao pode responder "REVISAO ROUXINOL" em vez do formulario de
- * manutencao, e ai a numeracao e outra. A chave e um trecho do nome, sem
- * acento e em minusculas.
- */
-const MAPA_POR_FORMULARIO = {
-  // "FORMULARIO DE INSTALACAO - TECNICOS INOPRIME"
-  "formulario de instalacao": PERGUNTAS_INSTALACAO,
-  // "FORMULARIO DE REMOCAO - GERAL"
-  "formulario de remocao": PERGUNTAS_REMOCAO,
-  // "FORMULARIO DE MANUTENCAO - TECNICOS INOPRIME"
-  // 14 = ALGUMA VIOLACAO NA INSTALACAO ENCONTRADA?
-  "formulario de manutencao": [14],
-  // "REVISAO ROUXINOL" — 6 e a violacao na instalacao.
-  "revisao rouxinol": [6],
-};
-
-/** O formulario tem mapeamento proprio, ou caiu no palpite pelo tipo? */
-function formularioMapeado(nomeFormulario) {
-  const nome = normalizar(nomeFormulario);
-  return Object.keys(MAPA_POR_FORMULARIO).some((trecho) => nome.includes(trecho));
-}
-
-/** Escolhe os numeros a exportar: pelo formulario, senao pelo tipo da O.S. */
-function perguntasDesejadas(nomeFormulario, categoria) {
-  const nome = normalizar(nomeFormulario);
-
-  for (const [trecho, numeros] of Object.entries(MAPA_POR_FORMULARIO)) {
-    if (nome.includes(trecho)) return numeros;
-  }
-
-  return MAPA_PERGUNTAS[categoria] || [];
-}
-
-/**
- * Perguntas do tipo "houve X?" cuja resposta afirmativa so tem valor com o
- * detalhe que vem logo depois ("qual foi?"). Saber que houve violacao sem
- * saber qual nao serve para o lancamento.
- */
-const DETALHE_QUANDO_AFIRMATIVO = [6, 14, 37, 42];
-
-/** A resposta indica que sim? Vazio e "nao" nao contam. */
-function ehAfirmativa(resposta) {
-  const texto = normalizar(resposta);
-  if (!texto) return false;
-  return !/^(nao|n|nenhum[ao]?|nada|negativo)$/.test(texto);
-}
-
-/**
- * Detalhe de uma pergunta afirmativa: a proxima pergunta do formulario, que
- * e onde o tecnico descreve o caso. Se ela tambem for um "nao", nao ha
- * detalhe a registrar.
- */
-function detalharResposta(formularios, item) {
-  if (!item || !ehAfirmativa(item.resposta)) return "";
-
-  const seguinte = formularios
-    .filter((form) => form.ordem > item.ordem)
-    .sort((a, b) => a.ordem - b.ordem)[0];
-
-  if (!seguinte || !seguinte.resposta) return "";
-
-  return `${seguinte.pergunta}: ${seguinte.resposta}`;
-}
+// Relatorio publico da O.S. — e o mesmo link que o "Compartilhar" devolve.
+const URL_RELATORIO =
+  "https://app.fieldcontrol.com.br/relacionamento-cliente/#/relatorio/";
 
 // Seletores do Field (marcacao Palantir).
 const SELETORES = {
   botaoEditarLinha: "palantir-button.palantir-table__action-button",
 };
 
-
-// Cronometro das etapas, para achar onde o tempo esta indo: TEMPOS=1
-const MEDIR_TEMPOS = process.env.TEMPOS === "1";
-
-async function cronometrar(etapa, acao) {
-  if (!MEDIR_TEMPOS) return acao();
-  const inicio = Date.now();
-  try {
-    return await acao();
-  } finally {
-    console.log(`      [tempo] ${etapa}: ${((Date.now() - inicio) / 1000).toFixed(1)}s`);
-  }
-}
+// Status da atividade no Field -> como a folha escreve.
+const STATUS_FIELD = {
+  done: "Concluída",
+  reported: "Impedido",
+  canceled: "Cancelada",
+  cancelled: "Cancelada",
+};
 
 const HEADLESS = process.env.HEADLESS !== "false";
-const TIMEOUT_LOGIN = 30000;
 
 // ---------------------------------------------------------------------------
-// Helpers
+// Regras dos formularios
 // ---------------------------------------------------------------------------
+
+/**
+ * Perguntas usadas na folha, localizadas pelo INICIO do texto (sem acento,
+ * minusculo). Nao pelo numero: o numero muda entre formularios — o extravio
+ * e a 37 na "REMOCAO - GERAL" e a 34 na "REMANEJAMENTO - REMOCAO".
+ */
+const PERGUNTAS = {
+  removidos: "quais equipamentos estao sendo removidos",
+  instalados: "quais equipamentos foram instalados",
+  dano: "foi identificado algum dano nos equipamentos removidos",
+  danoDescricao: "descreva os danos identificados",
+  extravio: "algum equipamento extraviado",
+  extravioQual: "qual equipamento foi extraviado",
+  extravioOutros: 'qual "outros" equipamento foi extraviado',
+  // "MANUTENCAO INOPRIME V2" lista o extravio direto, sem o "houve?".
+  extravioLista: "liste quais os itens da inoprime que foram extraviados",
+  // Violacao na instalacao: vai para a coluna Violacao.
+  violacao: "alguma violacao na instalacao encontrada",
+  violacaoDescricao: "descreva a violacao",
+  impedimentoMotivo: "informe o motivo do servico nao ser executado",
+  impedimentoDescricao:
+    "descreva detalhadamente apresentando toda especificacao",
+  impedimentoDescricao2:
+    "descreva detalhadamente o motivo do servico nao ter sido executado",
+  impedimentoSemAssinatura:
+    "descreva melhor o motivo do cliente nao ter assinado",
+};
+
+/**
+ * Equipamentos com o nome que a folha usa, na ordem em que ela escreve.
+ *
+ * GalileoSky/JR12/JR11 sao a telemetria avancada; o rastreador basico e uma
+ * telemetria basica. Sozinhos viram "telemetria" e "telemetria basica"; os
+ * dois juntos, "telemetria basica e telemetria avançada" (ver
+ * rotularEquipamentos).
+ */
+const ROTULOS_EQUIPAMENTO = [
+  [/rastreador/, "telemetria basica"],
+  [/galileo|jr1[12]/, "telemetria"],
+  [/camera/, "cam"],
+  [/bafometro/, "bafometro"],
+  [/satelital/, "satelital"],
+];
+
+/**
+ * Perguntas que todo formulario daquele tipo precisa ter respondidas para a
+ * folha. Se alguma existe no formulario, aparece sempre (nao depende de outra
+ * resposta) e ficou em branco, o formulario e "incompleto" — o tecnico
+ * enviou so com fotos, sem as informacoes.
+ */
+const PERGUNTAS_ESSENCIAIS = [
+  "removidos",
+  "instalados",
+  "dano",
+  "extravio",
+  "violacao",
+];
 
 /** Remove acentos e normaliza para comparacao. */
 function normalizar(texto) {
@@ -150,12 +142,276 @@ function normalizar(texto) {
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "")
     .toLowerCase()
+    .replace(/\s+/g, " ")
     .trim();
 }
 
 /**
+ * Texto da resposta de uma pergunta do formulario ("" se nao respondida).
+ *
+ * `formulario.questions` traz TODAS as perguntas do formulario, inclusive as
+ * condicionais que nao apareceram para o tecnico (answer = null). Por isso
+ * "pergunta nao encontrada" e "pergunta sem resposta" dao o mesmo "".
+ */
+function respostaDe(formulario, chave) {
+  const pergunta = perguntaDe(formulario, chave);
+  return pergunta ? textoDaResposta(pergunta) : "";
+}
+
+/** A pergunta do formulario cujo texto comeca com PERGUNTAS[chave], ou null. */
+function perguntaDe(formulario, chave) {
+  const inicio = PERGUNTAS[chave];
+  return (
+    formulario.questions.find((q) => normalizar(q.title).startsWith(inicio)) ||
+    null
+  );
+}
+
+/**
+ * O formulario foi enviado sem as informacoes da folha?
+ *
+ * So contam as perguntas essenciais que existem neste formulario e que nao
+ * tem condicao para aparecer: uma pergunta condicional (ex.: "descreva o
+ * dano", que so aparece depois de um SIM) em branco e normal.
+ */
+function formularioIncompleto(formulario) {
+  return PERGUNTAS_ESSENCIAIS.some((chave) => {
+    const pergunta = perguntaDe(formulario, chave);
+    if (!pergunta) return false;
+    const sempreAparece = !(pergunta.conditions || []).length;
+    return sempreAparece && !textoDaResposta(pergunta);
+  });
+}
+
+/**
+ * Converte o `answer` do Field em texto.
+ *
+ * O formato muda com o tipo da pergunta:
+ *   - texto/sim-nao/multipla escolha: string ("SIM", "GalileoSky&JR12");
+ *   - foto unica ("picture"): string com a URL da imagem;
+ *   - varias fotos ("multiple-picture"): lista de URLs.
+ * Fotos viram contagem — a URL nao interessa para a folha.
+ */
+function textoDaResposta(pergunta) {
+  const { answer } = pergunta;
+  if (answer == null) return "";
+  if (Array.isArray(answer)) return `${answer.length} foto(s)`;
+  if (typeof answer === "string" && /picture|signature/.test(pergunta.type)) {
+    return answer ? "1 foto" : "";
+  }
+  // Qualquer outro formato inesperado vai como JSON, para nao sumir.
+  return String(
+    typeof answer === "string" ? answer : JSON.stringify(answer),
+  ).trim();
+}
+
+// "SIM" / "Sim" / "sim" -> true. "NÃO", vazio e nao respondida -> false.
+const ehSim = (valor) => normalizar(valor) === "sim";
+
+// O Field junta as opcoes marcadas com "&": "GalileoSky&Câmeras" -> ["GalileoSky", "Câmeras"].
+const separarOpcoes = (valor) =>
+  String(valor || "")
+    .split("&")
+    .map((v) => v.trim())
+    .filter(Boolean);
+
+/**
+ * "GalileoSky&Câmeras&JR12" -> ["telemetria", "cam"], na ordem da folha.
+ * "GalileoSky&Rastreador básico" -> ["telemetria basica", "telemetria avançada"].
+ */
+function rotularEquipamentos(valor) {
+  // A ordem de ROTULOS_EQUIPAMENTO e a ordem em que a folha escreve
+  // ("telemetria e cam"), nao a ordem em que o tecnico marcou.
+  const ordem = ROTULOS_EQUIPAMENTO.map(([, rotulo]) => rotulo);
+  const rotulos = [];
+  for (const item of separarOpcoes(valor)) {
+    const achado = ROTULOS_EQUIPAMENTO.find(([padrao]) =>
+      padrao.test(normalizar(item)),
+    );
+    // Equipamento sem rotulo conhecido ("OUTROS") vai com o nome original.
+    const rotulo = achado ? achado[1] : item.toLowerCase();
+    // GalileoSky e JR12 viram os dois "telemetria": entra uma vez so.
+    if (!rotulos.includes(rotulo)) rotulos.push(rotulo);
+  }
+  const posicao = (r) => (ordem.includes(r) ? ordem.indexOf(r) : ordem.length);
+  rotulos.sort((a, b) => posicao(a) - posicao(b));
+
+  // Basica e avancada juntas: "telemetria" sozinho ficaria ambiguo, entao a
+  // avancada ganha o nome completo.
+  if (rotulos.includes("telemetria basica") && rotulos.includes("telemetria")) {
+    rotulos[rotulos.indexOf("telemetria")] = "telemetria avançada";
+  }
+  return rotulos;
+}
+
+/** ["telemetria", "cam", "bafometro"] -> "telemetria, cam e bafometro" */
+function juntarComE(itens) {
+  if (itens.length <= 1) return itens.join("");
+  return `${itens.slice(0, -1).join(", ")} e ${itens[itens.length - 1]}`;
+}
+
+/** "telemetria" -> "Telemetria extraviada", como a equipe escreve na folha. */
+function descreverExtravio(item) {
+  // Concordancia: "Telemetria basica extraviada", "Bafometro extraviado".
+  const feminino = /telemetria|cam|camera|antena|leitora|placa/.test(
+    normalizar(item),
+  );
+  const nome = item.charAt(0).toUpperCase() + item.slice(1).toLowerCase();
+  return `${nome} ${feminino ? "extraviada" : "extraviado"}`;
+}
+
+/**
+ * Avaria e trechos da Obs de UM formulario respondido.
+ *
+ * O impedimento e reconhecido pelo nome do formulario. Os demais, pelas
+ * perguntas que tem: cada regra abaixo so produz algo se a pergunta existir
+ * e estiver respondida. Assim o "REMANEJAMENTO - REMOCAO" cai na mesma regra
+ * do "FORMULARIO DE REMOCAO - GERAL" sem precisar ser cadastrado, e um
+ * formulario que nao tem a pergunta simplesmente nao contribui.
+ */
+function analisarFormulario(formulario) {
+  // avaria/violacao: marcam as colunas Avaria e Violacao; obs: trechos que
+  // vao para a coluna Obs, na ordem em que sao empilhados aqui.
+  const resultado = { avaria: false, violacao: false, obs: [] };
+
+  // --- Impedimento de visita: so o motivo interessa ------------------------
+  if (normalizar(formulario.name).includes("impedimento")) {
+    // A descricao detalhada (pergunta 2) e o que a folha manual usa. Se o
+    // tecnico nao escreveu, cai na outra descricao (3) e, por ultimo, no
+    // motivo marcado na lista (1).
+    const descricao =
+      respostaDe(formulario, "impedimentoDescricao") ||
+      respostaDe(formulario, "impedimentoDescricao2") ||
+      respostaDe(formulario, "impedimentoMotivo");
+    // Pergunta 8: so aparece quando ninguem no local assinou a O.S.
+    const semAssinatura = respostaDe(formulario, "impedimentoSemAssinatura");
+    if (descricao) resultado.obs.push(descricao);
+    if (semAssinatura) resultado.obs.push(semAssinatura);
+    return resultado;
+  }
+
+  // --- Remocao e instalacao: o que saiu e o que entrou ---------------------
+  // Vira "Remoção de telemetria e cam" / "Instalação de telemetria basica".
+  const removidos = rotularEquipamentos(respostaDe(formulario, "removidos"));
+  if (removidos.length)
+    resultado.obs.push(`Remoção de ${juntarComE(removidos)}`);
+
+  const instalados = rotularEquipamentos(respostaDe(formulario, "instalados"));
+  if (instalados.length)
+    resultado.obs.push(`Instalação de ${juntarComE(instalados)}`);
+
+  // --- Dano nos equipamentos removidos = avaria ----------------------------
+  if (ehSim(respostaDe(formulario, "dano"))) {
+    resultado.avaria = true;
+    // A descricao do dano e o que vai para a Obs ("Leitora quebrada...").
+    const descricao = respostaDe(formulario, "danoDescricao");
+    if (descricao) resultado.obs.push(descricao);
+  }
+
+  // --- Extravio na remocao: so na Obs, nao marca avaria --------------------
+  if (ehSim(respostaDe(formulario, "extravio"))) {
+    // "Qual equipamento foi extraviado?" vem da lista de equipamentos; se o
+    // tecnico marcou "OUTROS", o nome esta na pergunta seguinte, escrito.
+    const itens = [
+      ...rotularEquipamentos(respostaDe(formulario, "extravioQual")).filter(
+        (item) => item !== "outros",
+      ),
+      respostaDe(formulario, "extravioOutros"),
+    ].filter(Boolean);
+    // Disse que houve extravio mas nao disse o que: registra assim mesmo.
+    resultado.obs.push(
+      itens.length
+        ? itens.map(descreverExtravio).join(", ")
+        : "Equipamento extraviado",
+    );
+  }
+
+  // --- Extravio na "MANUTENCAO INOPRIME V2": lista direta ------------------
+  // Esse formulario nao pergunta "houve extravio?"; lista os itens. Respostas
+  // do tipo "NAO" / "NENHUM" sao descartadas.
+  const extraviados = separarOpcoes(
+    respostaDe(formulario, "extravioLista"),
+  ).filter((item) => !/^(nao|nenhum)/.test(normalizar(item)));
+  if (extraviados.length) {
+    resultado.obs.push(extraviados.map(descreverExtravio).join(", "));
+  }
+
+  // --- Violacao na manutencao: coluna Violacao ------------------------------
+  // Violacao respondida como violacao conta como violacao, nao como avaria.
+  if (ehSim(respostaDe(formulario, "violacao"))) {
+    resultado.violacao = true;
+    // "sem Buzzer", "Antena GPS violada"...
+    const descricao = respostaDe(formulario, "violacaoDescricao");
+    if (descricao) resultado.obs.push(descricao);
+  }
+
+  // --- Enviado so com fotos, sem as informacoes ----------------------------
+  if (formularioIncompleto(formulario))
+    resultado.obs.push("Formulário incompleto");
+
+  return resultado;
+}
+
+/**
+ * Junta os formularios da O.S. numa linha da folha.
+ *
+ * Uma O.S. pode ter mais de um formulario: o remanejamento tem o de remocao
+ * e o de instalacao, e as vezes o tecnico abre um impedimento por engano
+ * junto com o formulario certo. Avaria e violacao valem se QUALQUER
+ * formulario marcar; a Obs junta os trechos de todos, separados por " | ".
+ */
+function analisarOs(formularios) {
+  // Remocao antes da instalacao, como a folha escreve o remanejamento:
+  // "Remoção de telemetria e cam | Instalação de telemetria e cam".
+  const ordenados = [...formularios].sort(
+    (a, b) =>
+      Number(normalizar(b.name).includes("remocao")) -
+      Number(normalizar(a.name).includes("remocao")),
+  );
+
+  let avaria = false;
+  let violacao = false;
+  const obs = [];
+  for (const formulario of ordenados) {
+    // Formulario aberto por engano e largado sem resposta nao conta.
+    // status "done" = finalizado; "in-progress" = aberto e nao enviado.
+    if (formulario.status !== "done") {
+      obs.push(`Formulário "${formulario.name}" aberto e não finalizado`);
+      continue;
+    }
+    const resultado = analisarFormulario(formulario);
+    avaria = avaria || resultado.avaria;
+    violacao = violacao || resultado.violacao;
+    obs.push(...resultado.obs);
+  }
+
+  // O.S. concluida sem nenhum formulario: avisa em vez de deixar a Obs vazia.
+  if (!formularios.length) obs.push("Sem formulário respondido no Field");
+
+  return { avaria, violacao, obs: obs.join(" | ") };
+}
+
+/**
+ * Data de conclusao no fuso de Brasilia, como serial do Excel.
+ *
+ * O Field manda a data em UTC isso converte para o
+ * fuso de Brasilia*/
+function dataExcel(iso) {
+  if (!iso) return "";
+  const [dia, mes, ano] = new Date(iso)
+    .toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" })
+    .split("/");
+  return (Date.UTC(+ano, +mes - 1, +dia) - Date.UTC(1899, 11, 30)) / 86400000;
+}
+
+// ---------------------------------------------------------------------------
+// Planilha de entrada
+// ---------------------------------------------------------------------------
+
+/**
  * Classifica a O.S. a partir do Tipo e do Status da planilha.
- * Retorna a chave do MAPA_PERGUNTAS, "impedido" ou null (fora do escopo).
+ * Retorna "remocao", "instalacao", "remanejamento", "manutencao", "impedido"
+ * ou null (fora do escopo).
  */
 function classificarOs({ tipo, status }) {
   if (normalizar(status).includes("impedido")) return "impedido";
@@ -217,8 +473,13 @@ function lerOrdensServico(caminhoPlanilha) {
     .filter((os) => os.identificador);
 }
 
-/** Sem argumento, pega a planilha mais recente desta pasta. */
+/**
+ * Sem argumento, pega a planilha mais recente desta pasta.
+ * Ignora as saidas do proprio fechamento — inclusive as copias com data e
+ * hora gravadas quando a principal estava aberta no Excel.
+ */
 function descobrirPlanilhaEntrada() {
+  const prefixoSaida = path.basename(SAIDA_PADRAO, ".xlsx");
   return (
     fs
       .readdirSync(BASE_DIR)
@@ -226,10 +487,11 @@ function descobrirPlanilhaEntrada() {
         (nome) =>
           /\.(xlsx|xlsm|csv)$/i.test(nome) &&
           !nome.startsWith("~$") &&
-          path.join(BASE_DIR, nome) !== SAIDA_PADRAO,
+          !nome.startsWith(prefixoSaida),
       )
       .map((nome) => path.join(BASE_DIR, nome))
-      .sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs)[0] || null
+      .sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs)[0] ||
+    null
   );
 }
 
@@ -265,21 +527,71 @@ async function login(page) {
   // Espera a listagem aparecer de fato, em vez de um tempo fixo: o Field
   // demora a trocar o esqueleto pela barra de filtros nova.
   if (!(await esperarListagemPronta(page))) {
-    const caminho = await salvarDiagnostico(page, "listagem-nao-carregou");
-    throw new Error(
-      "A listagem de atividades nao carregou depois do login." +
-        (caminho ? ` | Diagnostico: ${caminho}.png` : ""),
-    );
+    throw new Error("A listagem de atividades nao carregou depois do login.");
   }
 }
 
 /**
- * Garante que a tela esteja na listagem antes da proxima O.S.
- *
- * Nao usar page.goBack(): quando a O.S. nao chega a abrir, o historico volta
- * para as telas do login e a aba termina em about:blank, derrubando todas as
- * O.S. seguintes em cascata.
- */
+ * Escuta as respostas GraphQL que o proprio Field recebe.*/
+function criarColetor(page) {
+  // O que o Field devolveu desde o ultimo limpar():
+  //   tasks       atividades da busca na listagem (status, data de conclusao);
+  //   orders      a O.S. aberta (id, cliente, tipo de servico);
+  //   formAnswers formularios respondidos, com todas as perguntas e respostas.
+  const dados = { tasks: [], orders: [], formAnswers: [] };
+
+  // Chamado pelo Playwright a cada resposta de rede da pagina. So interessa
+  // o GraphQL do Field; imagens, scripts e telemetria (Sentry) sao ignorados.
+  const ouvir = async (resposta) => {
+    if (!resposta.url().includes("/graphql")) return;
+    // Resposta sem corpo JSON (ou ja descartada pelo navegador): ignora.
+    const corpo = await resposta.json().catch(() => null);
+    const data = corpo && corpo.data;
+    if (!data) return;
+    // Cada consulta GraphQL devolve um campo diferente; guarda pelo nome.
+    if (Array.isArray(data.tasks?.items)) dados.tasks.push(...data.tasks.items);
+    if (data.order?.identifier) dados.orders.push(data.order);
+    // A primeira consulta de formAnswers so traz o total, sem os itens.
+    if (Array.isArray(data.formAnswers?.items))
+      dados.formAnswers.push(data.formAnswers);
+  };
+
+  page.on("response", ouvir);
+
+  return {
+    dados,
+    // Chamado antes de cada O.S., para nao misturar com a anterior.
+    limpar() {
+      dados.tasks.length = 0;
+      dados.orders.length = 0;
+      dados.formAnswers.length = 0;
+    },
+    // Chamado no fim do fechamento, antes de fechar o navegador.
+    parar() {
+      page.off("response", ouvir);
+    },
+  };
+}
+
+/** Escapa o texto para usar literalmente dentro de uma RegExp. */
+function escaparRegex(texto) {
+  return String(texto).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/**
+ * Espera uma condicao sobre os dados coletados.*/
+async function esperarDados(page, condicao, timeout) {
+  const limite = Date.now() + timeout;
+  while (Date.now() < limite) {
+    const valor = condicao();
+    if (valor) return valor;
+    await page.waitForTimeout(200);
+  }
+  return condicao();
+}
+
+/**
+ * Garante que a tela esteja na listagem antes da proxima O.S.*/
 async function voltarParaListagem(page) {
   const URL_ATIVIDADES = carregarUrlsField().listagem;
   // Fecha um painel ou modal que tenha ficado aberto.
@@ -301,36 +613,49 @@ async function voltarParaListagem(page) {
 }
 
 /**
- * Localiza a linha do identificador e abre a O.S. pelo botao de edicao.
- *
- * A O.S. abre como uma GAVETA por cima da listagem — mesma aba, mesma URL.
- * A listagem continua no DOM atras dela, entao "ainda estou na listagem" nao
- * serve como sinal de falha: o que confirma a abertura e a barra de abas da
- * gaveta (Geral, Formularios, Vinculos...).
- */
+ * Localiza a linha do identificador e abre a O.S. pelo botao de edicao.*/
 async function abrirOs(page, identificador) {
   await filtrarPorIdentificador(page, identificador);
 
-  const linha = page
+  // Qualquer linha que contenha o texto: serve para saber se o filtro
+  // respondeu.
+  const qualquerLinha = page
     .locator('tr, [role="row"], palantir-table-row')
     .filter({ hasText: identificador })
     .first();
 
-  const encontrou = await linha
+  const encontrou = await qualquerLinha
     .waitFor({ state: "visible", timeout: 20000 })
     .then(() => true)
     .catch(() => false);
 
   if (!encontrou) {
-    throw new Error(`Identificador ${identificador} nao encontrado na listagem.`);
+    throw new Error(
+      `Identificador ${identificador} nao encontrado na listagem.`,
+    );
   }
+
+  // Vale a linha com uma celula igual ao
+  //identificador; so se nenhuma bater cai na primeira que contem o texto.
+  const exato = new RegExp(`^\\s*${escaparRegex(identificador)}\\s*$`, "i");
+  const linhaExata = page
+    .locator('tr, [role="row"], palantir-table-row')
+    .filter({ has: page.locator('td, [role="cell"]', { hasText: exato }) })
+    .first();
+  const linha = (await linhaExata.count().catch(() => 0))
+    ? linhaExata
+    : qualquerLinha;
 
   // Um aviso do Field por cima engole o clique sem dar erro.
   await fecharPopups(page);
 
+  // O lapis de edicao, no fim da linha, e o que abre a gaveta. Se a marcacao
+  // mudar e ele sumir, clicar na propria linha costuma abrir tambem.
   const botaoEditar = linha.locator(SELETORES.botaoEditarLinha).last();
   const alvo = (await botaoEditar.count().catch(() => 0)) ? botaoEditar : linha;
 
+  // Duas tentativas: o primeiro clique as vezes chega antes da tabela
+  // terminar de redesenhar depois do filtro e nao abre nada.
   for (let tentativa = 1; tentativa <= 2; tentativa += 1) {
     await alvo.click({ timeout: 5000 }).catch(async () => {
       await alvo.click({ force: true }).catch(() => {});
@@ -340,20 +665,11 @@ async function abrirOs(page, identificador) {
     await page.waitForTimeout(1500);
   }
 
-  const caminho = await salvarDiagnostico(page, `nao-abriu-${identificador}`);
-  throw new Error(
-    `O clique em Editar nao abriu a O.S. ${identificador}` +
-      (caminho ? ` | Diagnostico: ${caminho}.png` : ""),
-  );
+  throw new Error(`O clique em Editar nao abriu a O.S. ${identificador}`);
 }
 
 /**
- * A aba "Formularios" da gaveta.
- *
- * O clicavel e o <button class="palantir-tabs__button">; o texto fica numa
- * <div> dentro dele, junto do contador. Mirar no texto pegava a div e o
- * clique nao trocava de aba — a leitura acabava acontecendo na aba "Geral".
- */
+ * A aba "Formularios" da gaveta.*/
 function localizarAbaFormularios(page) {
   return page
     .locator("button.palantir-tabs__button")
@@ -370,499 +686,180 @@ async function esperarGaveta(page, timeout = 15000) {
 }
 
 /**
- * Troca para a aba "Formularios" e espera o painel de respostas.
- *
- * A confirmacao e a classe "--active" no botao mais o titulo "Respostas (N)".
- * Sem checar, um clique que nao pega passa despercebido e a extracao le a
- * tela errada, devolvendo quase nada.
+ * Com a gaveta aberta, le a O.S. e os formularios que o Field carregou.
+ * O clique na aba "Formularios" e o que dispara a consulta das respostas.
  */
-async function abrirAbaFormularios(page, identificador) {
-  const aba = localizarAbaFormularios(page);
+async function lerDadosOs(page, coletor, identificador) {
+  const ident = normalizar(identificador);
 
-  const existe = await aba
-    .waitFor({ state: "visible", timeout: 15000 })
-    .then(() => true)
-    .catch(() => false);
+  // 1. A O.S. aberta. Chega sozinha quando a gaveta abre. Confere pelo
+  //    identificador exato, para garantir que a gaveta e a da O.S. certa.
+  const order = await esperarDados(
+    page,
+    () => coletor.dados.orders.find((o) => normalizar(o.identifier) === ident),
+    15000,
+  );
+  if (!order) {
+    throw new Error(`O Field nao devolveu os dados da O.S. ${identificador}.`);
+  }
 
-  if (!existe) {
-    const caminho = await salvarDiagnostico(page, `sem-aba-form-${identificador}`);
-    throw new Error(
-      `Aba "Formularios" nao encontrada na O.S. ${identificador}` +
-        (caminho ? ` | Diagnostico: ${caminho}.png` : ""),
+  // 2. Os formularios. So aceita respostas desta O.S.: uma consulta atrasada
+  //    da anterior nao pode entrar no lugar. Lista vazia (O.S. sem formulario)
+  //    tambem e aceita — e um resultado valido, nao uma falha.
+  const formAnswersDaOs = () =>
+    coletor.dados.formAnswers.find((fa) =>
+      fa.items.every((item) => !item.order || item.order.id === order.id),
     );
-  }
 
-  for (let tentativa = 1; tentativa <= 3; tentativa += 1) {
-    const classe = (await aba.getAttribute("class").catch(() => "")) || "";
-    if (classe.includes("palantir-tabs__button--active")) break;
+  const aba = localizarAbaFormularios(page);
+  // As vezes o proprio Field falha e mostra "Erro ao carregar os formularios
+  // da OS" com um botao "Tentar novamente" (aconteceu no SHX9B84). Clicar de
+  // novo na aba nao refaz a consulta; o botao, sim.
+  const tentarNovamente = page
+    .locator("button, palantir-button")
+    .filter({ hasText: /Tentar novamente/i })
+    .first();
 
-    await aba.click({ timeout: 5000 }).catch(async () => {
-      await aba.click({ force: true }).catch(() => {});
-    });
-
-    // Espera a aba ficar ativa, em vez de um tempo fixo.
-    const ate = Date.now() + 5000;
-    while (Date.now() < ate) {
-      await page.waitForTimeout(200);
-      const atual = (await aba.getAttribute("class").catch(() => "")) || "";
-      if (atual.includes("palantir-tabs__button--active")) break;
-    }
-  }
-
-  // Espera o que vier primeiro: o cabecalho "Respostas (N)" ou o aviso de
-  // formulario vazio. Esperar so pelo primeiro fazia toda O.S. sem
-  // formulario gastar os 20s do limite antes de checar a outra hipotese.
-  const temRespostas = page.getByText(/Respostas\s*\(\s*\d+\s*\)/i).first();
-  const estaVazia = page.getByText(/Nenhum formul[aá]rio respondido/i).first();
-
-  const pronto = await Promise.race([
-    temRespostas
-      .waitFor({ state: "visible", timeout: 20000 })
-      .then(() => true)
-      .catch(() => false),
-    estaVazia
-      .waitFor({ state: "visible", timeout: 20000 })
-      .then(() => false)
-      .catch(() => false),
-  ]);
-
-  if (!pronto) {
-    // O.S. sem formulario respondido e dado legitimo, nao falha: a aba
-    // mostra "Nenhum formulario respondido" e o contador fica em 0.
-    const vazia = await page
-      .getByText(/Nenhum formul[aá]rio respondido/i)
+  // Ate 3 tentativas: clica na aba (ou no "Tentar novamente", se o Field
+  // mostrou o erro) e espera ate 10s pela resposta.
+  let formAnswers = null;
+  for (let tentativa = 1; tentativa <= 3 && !formAnswers; tentativa += 1) {
+    const falhouNoField = await page
+      .getByText(/Erro ao carregar os formul[aá]rios/i)
       .first()
       .isVisible()
       .catch(() => false);
+    const alvo = falhouNoField ? tentarNovamente : aba;
 
-    // null distingue "sem formulario respondido" de "zero respostas lidas".
-    if (vazia) return null;
+    await alvo.click({ timeout: 5000 }).catch(async () => {
+      await alvo.click({ force: true }).catch(() => {});
+    });
+    formAnswers = await esperarDados(page, formAnswersDaOs, 10000);
+  }
 
-    const caminho = await salvarDiagnostico(page, `sem-respostas-${identificador}`);
+  if (!formAnswers) {
     throw new Error(
-      `A aba "Formularios" nao carregou as respostas da O.S. ${identificador}` +
-        (caminho ? ` | Diagnostico: ${caminho}.png` : ""),
+      `O Field nao devolveu os formularios da O.S. ${identificador}`,
     );
   }
-
-  // Quantas respostas o proprio Field diz que existem — serve para conferir
-  // se a leitura pegou todas.
-  const declaradas = await page
-    .getByText(/Respostas\s*\(\s*\d+\s*\)/i)
-    .first()
-    .innerText()
-    .then((t) => Number((t.match(/\d+/) || [0])[0]))
-    .catch(() => 0);
-
-  return declaradas;
-}
-
-/**
- * Separa o numero impresso ao lado da pergunta.
- * "10. NECESSARIO TROCA DO EQUIPAMENTO *" -> { numero: 10, pergunta: "..." }
- */
-function separarNumeroPergunta(texto) {
-  const limpo = String(texto || "")
-    .replace(/\s+/g, " ")
-    .replace(/\s*\*\s*$/, "")
-    .trim();
-  const casamento = limpo.match(/^(\d{1,3})\s*[).:\-–]?\s+(.+)$/);
-  if (!casamento) return { numero: null, pergunta: limpo };
-  return { numero: Number(casamento[1]), pergunta: casamento[2].trim() };
-}
-
-/**
- * Conta as perguntas numeradas visiveis na tela.
- *
- * Serve para saber se os cartoes ja renderizaram: o cabecalho "Respostas (N)"
- * aparece antes deles, e extrair nesse intervalo devolvia zero — foi o que
- * fez a planilha sair vazia mesmo com a aba certa aberta.
- */
-async function contarPerguntasNaTela(page) {
-  return page
-    .evaluate(() => {
-      const ENUNCIADO = /^\s*\d{1,3}\s*[).:\-–]?\s+\S/;
-      const RUIDO =
-        /p[áa]gina|itens?\.|pr[óo]xim|anterior|\bde\s+\d+\b|resultados?|linhas? por/i;
-      // Contador de caracteres dos campos de texto ("56 / 5000") tambem
-      // comeca com numero e entrava como se fosse a pergunta 56.
-      const CONTADOR = /^\s*\d{1,4}\s*\/\s*\d{1,6}\s*$/;
-
-      const SELETOR_TEXTO =
-        "palantir-text, p, h1, h2, h3, h4, h5, span, div, legend, label";
-
-      const pareceEnunciado = (elemento) => {
-        const t = (elemento.textContent || "").replace(/\s+/g, " ").trim();
-        if (!ENUNCIADO.test(t) || t.length > 200) return false;
-        if (RUIDO.test(t) || CONTADOR.test(t)) return false;
-        return !elemento.querySelector("input, textarea, select, img");
-      };
-
-      // Mesmo criterio da extracao: so o rotulo mais interno conta. Antes
-      // qualquer texto numerado servia, e a contagem ficava estavel em um
-      // numero qualquer antes das perguntas renderizarem — a leitura comecava
-      // numa tela ainda vazia e devolvia zero respostas.
-      // Mesma checagem de visibilidade da extracao. Sem ela a contagem
-      // enxergava texto numerado oculto, dava a tela por pronta e a leitura
-      // comecava antes dos cartoes aparecerem.
-      const visivel = (elemento) =>
-        Boolean(
-          elemento.getClientRects().length &&
-            getComputedStyle(elemento).visibility !== "hidden",
-        );
-
-      let total = 0;
-      for (const no of document.querySelectorAll(SELETOR_TEXTO)) {
-        if (!pareceEnunciado(no)) continue;
-        if (!visivel(no)) continue;
-        let interno = true;
-        for (const filho of no.querySelectorAll(SELETOR_TEXTO)) {
-          if (pareceEnunciado(filho)) {
-            interno = false;
-            break;
-          }
-        }
-        if (interno) total += 1;
-      }
-      return total;
-    })
-    .catch(() => 0);
-}
-
-/** Espera os cartoes de pergunta aparecerem e pararem de crescer. */
-async function esperarRespostasRenderizadas(page, timeout = 40000, declaradas = 0) {
-  const limite = Date.now() + timeout;
-  let anterior = -1;
-  let estaveis = 0;
-
-  while (Date.now() < limite) {
-    const atual = await contarPerguntasNaTela(page);
-
-    // Com o total declarado pelo Field ja na tela, nao ha o que esperar.
-    if (declaradas && atual >= declaradas) return atual;
-
-    if (atual > 0 && atual === anterior) {
-      estaveis += 1;
-      // Duas leituras iguais seguidas: parou de renderizar.
-      if (estaveis >= 2) return atual;
-    } else {
-      estaveis = 0;
-    }
-
-    anterior = atual;
-    await page.waitForTimeout(400);
-  }
-
-  return anterior > 0 ? anterior : 0;
-}
-
-/**
- * Carrega todas as respostas do formulario.
- *
- * O Field mostra so as primeiras e deixa um "Carregar mais" no fim. Sem
- * clicar ate o fim, perguntas de numero alto (34, 42, 45) nunca chegam ao
- * DOM — e sairiam da planilha como se nao existissem.
- */
-async function carregarTodasAsRespostas(page, limite = 30) {
-  for (let volta = 0; volta < limite; volta += 1) {
-    const botao = page
-      .locator("button, palantir-button")
-      .filter({ hasText: /^\s*Carregar mais\s*$/i })
-      .first();
-
-    if (!(await botao.isVisible().catch(() => false))) return volta;
-
-    const antes = await contarPerguntasNaTela(page);
-
-    await botao.click({ timeout: 5000 }).catch(async () => {
-      await botao.click({ force: true }).catch(() => {});
-    });
-
-    // Espera a lista crescer de verdade. Com tempo fixo por clique, uma O.S.
-    // com muitas respostas gastava quase 20s so aqui.
-    const limiteEspera = Date.now() + 8000;
-    while (Date.now() < limiteEspera) {
-      await page.waitForTimeout(250);
-      if ((await contarPerguntasNaTela(page)) > antes) break;
-      if (!(await botao.isVisible().catch(() => false))) break;
-    }
-  }
-  return limite;
-}
-
-/**
- * Abre a aba "Formularios" da gaveta e extrai as respostas.
- *
- * Retorna [{ numero, pergunta, resposta, marcado, comentario, fotos }]. O
- * numero e o impresso ao lado da pergunta, que e o que o mapeamento por tipo
- * de O.S. usa.
- */
-async function extrairFormularios(page, identificador) {
-  const declaradas = await cronometrar("aba Formularios", () =>
-    abrirAbaFormularios(page, identificador),
-  );
-
-  // Os cartoes chegam depois do cabecalho; sem esperar, a leitura acontece
-  // numa tela ainda vazia.
-  // Sem formulario respondido nao ha o que esperar: antes a O.S. gastava os
-  // 40s inteiros do limite aguardando cartoes que nunca viriam.
-  if (declaradas === null) {
-    const vazio = [];
-    vazio.nomeFormulario = "";
-    return vazio;
-  }
-
-  await cronometrar("renderizar", () =>
-    esperarRespostasRenderizadas(page, 40000, declaradas),
-  );
-  const cliques = await cronometrar("carregar mais", () =>
-    carregarTodasAsRespostas(page),
-  );
-
-  // Sem clique nenhum a tela nao mudou: repetir a espera so custa tempo.
-  if (cliques > 0) {
-    await cronometrar("renderizar 2", () =>
-      esperarRespostasRenderizadas(page, 40000, declaradas),
-    );
-  }
-
-  // O HTML da gaveta tem ~880 KB. Guardar um por O.S. enchia o disco com
-  // centenas de megabytes numa execucao completa. Agora so quando pedido
-  // (DEBUG=1) ou quando a leitura falha, que e quando ele serve.
-  const salvarHtml = () =>
-    cronometrar("salvar HTML", async () => {
-      fs.mkdirSync(DEBUG_DIR, { recursive: true });
-      fs.writeFileSync(
-        path.join(DEBUG_DIR, `${identificador.replace(/[\/:*?"<>|]/g, "_")}.html`),
-        await page.content(),
-        "utf8",
-      );
-    });
-
-  if (process.env.DEBUG === "1") await salvarHtml();
-
-  // Nome do formulario respondido: o numero da pergunta so faz sentido
-  // dentro de um formulario, e uma O.S. pode responder outro que nao o do
-  // seu tipo.
-  const nomeFormulario = await page
-    .evaluate(() => {
-      // O cartao do formulario e o unico que traz "Respondido por".
-      // Sem essa ancora, o seletor pegava o cartao da atividade, a direita,
-      // e o "nome do formulario" saia como o nome do tecnico.
-      for (const cartao of document.querySelectorAll("palantir-card-content")) {
-        if (!/Respondido por/i.test(cartao.textContent || "")) continue;
-        const titulo = cartao.querySelector('palantir-text[type="title"]');
-        if (titulo) return (titulo.textContent || "").replace(/\s+/g, " ").trim();
-      }
-      return "";
-    })
-    .catch(() => "");
-
-  const itens = await cronometrar("extrair", () => page.evaluate(() => {
-    const limpar = (valor) =>
-      (valor || "")
-        .replace(/\s+/g, " ")
-        // "SIM (0 pts.)" -> "SIM"
-        .replace(/\(\s*-?\d+(?:[.,]\d+)?\s*pts?\.?\s*\)/gi, "")
-        .trim();
-
-    // O enunciado vem numerado: "10. NECESSARIO TROCA DO EQUIPAMENTO *".
-    const ENUNCIADO = /^\s*\d{1,3}\s*[).:\-–]?\s+\S/;
-
-    // Textos que comecam com numero mas nao sao pergunta.
-    const RUIDO =
-      /p[áa]gina|itens?\.|pr[óo]xim|anterior|\bde\s+\d+\b|resultados?|linhas? por/i;
-    // Contador de caracteres dos campos de texto ("56 / 5000") tambem
-    // comeca com numero e entrava como se fosse a pergunta 56.
-    const CONTADOR = /^\s*\d{1,4}\s*\/\s*\d{1,6}\s*$/;
-
-    const CAMPOS =
-      'input, textarea, select, palantir-checkbox, palantir-radio, [role="radio"], [role="checkbox"], img';
-
-    const SELETOR_TEXTO =
-      "palantir-text, p, h1, h2, h3, h4, h5, span, div, legend, label";
-
-    /** O texto deste elemento parece um enunciado numerado? */
-    function pareceEnunciado(elemento) {
-      const t = (elemento.textContent || "").replace(/\s+/g, " ").trim();
-      if (!ENUNCIADO.test(t) || t.length > 200) return false;
-      if (RUIDO.test(t) || CONTADOR.test(t)) return false;
-      return !elemento.querySelector("input, textarea, select, img");
-    }
-
-    /**
-     * O enunciado de verdade e o elemento mais interno.
-     *
-     * O Field aninha o rotulo ("<palantir-text><span>31. ...</span>") e o
-     * cartao inteiro tambem comeca com o numero. Contar os dois fazia o
-     * cartao parecer ter duas perguntas, e a busca pelo bloco parava antes
-     * de alcancar as opcoes: as respostas saiam vazias.
-     */
-    function ehEnunciado(elemento) {
-      if (!pareceEnunciado(elemento)) return false;
-      for (const filho of elemento.querySelectorAll(SELETOR_TEXTO)) {
-        if (pareceEnunciado(filho)) return false;
-      }
-      return true;
-    }
-
-    /** Quantas perguntas distintas existem dentro deste elemento. */
-    function quantosEnunciados(elemento) {
-      let total = 0;
-      for (const filho of elemento.querySelectorAll(SELETOR_TEXTO)) {
-        if (ehEnunciado(filho)) total += 1;
-      }
-      return total;
-    }
-
-    /**
-     * Acha o cartao da pergunta: sobe do enunciado ate achar os campos de
-     * resposta, mas para antes de englobar a pergunta seguinte.
-     *
-     * Sem esse limite, um nivel a mais varria o formulario inteiro e a
-     * resposta saia com as opcoes de todas as outras perguntas emendadas.
-     */
-    function blocoDaPergunta(enunciado) {
-      // Comeca no proprio enunciado: se ja o primeiro pai envolver outra
-      // pergunta, e melhor ficar com o enunciado sozinho do que devolver um
-      // bloco que varre meio formulario.
-      let melhor = enunciado;
-      let atual = enunciado.parentElement;
-
-      for (let nivel = 0; nivel < 6 && atual; nivel += 1) {
-        // Passou a conter outra pergunta: subiu demais.
-        if (quantosEnunciados(atual) > 1) break;
-
-        melhor = atual;
-        if (atual.querySelector(CAMPOS)) return atual;
-        atual = atual.parentElement;
-      }
-
-      return melhor;
-    }
-
-    // A aba que sai de cena continua no DOM, apenas escondida. Sem este
-    // filtro, texto da aba "Geral" entrava como se fosse pergunta — inclusive
-    // com numero, atropelando o mapeamento.
-    const visivel = (elemento) =>
-      Boolean(
-        elemento.getClientRects().length &&
-          getComputedStyle(elemento).visibility !== "hidden",
-      );
-
-    const vistos = new Set();
-    const resultado = [];
-
-    const candidatos = Array.from(
-      document.querySelectorAll("palantir-text, p, h1, h2, h3, h4, h5, span, div, legend, label"),
-    );
-
-    for (const no of candidatos) {
-      const texto = (no.textContent || "").replace(/\s+/g, " ").trim();
-      // So o rotulo mais interno: o cartao inteiro tambem comeca com o
-      // numero e traria a pergunta repetida e as opcoes coladas.
-      if (!ehEnunciado(no)) continue;
-      if (!visivel(no)) continue;
-
-      const bloco = blocoDaPergunta(no);
-      if (vistos.has(bloco)) continue;
-      vistos.add(bloco);
-
-      // 1. Opcoes marcadas (radio SIM/NAO, checkbox de multipla escolha).
-      const marcadas = [];
-      for (const campo of bloco.querySelectorAll(
-        'input[type="radio"], input[type="checkbox"]',
-      )) {
-        if (!campo.checked) continue;
-        const rotulo =
-          campo.closest("label") ||
-          (campo.id && bloco.querySelector(`label[for="${campo.id}"]`)) ||
-          campo.parentElement;
-        marcadas.push(limpar(rotulo ? rotulo.textContent : campo.value));
-      }
-      for (const campo of bloco.querySelectorAll(
-        '[aria-selected="true"], [aria-checked="true"]',
-      )) {
-        const botao = campo.closest("button") || campo.parentElement;
-        const rotulo = botao && botao.querySelector("span");
-        marcadas.push(
-          limpar(rotulo ? rotulo.textContent : botao && botao.textContent),
-        );
-      }
-
-      // 2. Texto escrito (observacao, comentario, valor digitado).
-      const escritos = [];
-      for (const campo of bloco.querySelectorAll("textarea, input")) {
-        if (campo.type === "radio" || campo.type === "checkbox") continue;
-        if (campo.value && campo.value.trim()) escritos.push(limpar(campo.value));
-      }
-
-      // 3. Fotos: a resposta e a propria imagem; registra quantas.
-      const fotos = bloco.querySelectorAll('img:not([src^="data:image/svg"])')
-        .length;
-
-      // Todas as opcoes oferecidas, para conferir o que ficou sem marcar.
-      const opcoes = Array.from(
-        bloco.querySelectorAll("label, span.tw-break-all"),
-      )
-        .map((e) => limpar(e.textContent))
-        .filter((t) => t && t.length < 80);
-
-      const unicas = (lista) => lista.filter((v, i) => v && lista.indexOf(v) === i);
-
-      resultado.push({
-        enunciado: texto,
-        marcadas: unicas(marcadas),
-        comentario: unicas(escritos).join(" | "),
-        fotos,
-        opcoes: unicas(opcoes).join(" | "),
-      });
-    }
-
-    return resultado;
-  }));
-
-  if (!itens.length) await salvarHtml();
-
-  if (declaradas && itens.length < declaradas) {
+  // Nunca aconteceu (as O.S. tem 1 ou 2 formularios), mas se o Field um dia
+  // paginar, o aviso aparece no terminal em vez de faltar formulario calado.
+  if (formAnswers.pageInfo?.hasNextPage) {
     console.warn(
-      `${identificador}: o Field declara ${declaradas} respostas e foram ` +
-        `lidas ${itens.length} — conferir o HTML em debug-formularios/`,
+      `${identificador}: o Field paginou os formularios; so a 1a pagina foi lida.`,
     );
   }
 
-  const respostas = itens.map((item, indice) => {
-    const { numero, pergunta } = separarNumeroPergunta(item.enunciado);
-    const marcado = item.marcadas.join(" | ");
+  // 3. A atividade (status e data de conclusao). Veio na busca da listagem.
+  //    A busca pode listar mais de uma atividade (O.S. antigas com o mesmo
+  //    identificador): vale a desta O.S.
+  const task =
+    coletor.dados.tasks.find((t) => t.order?.id === order.id) ||
+    coletor.dados.tasks.find(
+      (t) => normalizar(t.order?.identifier) === ident,
+    ) ||
+    null;
 
-    // A resposta util e o que foi marcado; sem marcacao, o que foi escrito;
-    // sem nenhum dos dois, a contagem de fotos.
-    const resposta =
-      marcado || item.comentario || (item.fotos ? `${item.fotos} foto(s)` : "");
-
-    return {
-      numero,
-      pergunta,
-      resposta,
-      marcado,
-      comentario: item.comentario,
-      fotos: item.fotos,
-      opcoes: item.opcoes,
-      ordem: indice + 1,
-    };
-  });
-
-  respostas.nomeFormulario = nomeFormulario;
-  return respostas;
+  return { order, task, formularios: formAnswers.items };
 }
 
 // ---------------------------------------------------------------------------
 // Orquestracao
 // ---------------------------------------------------------------------------
 
+// Colunas da folha, na ordem da planilha usada com as empresas.
+const COLUNAS_PAGAMENTO = [
+  "Cliente",
+  "Identificador",
+  "Tipo",
+  "Status",
+  "Data Execução",
+  "Avaria",
+  "Violação",
+  "Obs",
+  "Link",
+];
+
+const COLUNAS_FORMULARIOS = [
+  "Identificador",
+  "Tipo",
+  "Formulario",
+  "Status do formulario",
+  "Numero",
+  "Pergunta",
+  "Resposta",
+];
+
+/**
+ * Linha da folha a partir dos dados lidos do Field.
+ *
+ * `os` e a linha da planilha de entrada; order/task/formularios vieram do
+ * Field (lerDadosOs). Onde os dois tem a informacao, a origem escolhida esta
+ * comentada em cada coluna.
+ */
+function montarLinhaPagamento(os, { order, task, formularios }) {
+  // Avaria, Violacao e Obs saem da regra dos formularios.
+  const { avaria, violacao, obs } = analisarOs(formularios);
+  // Data de execucao = conclusao da atividade. Sem atividade, usa o
+  // formulario finalizado por ultimo.
+  const concluidoEm =
+    task?.completedAt ||
+    formularios
+      .map((f) => f.completedAt)
+      .filter(Boolean)
+      .sort()
+      .pop() ||
+    "";
+
+  return {
+    // O cliente da planilha exportada e o que a folha usa (ex.: "InoPrime"
+    // em instalacoes faturadas para a InoPrime); o cadastro do Field e reserva.
+    Cliente: os.cliente || order.customer?.name || "",
+    Identificador: os.identificador,
+    // Tipo de servico cadastrado no Field ("Remoção", "Remanejamento de Veiculo").
+    Tipo: order.service?.description || os.tipo,
+    // Status atual no Field, traduzido (done -> Concluída, reported -> Impedido).
+    // Status desconhecido vai como o Field mandou, para nao sumir.
+    Status: STATUS_FIELD[task?.status] || task?.status || os.status,
+    "Data Execução": dataExcel(concluidoEm),
+    Avaria: avaria ? "SIM" : "NÃO",
+    Violação: violacao ? "SIM" : "NÃO",
+    Obs: obs,
+    // O link do relatorio e sempre .../relatorio/<id da O.S.> (conferido nas
+    // O.S. de exemplo): monta direto, sem clicar em "Compartilhar".
+    Link: `${URL_RELATORIO}${order.id}`,
+  };
+}
+
+/**
+ * Linha da folha so com o que veio da planilha de entrada.
+ * Usada quando a O.S. nao pode ser lida do Field (erro) e na aba "Fora do
+ * escopo"; quem chama completa a Obs com o motivo.
+ */
+function montarLinhaBase(os) {
+  return {
+    Cliente: os.cliente,
+    Identificador: os.identificador,
+    Tipo: os.tipo,
+    Status: os.status,
+    "Data Execução": "",
+    Avaria: "",
+    Violação: "",
+    Obs: "",
+    Link: "",
+  };
+}
+
 /**
  * Executa o fechamento.
- * onEvento recebe o progresso ({ tipo, ... }) para o front acompanhar.
+ *
+ * ordens     linhas da planilha de entrada (lerOrdensServico).
+ * saidaPath  onde gravar a planilha; se estiver aberta no Excel, grava uma
+ *            copia com data e hora e devolve esse caminho em outputPath.
+ * onEvento   recebe o progresso ({ tipo, ... }) para a tela acompanhar:
+ *            inicio, login, logado, os-inicio, os-ok, os-erro, parado,
+ *            aviso e fim.
+ * deveParar  consultada entre uma O.S. e a proxima (botao Parar).
  */
 async function runPagamento(
   ordens,
@@ -888,24 +885,19 @@ async function runPagamento(
   }
 
   const resultados = [];
-  // Conteudo bruto dos formularios, para o usuario avaliar o que entra na folha.
+  // Tipos que nao entram na folha ficam numa aba separada, para conferencia.
+  const foraDoEscopo = [];
+  // Todas as respostas, para conferir o que gerou cada linha da folha.
   const respostasCompletas = [];
-  // Texto de cada pergunta, para o cabecalho da planilha sair legivel em vez
-  // de "F13". A primeira O.S. que trouxer a pergunta define o titulo.
-  const tituloDaPergunta = new Map();
 
-  // O.S. impedidas e tipos fora do escopo nao precisam abrir o navegador.
+  // Impedidas tambem sao abertas: o motivo esta no formulario de impedimento.
   const paraVisitar = [];
   for (const os of ordens) {
     const categoria = classificarOs(os);
-    if (categoria === "impedido") {
-      resultados.push({ ...montarLinhaBase(os, "impedido"), Observacao: "O.S. impedida" });
-      continue;
-    }
     if (!categoria) {
-      resultados.push({
-        ...montarLinhaBase(os, "fora do escopo"),
-        Observacao: "Tipo sem formularios de pagamento",
+      foraDoEscopo.push({
+        ...montarLinhaBase(os),
+        Obs: "Tipo sem formularios de pagamento",
       });
       continue;
     }
@@ -916,12 +908,15 @@ async function runPagamento(
     tipo: "inicio",
     total: ordens.length,
     aVisitar: paraVisitar.length,
-    ignoradas: resultados.length,
+    ignoradas: foraDoEscopo.length,
   });
 
   if (paraVisitar.length) {
     const browser = await chromium.launch({ headless: HEADLESS });
     const page = await browser.newPage();
+    // Liga o coletor antes do login: ele fica escutando a pagina a execucao
+    // toda e e limpo a cada O.S.
+    const coletor = criarColetor(page);
 
     try {
       emitir({ tipo: "login" });
@@ -951,97 +946,59 @@ async function runPagamento(
           total: paraVisitar.length,
         });
         try {
-          const pagina = await cronometrar("abrir O.S.", () =>
-            abrirOs(page, os.identificador),
-          );
-          const formularios = await extrairFormularios(pagina, os.identificador);
+          // Limpa antes do filtro: a busca ja traz a atividade (tasks).
+          coletor.limpar();
+          await abrirOs(page, os.identificador);
+          const dados = await lerDadosOs(page, coletor, os.identificador);
 
-          const nomeFormulario = formularios.nomeFormulario || "";
-          // O numero vale dentro do formulario; o tipo da O.S. e so o
-          // palpite quando o formulario nao esta mapeado.
-          const numerosDesejados = perguntasDesejadas(nomeFormulario, os.categoria);
-
-          const linha = montarLinhaBase(os, os.categoria);
-          linha.Formulario = nomeFormulario;
-          // Sem mapeamento proprio, os numeros vem do tipo da O.S. e quase
-          // sempre nao existem nesse formulario: as colunas saem vazias sem
-          // explicacao. Melhor dizer na planilha.
-          linha.Observacao = !formularios.length
-            ? "Sem formulario respondido no Field"
-            : formularioMapeado(nomeFormulario)
-              ? ""
-              : `Formulario sem mapeamento proprio: ${nomeFormulario}`;
-
-          for (const numero of numerosDesejados) {
-            const item = formularios.find((form) => form.numero === numero);
-            // Rotulo fixo: incluir o texto da pergunta criava uma coluna
-            // diferente por O.S. (a pergunta muda de forma entre formularios)
-            // e a planilha virava uma colcha de retalhos. O texto vai na
-            // coluna ao lado e, completo, na aba Formularios.
-            const rotulo = `F${numero}`;
-            // Uma pergunta pode ter marcacao E comentario ("NAO" mais a
-            // observacao do tecnico); os dois importam para o lancamento.
-            // Vazio nao diz nada: pode ser pergunta ausente no formulario,
-            // pergunta sem resposta, ou falha de leitura. A planilha passa a
-            // dizer qual dos casos e.
-            if (!item) {
-              linha[rotulo] = NAO_EXISTE;
-            } else {
-              const valor =
-                [item.marcado, item.comentario].filter(Boolean).join(" — ") ||
-                item.resposta;
-              linha[rotulo] = valor || SEM_RETORNO;
-            }
-
-            if (item?.pergunta && !tituloDaPergunta.has(rotulo)) {
-              tituloDaPergunta.set(rotulo, `${numero}. ${item.pergunta}`);
-            }
-
-            // "Houve violacao? SIM" sozinho nao permite lancar nada: o que
-            // importa e qual violacao foi.
-            if (DETALHE_QUANDO_AFIRMATIVO.includes(numero)) {
-              linha[`${rotulo} (detalhe)`] = detalharResposta(formularios, item);
-            }
-          }
-
-          // Guarda tudo que veio do formulario, inclusive o que nao foi mapeado.
-          for (const item of formularios) {
-            respostasCompletas.push({
-              Identificador: os.identificador,
-              Tipo: os.tipo,
-              Categoria: os.categoria,
-              Formulario: nomeFormulario,
-              Numero: item.numero ?? "",
-              Ordem: item.ordem,
-              Pergunta: item.pergunta,
-              Resposta: item.resposta,
-              Marcado: item.marcado,
-              Comentario: item.comentario,
-              Fotos: item.fotos || "",
-              "Opcoes disponiveis": item.opcoes,
-              "Entra na folha": numerosDesejados.includes(item.numero)
-                ? "Sim"
-                : "Avaliar",
-            });
-          }
-
+          // Linha da aba Pagamento.
+          const linha = montarLinhaPagamento(os, dados);
           resultados.push(linha);
+
+          // Linhas da aba Formularios: toda pergunta respondida, de todos os
+          // formularios da O.S., para conferir de onde saiu cada Obs/Avaria/
+          // Violacao.
+          // Perguntas sem resposta (condicionais que nao apareceram) ficam de
+          // fora — so ocupariam espaco.
+          let respondidas = 0;
+          for (const formulario of dados.formularios) {
+            for (const pergunta of formulario.questions) {
+              const resposta = textoDaResposta(pergunta);
+              if (!resposta) continue;
+              respondidas += 1;
+              respostasCompletas.push({
+                Identificador: os.identificador,
+                Tipo: linha.Tipo,
+                Formulario: formulario.name,
+                "Status do formulario": formulario.status,
+                // position comeca em 0; o numero mostrado no Field e +1.
+                Numero: pergunta.position + 1,
+                Pergunta: pergunta.title,
+                Resposta: resposta,
+              });
+            }
+          }
+
           console.log(
-            `${os.identificador} [${os.categoria}] ${formularios.length} respostas lidas, ` +
-              `${numerosDesejados.length} exportadas | formulario: ${nomeFormulario || "?"}`,
+            `${os.identificador} [${linha.Status}] Avaria ${linha.Avaria} ` +
+              `Violação ${linha.Violação} | ` +
+              `${dados.formularios.map((f) => f.name).join(" + ") || "sem formulario"} | ${linha.Obs}`,
           );
           emitir({
             tipo: "os-ok",
             identificador: os.identificador,
             categoria: os.categoria,
-            respostas: formularios.length,
-            exportadas: numerosDesejados.length,
+            respostas: respondidas,
+            exportadas: dados.formularios.length,
           });
         } catch (erro) {
+          // Falha numa O.S. nao derruba o fechamento: ela entra na folha com
+          // o erro na Obs (para refazer a mao) e a execucao segue para a
+          // proxima.
           console.error(`Falha em ${os.identificador}: ${erro.message}`);
           resultados.push({
-            ...montarLinhaBase(os, os.categoria),
-            Observacao: `ERRO: ${erro.message}`,
+            ...montarLinhaBase(os),
+            Obs: `ERRO: ${erro.message}`,
           });
           emitir({
             tipo: "os-erro",
@@ -1051,72 +1008,63 @@ async function runPagamento(
           });
         }
 
-        await cronometrar("voltar", () => voltarParaListagem(page));
+        await voltarParaListagem(page);
       }
     } finally {
+      coletor.parar();
       await browser.close();
     }
   }
 
-  /**
-   * Troca "F13" pelo texto da pergunta no cabecalho.
-   *
-   * A coluna so ganha nome depois da leitura, porque a pergunta vem do
-   * formulario. Numeros soltos obrigavam a consultar o mapeamento para
-   * entender a planilha.
-   */
-  const renomearColunas = (linha) =>
-    Object.fromEntries(
-      Object.entries(linha).map(([chave, valor]) => {
-        const base = chave.replace(/ \(detalhe\)$/, "");
-        const titulo = tituloDaPergunta.get(base);
-        if (!titulo) return [chave, valor];
-        return [chave.endsWith("(detalhe)") ? `${titulo} — detalhe` : titulo, valor];
-      }),
-    );
-
-  // Identificacao primeiro, depois as perguntas. Sem ordem definida, as
-  // colunas seguiam a primeira O.S. lida e mudavam a cada execucao.
-  const COLUNAS_PAGAMENTO = [
-    "Identificador",
-    "Tipo",
-    "Categoria",
-    "Cliente",
-    "Tecnico",
-    "Status",
-    "Avaria",
-    "Formulario",
-    "Observacao",
-  ];
-
-  const COLUNAS_FORMULARIOS = [
-    "Identificador",
-    "Tipo",
-    "Categoria",
-    "Formulario",
-    "Numero",
-    "Pergunta",
-    "Resposta",
-    "Marcado",
-    "Comentario",
-    "Fotos",
-    "Entra na folha",
-    "Opcoes disponiveis",
-    "Ordem",
-  ];
-
-  gravarPlanilha(saidaPath, [
+  const abas = [
     {
       nome: "Pagamento",
-      linhas: resultados.map(renomearColunas),
+      linhas: resultados,
       ordem: COLUNAS_PAGAMENTO,
+      formatos: { "Data Execução": "dd/mm/yyyy" },
     },
     {
       nome: "Formularios",
       linhas: respostasCompletas,
       ordem: COLUNAS_FORMULARIOS,
     },
-  ]);
+    ...(foraDoEscopo.length
+      ? [
+          {
+            nome: "Fora do escopo",
+            linhas: foraDoEscopo,
+            ordem: COLUNAS_PAGAMENTO,
+          },
+        ]
+      : []),
+  ];
+
+  // Planilha anterior aberta no Excel: o Windows trava o arquivo (EBUSY) e a
+  // gravacao falhava no fim, jogando fora todas as O.S. lidas. Nesse caso
+  // grava uma copia com data e hora no nome e avisa onde ficou.
+  try {
+    gravarPlanilha(saidaPath, abas);
+  } catch (erro) {
+    if (!["EBUSY", "EPERM", "EACCES"].includes(erro.code)) throw erro;
+    const carimbo = new Date()
+      .toLocaleString("sv-SE", { timeZone: "America/Sao_Paulo" })
+      .replace(/[-: ]/g, "")
+      .slice(0, 12);
+    const alternativa = saidaPath.replace(/\.xlsx$/i, `_${carimbo}.xlsx`);
+    gravarPlanilha(alternativa, abas);
+    console.warn(
+      `${path.basename(saidaPath)} esta aberta em outro programa; ` +
+        `a planilha foi gravada em ${alternativa}`,
+    );
+    emitir({
+      tipo: "aviso",
+      mensagem:
+        `A planilha anterior está aberta no Excel. O resultado foi salvo em ` +
+        `${path.basename(alternativa)}, na pasta folha-de-pagamento.`,
+    });
+    saidaPath = alternativa;
+  }
+
   console.log(
     `Planilha gerada: ${saidaPath} ` +
       `(${resultados.length} O.S., ${respostasCompletas.length} respostas)`,
@@ -1129,22 +1077,18 @@ async function runPagamento(
     interrompida,
   });
 
-  return { outputPath: saidaPath, resultados, respostasCompletas, interrompida };
-}
-
-/** Colunas fixas presentes em toda linha da planilha de saida. */
-function montarLinhaBase(os, categoria) {
   return {
-    Identificador: os.identificador,
-    Tipo: os.tipo,
-    Categoria: categoria,
-    Cliente: os.cliente,
-    Status: os.status,
-    Tecnico: os.tecnico,
-    Avaria: os.avaria,
+    outputPath: saidaPath,
+    resultados,
+    respostasCompletas,
+    interrompida,
   };
 }
 
+/**
+ * Execucao direta: node Pagamento.js [planilha]. Sem argumento, usa a
+ * planilha mais recente da pasta.
+ */
 async function main() {
   const entrada = process.argv[2] || descobrirPlanilhaEntrada();
   if (!entrada) {
@@ -1179,13 +1123,11 @@ module.exports = {
   lerOrdensServico,
   classificarOs,
   descobrirPlanilhaEntrada,
-  // Exportados para poder testar a leitura sem abrir o Field.
-  extrairFormularios,
-  perguntasDesejadas,
-  formularioMapeado,
-  MAPA_POR_FORMULARIO,
-  separarNumeroPergunta,
-  carregarTodasAsRespostas,
-  MAPA_PERGUNTAS,
+  // Exportados para poder testar as regras sem abrir o Field.
+  analisarFormulario,
+  analisarOs,
+  montarLinhaPagamento,
+  rotularEquipamentos,
+  PERGUNTAS,
   SAIDA_PADRAO,
 };
