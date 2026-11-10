@@ -1,10 +1,6 @@
 /**
  * iniciar.js - sobe o Grievous e abre o navegador na tela de login.
- *
- * E o que o executavel chama. A logica ficou aqui, em Node, e nao no .bat,
- * porque no .bat um erro do servidor sumia junto com a janela: a tela abria,
- * mas quem respondia era outra coisa (ou nada), e salvar as credenciais
- * falhava sem dizer por que.
+ * Chamado pelo executavel.
  */
 
 const http = require("node:http");
@@ -12,14 +8,13 @@ const net = require("node:net");
 const { spawn } = require("node:child_process");
 
 const PORTA_INICIAL = Number(process.env.PORT) || 3000;
-// Quantas portas tentar antes de desistir, para rodar mais de uma copia na
-// mesma maquina sem precisar configurar nada.
+// Quantas portas tentar a partir da inicial.
 const PORTAS_A_TENTAR = 10;
 
 let PORTA = PORTA_INICIAL;
 let ENDERECO = `http://localhost:${PORTA}/`;
 
-/** Passa a usar esta porta aqui e no servidor. */
+/** Define a porta usada aqui e no servidor. */
 function usarPorta(porta) {
   PORTA = porta;
   ENDERECO = `http://localhost:${porta}/`;
@@ -85,13 +80,7 @@ function abrirNavegador(url) {
   }
 }
 
-/**
- * A pasta esta dentro de um servico de sincronizacao?
- *
- * Rodar o projeto de dentro do OneDrive em mais de uma maquina e o caminho
- * mais curto para executar codigo velho: a sincronizacao tem atraso e cria
- * copias duplicadas ("arquivo (1).xlsx"). Cada maquina deve ter o seu clone.
- */
+/** Avisa se o projeto esta numa pasta sincronizada (OneDrive, Dropbox...). */
 function avisarSePastaSincronizada() {
   if (!/OneDrive|Dropbox|Google Drive|iCloud/i.test(__dirname)) return;
 
@@ -110,9 +99,7 @@ async function main() {
   console.log("=== GRIEVOUS ===\n");
   avisarSePastaSincronizada();
 
-  // Procura uma porta livre a partir da inicial. Antes o programa desistia
-  // quando a 3000 estava ocupada; abrir uma segunda copia exigia configurar
-  // PORT na mao.
+  // Procura uma porta livre a partir da inicial.
   let encontrou = false;
 
   for (let tentativa = 0; tentativa < PORTAS_A_TENTAR; tentativa += 1) {
@@ -123,8 +110,7 @@ async function main() {
       break;
     }
 
-    // Se quem esta na porta e o proprio Grievous, reaproveita em vez de subir
-    // outro, que morreria com "endereco em uso" sem ninguem ver.
+    // Se quem esta na porta e o proprio Grievous, reaproveita.
     if (await grievousRespondendo()) {
       console.log(`Ja havia um Grievous rodando em ${ENDERECO}`);
       console.log("Abrindo o navegador na instancia existente.\n");

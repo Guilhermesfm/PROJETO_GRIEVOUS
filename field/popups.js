@@ -1,12 +1,8 @@
 // Fecha os avisos e modais que o Field abre por cima da tela.
 //
-// Aparecem em momentos imprevisiveis (logo apos o login, mas tambem no meio da
-// navegacao) e bloqueiam qualquer clique, porque o overlay cobre a pagina.
-// Por isso a limpeza roda antes das acoes, e nao so uma vez apos entrar.
-//
-// O Field mistura duas tecnologias: modais antigos em AngularJS (<md-dialog>,
-// classe .fc-modal) e componentes novos em CDK (.cdk-overlay-container).
-// Os dois precisam ser cobertos.
+// Aparecem a qualquer momento e bloqueiam os cliques, por isso a limpeza roda
+// antes das acoes. Cobre modais AngularJS (<md-dialog>, .fc-modal) e CDK
+// (.cdk-overlay-container).
 
 // Textos dos botoes que fecham esses avisos.
 const TEXTOS_FECHAR =
@@ -156,6 +152,7 @@ async function temOverlayBloqueando(page) {
 
 module.exports = {
   fecharPopups,
+  clicar,
   temOverlayBloqueando,
   TEXTOS_FECHAR,
   BOTOES,

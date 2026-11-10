@@ -113,7 +113,7 @@ async function executarWeb() {
   require("./web/servidor.js");
 }
 
-/** Pergunta no terminal*/
+/** Pergunta no terminal; oculto = true esconde o que e digitado. */
 function perguntar(texto, oculto = false) {
   const io = readline.createInterface({
     input: process.stdin,

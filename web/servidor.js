@@ -6,16 +6,9 @@ const {
   carregarCredenciais,
   salvarCredenciais,
 } = require("../field/credenciais.js");
-const {
-  runPagamento,
-  lerOrdensServico,
-  classificarOs,
-  descobrirPlanilhaEntrada,
-  SAIDA_PADRAO,
-} = require("../folha-de-pagamento/Pagamento.js");
+const { SAIDA_PADRAO } = require("../folha-de-pagamento/Pagamento.js");
 
-// Porta em que o front será exibido. Por padrão só aceita conexões da própria
-// máquina, já que a tela de login trafega a senha do Field sem HTTPS.
+// Porta do front. So aceita conexoes locais: a senha do Field trafega sem HTTPS.
 const PORT = Number(process.env.PORT) || 3000;
 const HOST = process.env.HOST || "127.0.0.1";
 const PUBLIC_DIR = path.join(__dirname, "public");
@@ -121,7 +114,7 @@ function emitirProgressoPagamento(evento) {
   for (const res of progressoPagamento.ouvintes) res.write(linha);
 }
 
-/*Fechar a aba so desconecta — o fechamento continua rodando no servidor.*/
+/** Conecta a aba ao progresso do fechamento (fechar a aba so desconecta). */
 function acompanharPagamento(req, res) {
   for (const evento of progressoPagamento.eventos) {
     res.write(`data: ${JSON.stringify(evento)}\n\n`);
@@ -215,8 +208,10 @@ function lerCorpoBinario(req, limite = TAMANHO_MAXIMO) {
   });
 }
 
-// Monta o resumo da planilha de entrada do fechamento.
+// Monta o resumo da planilha de entrada com as regras atuais do Pagamento.js.
 function resumirPlanilha() {
+  const { descobrirPlanilhaEntrada, lerOrdensServico, classificarOs } =
+    carregarAutomacaoPagamento();
   const entrada = descobrirPlanilhaEntrada();
   if (!entrada) {
     return { ok: false, error: "Nenhuma planilha em folha-de-pagamento/." };
@@ -316,8 +311,7 @@ const server = http.createServer(async (req, res) => {
       fs.mkdirSync(PASTA_PAGAMENTO, { recursive: true });
       fs.writeFileSync(destino, conteudo);
 
-      // Lê de volta para avisar na hora se a planilha não serve, em vez de
-      // deixar o erro aparecer só quando a execução começar.
+      // Le de volta para validar a planilha na hora.
       const resumo = resumirPlanilha();
       if (!resumo.ok) throw new Error(resumo.error);
 
@@ -340,8 +334,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   // --- Fechamento: acompanhar o que ja esta rodando (SSE) ------------------
-  // Usada pela tela ao abrir/recarregar: se ha fechamento em andamento, a aba
-  // recebe o historico e o progresso; se nao ha, avisa e fecha.
+  // Ao abrir a tela: conecta ao fechamento em andamento, se houver.
   if (req.method === "GET" && url.pathname === "/api/pagamento/acompanhar") {
     res.writeHead(200, {
       "Content-Type": "text/event-stream; charset=utf-8",
@@ -368,7 +361,7 @@ const server = http.createServer(async (req, res) => {
 
     // Uma execução por vez.
     if (execucao.ativa) {
-      // Ja e um fechamento: em vez de recusar, esta aba passa a acompanha-lo.
+      // Ja e um fechamento: esta aba so acompanha.
       if (execucao.tipo === "pagamento") {
         acompanharPagamento(req, res);
         return;
@@ -383,8 +376,7 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    // Marca antes de qualquer espera, para não abrir brecha entre a checagem
-    // e o início de fato.
+    // Marca antes de qualquer await, para nao rodar duas ao mesmo tempo.
     iniciarExecucao("pagamento");
 
     // Execucao nova: historico zerado, e esta aba e a primeira a acompanhar.
@@ -400,7 +392,7 @@ const server = http.createServer(async (req, res) => {
       const limite = Number(url.searchParams.get("limite")) || 0;
       const ordens = limite ? resumo.ordens.slice(0, limite) : resumo.ordens;
 
-      // Pega a versão atual do código, não a que estava em memória.
+      // Le o codigo atual do disco.
       const automacao = carregarAutomacaoPagamento();
       await automacao.runPagamento(
         ordens,
@@ -412,7 +404,6 @@ const server = http.createServer(async (req, res) => {
       enviar({ tipo: "erro", erro: erro.message });
     } finally {
       encerrarExecucao();
-      // Fecha a conexao de todas as abas, inclusive a que iniciou.
       encerrarProgressoPagamento();
     }
     return;

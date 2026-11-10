@@ -1,15 +1,9 @@
-// Formatacao das planilhas de saida.
-//
-// O json_to_sheet entrega a aba crua: colunas todas com a mesma largura, sem
-// filtro e na ordem em que as chaves aparecem. Com centenas de linhas e
-// colunas de texto longo, isso fica ilegivel.
+// Formatacao das planilhas de saida: ordem das colunas, largura, filtro e formatos.
 
 const XLSX = require("xlsx");
 
-// Texto unico para "o Field nao devolveu nada". Celula vazia e ambigua: nao
-// da para saber se a pergunta nao foi respondida ou se a leitura falhou.
+// Texto usado quando o Field nao devolveu nada (celula vazia seria ambigua).
 const SEM_RETORNO = "sem retorno";
-const NAO_EXISTE = "nao existe neste formulario";
 
 /** Largura da coluna pelo conteudo, com minimo e maximo razoaveis. */
 function larguraDaColuna(titulo, valores) {
@@ -21,11 +15,7 @@ function larguraDaColuna(titulo, valores) {
 }
 
 /**
- * Monta a aba a partir das linhas, com as colunas na ordem pedida.
- *
- * Colunas listadas em `ordem` vem primeiro, na ordem dada; o resto vem
- * depois, na ordem em que aparecer. Sem isso a ordem segue a primeira linha
- * e muda conforme a O.S. que for lida primeiro.
+ * Monta a aba a partir das linhas: colunas de `ordem` primeiro, o resto depois.
  */
 function montarAba(linhas, ordem = [], formatos = {}) {
   if (!linhas.length) return XLSX.utils.json_to_sheet([]);
@@ -54,8 +44,8 @@ function montarAba(linhas, ordem = [], formatos = {}) {
     ),
   );
 
-  // Formato por coluna ({ "Data": "dd/mm/yyyy" }). Datas vao como serial do
-  // Excel: um Date passado ao SheetJS sai deslocado pelo fuso da maquina.
+  // Formato por coluna ({ "Data": "dd/mm/yyyy" }).
+  // Datas vao como serial do Excel: um Date sairia deslocado pelo fuso.
   for (const [titulo, formato] of Object.entries(formatos)) {
     const coluna = cabecalho.indexOf(titulo);
     if (coluna === -1) continue;
@@ -65,9 +55,7 @@ function montarAba(linhas, ordem = [], formatos = {}) {
     }
   }
 
-  // Filtro em cada coluna. Congelar o cabecalho nao entra aqui: o SheetJS
-  // desta versao nao grava painel congelado no arquivo, entao o codigo so
-  // daria a impressao de ter configurado.
+  // Filtro em cada coluna.
   aba["!autofilter"] = {
     ref: XLSX.utils.encode_range({
       s: { r: 0, c: 0 },
@@ -93,5 +81,4 @@ module.exports = {
   gravarPlanilha,
   larguraDaColuna,
   SEM_RETORNO,
-  NAO_EXISTE,
 };

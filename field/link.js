@@ -21,12 +21,8 @@ const SELETORES = {
 };
 
 /**
- * Clica de verdade, com plano B.
- *
- * O botao Compartilhar fica no topo da gaveta e o Playwright recusava o
- * clique com "Element is outside of the viewport" — nem o force resolve,
- * porque ele ainda precisa da posicao na tela. O click pelo DOM funciona
- * independente disso.
+ * Clica de verdade, com plano B: o ultimo recurso e o click pelo DOM,
+ * que funciona mesmo com o botao fora da viewport.
  */
 async function clicar(alvo) {
   await alvo.scrollIntoViewIfNeeded({ timeout: 3000 }).catch(() => {});

@@ -1,8 +1,7 @@
 // Filtro "Identificador" da listagem de atividades do Field.
-// Fica em um modulo separado porque o fechamento e a automacao de placas
-// usam a mesma tela — quando o Field muda esse filtro, so este arquivo muda.
+// Usado pelo fechamento e pela automacao de placas.
 
-const { fecharPopups } = require("./popups.js");
+const { fecharPopups, clicar } = require("./popups.js");
 
 const SELETORES = {
   maisFiltros: "button.palantir-filter-bar__more",
@@ -10,22 +9,15 @@ const SELETORES = {
   chipTrigger: "button.palantir-filter-chip__trigger",
   item: "palantir-filter-item, .filter-item",
   itemLabel: ".filter-item__label",
-  // O placeholder ja foi "Buscar..."; hoje e "Busque aqui...".
+  // O placeholder varia entre versoes do Field.
   busca: 'input[placeholder="Busque aqui..."], input[placeholder="Buscar..."]',
-  // O painel de filtro e um overlay do CDK. Procurar o campo na pagina toda
-  // faz a automacao digitar em outra caixa de busca (a pesquisa global, a de
-  // coluna) quando o Field muda o filtro de lugar — foi o que aconteceu ao
-  // rodar em outra maquina.
+  // Painel do filtro (overlay do CDK).
   painel: ".cdk-overlay-container",
 };
 
 /**
  * Retorna o campo de busca do painel de filtro, ou null.
- *
- * A busca e restrita ao painel de proposito. Procurar na pagina inteira faz a
- * automacao achar a caixa de pesquisa global — que tem o mesmo placeholder e
- * vem antes no DOM — e digitar nela: o filtro nunca e aplicado e a listagem
- * continua inteira. Foi o que aconteceu ao rodar em outra maquina.
+ * Restrito ao painel: a pesquisa global tem o mesmo placeholder.
  */
 async function acharCampoBusca(page, timeout = 6000) {
   const campo = page.locator(`${SELETORES.painel} ${SELETORES.busca}`).first();
@@ -38,12 +30,7 @@ async function acharCampoBusca(page, timeout = 6000) {
   return visivel ? campo : null;
 }
 
-/**
- * Espera a listagem terminar de carregar.
- *
- * O Field desenha primeiro um esqueleto com a barra antiga ("Filtrar") e so
- * depois troca pela barra nova.
- */
+/** Espera a listagem terminar de carregar (a barra "Mais filtros" aparecer). */
 async function esperarListagemPronta(
   page,
   tentativas = 3,
@@ -67,8 +54,7 @@ async function esperarListagemPronta(
       await page.waitForTimeout(1500);
     }
 
-    // A consulta que traz a lista as vezes volta erro e o Field fica no
-    // esqueleto para sempre, sem tentar de novo.
+    // A lista pode travar no esqueleto de carregamento: recarrega a pagina.
     if (tentativa < tentativas) {
       await page.reload({ waitUntil: "domcontentloaded" }).catch(() => {});
       await page.waitForTimeout(4000);
@@ -78,9 +64,7 @@ async function esperarListagemPronta(
   return false;
 }
 
-/**
- * Abre o menu "Mais filtros".
- */
+/** Abre o menu "Mais filtros". */
 async function abrirMenuFiltros(page) {
   const botao = page.locator(SELETORES.maisFiltros).first();
 
@@ -107,11 +91,7 @@ async function abrirMenuFiltros(page) {
 
     await fecharPopups(page);
 
-    // Clique normal primeiro (espera o elemento ficar acionavel de verdade);
-    // force so como ultimo recurso.
-    await botao.click({ timeout: 5000 }).catch(async () => {
-      await botao.click({ force: true }).catch(() => {});
-    });
+    await clicar(botao);
 
     const abriu = await itens
       .first()
@@ -121,7 +101,7 @@ async function abrirMenuFiltros(page) {
 
     if (abriu) return itens;
 
-    // O clique pode ter alternado o menu para fechado; reabre na proxima volta.
+    // O clique pode ter fechado o menu; tenta de novo na proxima volta.
     await page.waitForTimeout(800);
   }
 
@@ -140,7 +120,7 @@ async function abrirFiltroIdentificador(page) {
   const jaAberto = await acharCampoBusca(page, 400);
   if (jaAberto) return jaAberto;
 
-  // 2. A listagem precisa estar carregada;
+  // 2. A listagem precisa estar carregada.
   await esperarListagemPronta(page);
 
   // 3. Filtro fixado como chip na barra (botao de pin do Field).
@@ -160,8 +140,7 @@ async function abrirFiltroIdentificador(page) {
   // 4. Caminho completo: "Mais filtros" -> item "Identificador".
   await abrirMenuFiltros(page);
 
-  // Localiza pelo rotulo exato e sobe para o container clicavel.
-  // "Identificador do cliente" nao pode ser escolhido por engano.
+  // Rotulo exato (evita "Identificador do cliente"), depois o container clicavel.
   const rotulo = page
     .locator(SELETORES.itemLabel)
     .filter({ hasText: /^\s*Identificador\s*$/ })
@@ -211,12 +190,9 @@ async function filtrarPorIdentificador(page, valor) {
   await busca.fill("");
   await busca.fill(valor);
 
-  // Espera a tabela responder, em vez de um tempo fixo: o filtro aplica em
-  // menos de um segundo na maioria das vezes.
   await esperarTabelaFiltrada(page, valor);
 
-  // Alguns filtros listam as opcoes encontradas para marcar; se for o caso,
-  // seleciona a que corresponde ao valor buscado.
+  // Se o filtro listar opcoes para marcar, seleciona a do valor buscado.
   const opcao = page
     .locator('palantir-checkbox, [role="option"], palantir-list-item')
     .filter({ hasText: valor })
@@ -229,12 +205,7 @@ async function filtrarPorIdentificador(page, valor) {
   }
 }
 
-/**
- * Espera a linha do valor buscado aparecer na tabela.
- *
- * Substitui as esperas fixas que somavam mais de 5s por filtro: o Field
- * costuma responder em menos de 1s, e so os casos lentos custam caro.
- */
+/** Espera a linha do valor buscado aparecer na tabela. */
 async function esperarTabelaFiltrada(page, valor, timeout = 15000) {
   const linha = page
     .locator('tr, [role="row"], palantir-table-row')
@@ -249,8 +220,6 @@ async function esperarTabelaFiltrada(page, valor, timeout = 15000) {
 
 module.exports = {
   filtrarPorIdentificador,
-  esperarTabelaFiltrada,
   esperarListagemPronta,
-  abrirFiltroIdentificador,
   SELETORES,
 };

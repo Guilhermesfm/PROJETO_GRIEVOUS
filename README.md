@@ -102,7 +102,7 @@ preciso antes colocar uma senha de acesso no próprio Grievous.
 ## Fechamento da folha
 
 1. Exporte a planilha de O.S. do Field (colunas `Identificador`, `Tipo`,
-   `Status`, `Cliente`, `Técnico`, `Avaria`).
+   `Status`, `Cliente`).
 2. Envie o arquivo pelo botão **Enviar planilha** da interface (ou arraste-o
    sobre o painel). Ele é gravado em `folha-de-pagamento/` e conferido na
    hora — se a planilha não servir, o erro aparece antes de começar.
@@ -118,7 +118,17 @@ O resultado sai em `folha-de-pagamento/pagamento_formularios.xlsx`:
   Identificador, Tipo, Status, Data Execução, Avaria, Violação, Obs, Link.
 - **Formularios** — todas as respostas lidas, para conferência manual.
 - **Fora do escopo** — tipos sem formulário de pagamento (preparação de
-  materiais, revisão preventiva, laudo), que não são abertos.
+  materiais, laudo, revisão preventiva, validação de frotas, check list,
+  extração de vídeo), que não são abertos, e as revisões/devoluções sem
+  nenhuma ocorrência.
+
+Revisão Rouxinol e Entrega e Devolução não são serviço pago: a O.S. é aberta
+e só vai para a folha se tiver avaria nos equipamentos, extravio ou violação.
+
+A coluna Tipo da folha é a da planilha enviada. Mas, ao abrir a O.S., vale o
+serviço cadastrado no Field: uma O.S. que a planilha chama de "Manutenção" e
+o Field de "Extração de Videos" vai para "Fora do escopo", com o tipo do
+Field na Obs.
 
 As respostas não são lidas da tela: o programa abre a O.S. e usa os dados que
 o próprio Field carrega (`formAnswers`), com todos os formulários da O.S.
@@ -133,19 +143,25 @@ entre formulários (o extravio é a 37 na "REMOÇÃO - GERAL" e a 34 na
 | ----------------------------------- | -------------------------------- | ------------------------------------------- |
 | Remoção / Remanejamento - Remoção   | Avaria: dano nos equipamentos    | equipamentos removidos, dano, extravio      |
 | Instalação / Remanejamento - Instal.| —                                | equipamentos instalados                     |
-| Manutenção                          | Violação: violação na instalação | descrição da violação, extravio             |
+| Manutenção / Revisão Rouxinol       | Violação: violação na instalação | descrição da violação, extravio             |
+| Remanejamento InoPrime V2           | Avaria: periférico avariado      | "Periférico InoPrime avariado"              |
+| Entrega e Devolução                 | Avaria: material devolvido       | relato da avaria, o que foi extraviado      |
 | Impedimento de visita               | —                                | descrição do motivo + motivo sem assinatura |
 
-Avaria no veículo antes do serviço não entra na folha.
+Avaria no veículo, antes ou depois do serviço, não entra na folha.
+
+Tipos com outro nome também são reconhecidos: "RETIRADA" conta como remoção
+e "MANUTEÇÃO" (assim, sem o N, no Field da Terrabel) como manutenção.
 
 Nomes dos equipamentos na Obs:
 
 | Marcado no formulário                  | Na folha                                |
 | -------------------------------------- | --------------------------------------- |
-| GalileoSky / JR12 / JR11               | telemetria                              |
+| GalileoSky / Galileo 7X / JR12 / J-R12 | telemetria                              |
 | Rastreador básico                      | telemetria basica                       |
 | GalileoSky (ou JR) + rastreador básico | telemetria basica e telemetria avançada |
-| Câmeras                                | cam                                     |
+| Câmeras / V5 / NT407 / Momenta         | cam                                     |
+| Outros (sistema de fadiga, redundante) | o próprio nome                          |
 
 Formulário enviado só com fotos, sem as respostas que a folha usa
 (equipamentos, dano, extravio, violação), recebe "Formulário incompleto" na

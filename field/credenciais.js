@@ -3,13 +3,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 const dotenv = require("dotenv");
 
-// O .env fica na raiz do projeto, um nivel acima desta pasta.
+// .env na raiz do projeto.
 const CAMINHO_ENV = path.join(__dirname, "..", ".env");
 
-/**
- * Le o .env do disco a cada chamada, para que a tela de login altere as
- * credenciais sem precisar reiniciar o servidor.
- */
+/** Le EMAIL e PASSWORD do .env (relido a cada chamada). */
 function carregarCredenciais() {
   dotenv.config({ path: CAMINHO_ENV, override: true, quiet: true });
   return {
@@ -26,9 +23,7 @@ function formatarValor(valor) {
     : texto;
 }
 
-/**
- * Grava EMAIL e PASSWORD no .env preservando as demais chaves do arquivo.
- */
+/** Grava EMAIL e PASSWORD no .env preservando as demais chaves. */
 function salvarCredenciais(email, senha) {
   if (!email || !senha) {
     throw new Error("E-mail e senha sao obrigatorios.");
@@ -61,7 +56,7 @@ function salvarCredenciais(email, senha) {
   }
 
   const conteudo = linhas.join("\n").replace(/\n{3,}$/, "\n");
-  // mode 0o600: so o dono le o arquivo (ignorado no Windows, util no Linux).
+  // 0o600: so o dono le o arquivo (ignorado no Windows).
   fs.writeFileSync(CAMINHO_ENV, conteudo.endsWith("\n") ? conteudo : `${conteudo}\n`, {
     encoding: "utf8",
     mode: 0o600,
@@ -74,8 +69,7 @@ function salvarCredenciais(email, senha) {
   return { email };
 }
 
-// Enderecos do Field. Ficam no .env porque o Field troca de tela sem aviso e
-// nao da para depender de editar o codigo para acompanhar.
+// Enderecos padrao do Field (podem ser trocados no .env).
 const URLS_PADRAO = {
   login:
     "https://app.fieldcontrol.com.br/autenticador-v2/#/login?to=:hash:%2Fatividades",

@@ -1,10 +1,9 @@
 // Abre e fecha a gaveta da O.S. a partir da linha ja filtrada na listagem.
 //
-// A O.S. abre como uma gaveta por cima da listagem: mesma aba, mesma URL.
-// A listagem continua no DOM atras dela, entao a confirmacao de que abriu e
-// a barra de abas da gaveta (Geral, Formularios, Vinculos...), nao a URL.
+// A gaveta abre por cima da listagem, sem mudar a URL: a confirmacao de que
+// abriu e a barra de abas dela (Geral, Formularios...).
 
-const { fecharPopups } = require("./popups.js");
+const { fecharPopups, clicar } = require("./popups.js");
 
 const SELETOR_EDITAR = "palantir-button.palantir-table__action-button";
 
@@ -48,10 +47,7 @@ async function abrirGaveta(page, identificador) {
   const alvo = (await botao.count().catch(() => 0)) ? botao : linha;
 
   for (let tentativa = 1; tentativa <= 2; tentativa += 1) {
-    // Clique normal primeiro: espera o elemento ficar acionavel de verdade.
-    await alvo.click({ timeout: 8000 }).catch(async () => {
-      await alvo.click({ force: true }).catch(() => {});
-    });
+    await clicar(alvo);
 
     if (await gavetaAberta(page)) return true;
     await page.waitForTimeout(1500);

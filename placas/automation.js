@@ -19,10 +19,9 @@ const {
 const { fecharPopups } = require("../field/popups.js");
 const { capturarLinkOs } = require("../field/link.js");
 const { abrirGaveta, fecharGaveta } = require("../field/gaveta.js");
-
-// Tudo da automacao de placas fica nesta pasta.
 const { gravarPlanilha, SEM_RETORNO } = require("../planilha.js");
 
+// A planilha de saida fica nesta pasta.
 const OUTPUT_DIR = __dirname;
 
 /** Caminho da planilha de saida, dentro desta pasta. */
@@ -32,12 +31,10 @@ function resolveOutputPath(filename = "situacoes_placas.xlsx") {
 
 /**
  * Faz login no Field, consulta cada placa e grava a planilha.
- * deveParar e chamada antes de cada placa; quando devolve true, a execucao
- * para e grava o que ja foi consultado.
+ * deveParar() e checada antes de cada placa.
  * Retorna { outputPath, resultados, interrompida }.
  */
 async function runAutomation(placas = [], deveParar = () => false) {
-  // Marca se a execucao foi interrompida pelo usuario.
   let interrompida = false;
   const { email, senha } = carregarCredenciais();
   const urls = carregarUrlsField();
@@ -50,33 +47,27 @@ async function runAutomation(placas = [], deveParar = () => false) {
 
   const resultados = [];
 
-  // Sem executablePath: o Playwright acha o Chromium que ele mesmo instalou,
-  // em qualquer maquina. HEADLESS=false abre o navegador para acompanhar.
+  // HEADLESS=false abre o navegador na tela.
   const browser = await chromium.launch({
     headless: process.env.HEADLESS !== "false",
   });
   const page = await browser.newPage();
 
   try {
-    // 1. Acessa a página de login
+    // Login: e-mail, Continuar, senha, Continuar.
     await page.goto(urls.login);
 
-    // 2. Clica no campo de e-mail e preenche
     await page.click('input[name="email"]');
     await page.fill('input[name="email"]', email);
 
-    // 3. Clica em "Continuar"
     await page.click('palantir-button:has-text("Continuar")');
 
-    // 4. Clica no campo de senha e preenche
     await page.click('input[aria-label="password"]');
     await page.fill('input[aria-label="password"]', senha);
 
-    // 5. Clica em "Continuar" de novo
     await page.click('palantir-button:has-text("Continuar")');
 
-    // O redirecionamento depois da senha pode levar mais de 5s. Navegar para a
-    // listagem antes dele terminar interrompe o fluxo de autenticacao.
+    // Espera o login redirecionar para a listagem antes de seguir.
     await page.waitForURL(
       (url) =>
         url.origin === destinoListagem.origin &&
@@ -89,19 +80,16 @@ async function runAutomation(placas = [], deveParar = () => false) {
       throw new Error("A listagem de atividades nao carregou depois do login.");
     }
 
-    // 8. Repete a busca para cada placa da lista
     for (const placa of placas) {
-      // Parada solicitada: para na placa atual e salva o que ja foi consultado.
+      // Parada solicitada: salva o que ja foi consultado.
       if (deveParar()) {
         interrompida = true;
         console.log("Execucao interrompida pelo usuario.");
         break;
       }
 
-      // Uma placa problematica nao pode derrubar o lote: antes qualquer
-      // falha encerrava a execucao e perdia as placas seguintes.
+      // Falha numa placa nao derruba o lote.
       try {
-        // Filtro "Identificador" da barra nova do Field (modulo compartilhado).
         await filtrarPorIdentificador(page, placa);
 
         const linha = page
@@ -120,7 +108,7 @@ async function runAutomation(placas = [], deveParar = () => false) {
 
         await linha.click({ force: true });
 
-        // Espera a data aparecer em vez de um tempo fixo de 3s.
+        // Espera a data de criacao aparecer (ate 15s).
         const padraoData = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}$/;
         const textos = page.locator('palantir-text[type="text"]');
         let dataCriacao = "";
@@ -178,7 +166,7 @@ async function runAutomation(placas = [], deveParar = () => false) {
     await browser.close();
   }
 
-  // 9. Gera a planilha Excel com os resultados
+  // Gera a planilha com os resultados.
   const outputPath = resolveOutputPath();
   gravarPlanilha(outputPath, [
     {

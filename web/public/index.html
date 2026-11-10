@@ -481,9 +481,7 @@
       }
 
       /* ---------- Tabelas ---------- */
-      /* O Bootstrap pinta a tabela pelas proprias variaveis; definir so o
-         "color" no .table nao adianta — o texto sai preto sobre o fundo
-         escuro e some. Por isso as variaveis sao redefinidas aqui. */
+      /* O Bootstrap pinta a tabela pelas proprias variaveis: redefinidas aqui. */
       .table {
         --bs-table-color: var(--app-text);
         --bs-table-bg: transparent;
@@ -511,8 +509,7 @@
         font-weight: 500;
       }
 
-      /* Na tabela o vermelho do log fica apertado contra o fundo; aqui vai
-         um tom mais claro, que sobra contraste. */
+      /* Vermelho mais claro na tabela, para ter contraste. */
       .table .log-erro {
         color: #ff9195;
       }
@@ -1223,11 +1220,7 @@
         return `<span class="badge-cat ${classe}">${categoria}</span>`;
       }
 
-      /**
-       * Cor da situação das placas. O texto vem do Field com acento e
-       * variação de gênero ("Impedido"/"Impedida"), então a comparação é
-       * feita sem acento e por trecho.
-       */
+      /** Cor da situacao das placas (compara sem acento e por trecho). */
       function badgeSituacao(situacao) {
         const texto = String(situacao ?? "").trim();
         if (!texto) return "";
@@ -1280,11 +1273,7 @@
         return new Date().toLocaleTimeString("pt-BR");
       }
 
-      /**
-       * "Failed to fetch" é o que o navegador diz quando o servidor não
-       * responde — normalmente porque o Grievous foi fechado com a aba
-       * aberta. A mensagem crua não ajuda ninguém.
-       */
+      /** Troca o "Failed to fetch" (servidor fechado) por uma mensagem clara. */
       function explicarErro(erro) {
         const texto = String(erro?.message || erro);
         if (/failed to fetch|networkerror|load failed/i.test(texto)) {
@@ -1322,6 +1311,8 @@
             ["manutencao", "is-amber"],
             ["remanejamento", ""],
             ["impedido", "is-red"],
+            // Revisao e entrega/devolucao: so entram com avaria ou extravio.
+            ["ocorrencia", "is-amber"],
             ["fora do escopo", "is-muted"],
           ];
 
@@ -1392,8 +1383,7 @@
           '<i class="fa-solid fa-spinner fa-spin me-1"></i>Enviando…';
 
         try {
-          // O corpo vai cru e o nome no cabecalho: evita depender de um
-          // parser de multipart no servidor.
+          // Arquivo cru no corpo e nome no cabecalho (sem multipart).
           const resposta = await fetch("/api/pagamento/planilha", {
             method: "POST",
             headers: {
@@ -1488,22 +1478,16 @@
         ).catch((erro) => logar(`Falha ao parar: ${erro.message}`, "erro")),
       );
 
-      // Guarda o fluxo aberto: sem isso, um segundo clique (ou um retorno a
-      // esta aba) abriria outro EventSource e pediria outra execucao.
+      // Fluxo aberto, para nao abrir um segundo EventSource.
       let fonteAtual = null;
 
       /**
-       * Conecta a tela ao progresso de um fechamento.
-       *
-       * Usada pelo botao "Rodar" (/api/pagamento/run, que inicia) e ao abrir
-       * ou recarregar a pagina (/api/pagamento/acompanhar, que so acompanha o
-       * que ja esta rodando). Nos dois casos o servidor manda primeiro o
-       * historico da execucao, entao a tela se monta do zero com ele.
+       * Conecta a tela ao progresso de um fechamento (/run inicia, /acompanhar so acompanha).
        */
       function acompanharFechamento(endereco) {
         botaoFechamento.disabled = true;
         botaoParar.disabled = false;
-        document.getElementById("status-execucao").textContent = "rodando";
+        document.getElementById("status-execucao").textContent = "executando";
         document.getElementById("log-fechamento").innerHTML = "";
         tabelaFechamento.innerHTML = "";
         primeiraLinha = true;
@@ -1629,9 +1613,7 @@
         acompanharFechamento(`/api/pagamento/run?limite=${limite}`);
       });
 
-      // Ao abrir ou recarregar a pagina: se o servidor ja esta rodando um
-      // fechamento (iniciado nesta ou em outra aba), mostra o progresso e
-      // libera o botao Parar.
+      // Ao abrir a pagina: se ja ha fechamento rodando, mostra o progresso.
       fetch("/api/status")
         .then((resposta) => resposta.json())
         .then((status) => {
