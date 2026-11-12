@@ -600,6 +600,53 @@
         color: var(--app-eye);
       }
 
+      /* Alerta de O.S. aberta ha mais de 30 dias: note do Color Admin com
+         sabre vermelho. */
+      .note-forca {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin: 14px;
+        padding: 12px 16px;
+        border-left: 4px solid var(--app-red);
+        border-radius: 3px;
+        background: linear-gradient(
+          90deg,
+          rgba(229, 72, 77, 0.16),
+          rgba(229, 72, 77, 0.04)
+        );
+        box-shadow: -2px 0 12px rgba(229, 72, 77, 0.45);
+      }
+      .note-forca .note-icon {
+        font-size: 1.6rem;
+        color: var(--app-red);
+        filter: drop-shadow(0 0 6px rgba(229, 72, 77, 0.7));
+      }
+      .note-forca h5 {
+        margin: 0 0 2px;
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        color: #ff9195;
+      }
+      .note-forca p {
+        margin: 0;
+        font-size: 0.82rem;
+        color: var(--app-text);
+      }
+
+      /* Linha da O.S. em alerta: sabre vermelho na borda. */
+      tr.os-alerta td:first-child {
+        box-shadow: inset 3px 0 0 var(--app-red);
+      }
+      .badge-dias {
+        margin-left: 8px;
+        background: rgba(229, 72, 77, 0.18);
+        color: #ff9195;
+        box-shadow: 0 0 6px rgba(229, 72, 77, 0.35);
+      }
+
       .tab-pane {
         display: none;
       }
@@ -1076,6 +1123,13 @@
               </h4>
             </div>
             <div class="panel-body p-0">
+              <div class="note-forca d-none" id="alerta-placas" role="alert">
+                <i class="fa-solid fa-jedi note-icon"></i>
+                <div>
+                  <h5>DISTÚRBIO NA FORÇA</h5>
+                  <p id="alerta-placas-texto"></p>
+                </div>
+              </div>
               <div class="table-wrap">
                 <table class="table table-sm align-middle">
                   <thead>
@@ -1242,6 +1296,35 @@
           (regras.find(([padrao]) => padrao.test(chave)) || [])[1] || "sit-outra";
 
         return `<span class="badge-cat ${classe}">${escapar(texto)}</span>`;
+      }
+
+      // Dias para a O.S. nao concluida entrar em alerta.
+      const DIAS_ALERTA = 30;
+
+      /**
+       * Dias desde a criacao ("dd/mm/aaaa hh:mm") se a O.S. nao foi concluida
+       * nem cancelada e passou de DIAS_ALERTA; senao null.*/
+      function diasEmAlerta(item) {
+        const situacao = String(item.Situacao ?? "")
+          .normalize("NFD")
+          .replace(/[̀-ͯ]/g, "")
+          .toLowerCase();
+        if (/conclu|cancelad/.test(situacao)) return null;
+
+        const data = /^(\d{2})\/(\d{2})\/(\d{4})/.exec(item["Data de criacao"] || "");
+        if (!data) return null;
+        const criadaEm = new Date(+data[3], +data[2] - 1, +data[1]);
+        const dias = Math.floor((Date.now() - criadaEm) / 86400000);
+        return dias > DIAS_ALERTA ? dias : null;
+      }
+
+      /** Mostra ou esconde a faixa de alerta dos resultados de placas. */
+      function mostrarAlertaPlacas(total) {
+        document.getElementById("alerta-placas").classList.toggle("d-none", !total);
+        document.getElementById("alerta-placas-texto").textContent =
+          `${total} O.S. ${total === 1 ? "aberta" : "abertas"} há mais de ` +
+          `${DIAS_ALERTA} dias sem conclusão. Verifique antes que o General ` +
+          "perca a paciência.";
       }
 
       /** Link da O.S., so para as concluidas; abre em outra aba. */
@@ -1669,17 +1752,23 @@
           if (!dados.ok) throw new Error(dados.error);
 
           const corpo = document.getElementById("tabela-placas");
+          let emAlerta = 0;
           corpo.innerHTML = dados.resultados
-            .map(
-              (item) => `
-                <tr>
+            .map((item) => {
+              const dias = diasEmAlerta(item);
+              if (dias) emAlerta += 1;
+              return `
+                <tr class="${dias ? "os-alerta" : ""}">
                   <td>${escapar(item.Placa)}</td>
                   <td>${badgeSituacao(item.Situacao)}</td>
                   <td>${linkDaOs(item.Link)}</td>
-                  <td>${escapar(item["Data de criacao"])}</td>
-                </tr>`,
-            )
+                  <td>${escapar(item["Data de criacao"])}${
+                    dias ? `<span class="badge-cat badge-dias">${dias} dias</span>` : ""
+                  }</td>
+                </tr>`;
+            })
             .join("");
+          mostrarAlertaPlacas(emAlerta);
 
           status.textContent = dados.interrompida
             ? `Parado — ${dados.resultados.length} de ${placas.length} placa(s) consultada(s).`
