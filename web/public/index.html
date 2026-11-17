@@ -1302,8 +1302,8 @@
       const DIAS_ALERTA = 30;
 
       /**
-       * Dias desde a criacao ("dd/mm/aaaa hh:mm") se a O.S. nao foi concluida
-       * nem cancelada e passou de DIAS_ALERTA; senao null.*/
+       * Dias da O.S. nao concluida nem cancelada que passou de DIAS_ALERTA;
+       * senao null. Os dias vem do servidor, iguais aos da planilha.*/
       function diasEmAlerta(item) {
         const situacao = String(item.Situacao ?? "")
           .normalize("NFD")
@@ -1311,11 +1311,8 @@
           .toLowerCase();
         if (/conclu|cancelad/.test(situacao)) return null;
 
-        const data = /^(\d{2})\/(\d{2})\/(\d{4})/.exec(item["Data de criacao"] || "");
-        if (!data) return null;
-        const criadaEm = new Date(+data[3], +data[2] - 1, +data[1]);
-        const dias = Math.floor((Date.now() - criadaEm) / 86400000);
-        return dias > DIAS_ALERTA ? dias : null;
+        const dias = item["Dias desde a criacao"];
+        return typeof dias === "number" && dias > DIAS_ALERTA ? dias : null;
       }
 
       /** Mostra ou esconde a faixa de alerta dos resultados de placas. */

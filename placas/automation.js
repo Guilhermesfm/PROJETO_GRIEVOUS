@@ -1,9 +1,8 @@
 /**
  * placas/automation.js - consulta de placas no Field.
  *
- * Para cada placa: filtra a listagem pelo identificador, le a situacao e a
- * data de criacao e, se a O.S. estiver concluida, pega o link de
- * compartilhamento. O resultado vai para placas/situacoes_placas.xlsx.
+ * Para cada placa: le a situacao, a data de criacao e os dias desde ela e,
+ * se a O.S. estiver concluida, o link. Grava placas/situacoes_placas.xlsx.
  */
 
 const path = require("node:path");
@@ -27,6 +26,14 @@ const OUTPUT_DIR = __dirname;
 /** Caminho da planilha de saida, dentro desta pasta. */
 function resolveOutputPath(filename = "situacoes_placas.xlsx") {
   return path.join(OUTPUT_DIR, filename);
+}
+
+/** Dias completos desde "dd/mm/aaaa hh:mm" ate hoje ("" sem data). */
+function diasDesdeCriacao(texto) {
+  const data = /^(\d{2})\/(\d{2})\/(\d{4})/.exec(texto || "");
+  if (!data) return "";
+  const criadaEm = new Date(+data[3], +data[2] - 1, +data[1]);
+  return Math.floor((Date.now() - criadaEm) / 86400000);
 }
 
 /**
@@ -145,6 +152,8 @@ async function runAutomation(placas = [], deveParar = () => false) {
           Situacao: situacao || SEM_RETORNO,
           Link: link || (/conclu/i.test(situacao) ? SEM_RETORNO : ""),
           "Data de criacao": dataCriacao || SEM_RETORNO,
+          // Contado no dia da consulta.
+          "Dias desde a criacao": diasDesdeCriacao(dataCriacao),
           Observacao: situacao ? "" : "Nada retornado para esta placa",
         });
 
@@ -158,6 +167,7 @@ async function runAutomation(placas = [], deveParar = () => false) {
           Situacao: SEM_RETORNO,
           Link: "",
           "Data de criacao": SEM_RETORNO,
+          "Dias desde a criacao": "",
           Observacao: `ERRO: ${erro.message}`,
         });
       }
@@ -172,7 +182,14 @@ async function runAutomation(placas = [], deveParar = () => false) {
     {
       nome: "Situacoes",
       linhas: resultados,
-      ordem: ["Placa", "Situacao", "Data de criacao", "Link", "Observacao"],
+      ordem: [
+        "Placa",
+        "Situacao",
+        "Data de criacao",
+        "Dias desde a criacao",
+        "Link",
+        "Observacao",
+      ],
     },
   ]);
 

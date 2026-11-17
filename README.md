@@ -168,6 +168,17 @@ Formulário enviado só com fotos, sem as respostas que a folha usa
 Obs. Formulário aberto e não finalizado é ignorado, com aviso na Obs. As
 perguntas ficam em `PERGUNTAS`, no topo de `folha-de-pagamento/Pagamento.js`.
 
+## Consulta de placas
+
+Na aba **Placas**, informe as placas (uma por linha ou separadas por
+vírgula) e clique em Consultar. O resultado sai em
+`placas/situacoes_placas.xlsx`: Placa, Situacao, Data de criacao, Dias desde
+a criacao (contado no dia da consulta), Link e Observacao.
+
+O.S. não concluída nem cancelada criada há mais de 30 dias aparece em
+alerta na tela: faixa "Distúrbio na Força" no topo e selo com os dias na
+linha.
+
 ## Estrutura
 
 ```
