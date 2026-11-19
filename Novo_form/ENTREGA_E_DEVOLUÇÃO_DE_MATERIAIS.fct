@@ -1,0 +1,487 @@
+{
+  "name": "ENTREGA E DEVOLUÇÃO DE MATERIAIS",
+  "type": "public",
+  "description": "",
+  "questionsCount": 22,
+  "questions": [
+    {
+      "id": "91e5bf31-38d3-485e-a365-17a967858e06",
+      "type": "multiple-choice",
+      "title": "TIPO DE REMESSA",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "45ea36af-65be-41df-a9dc-eadf511f7d9d",
+          "value": "ENTREGA DE MATERIAIS",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "7f461895-51a8-453a-b5ea-7f21bde16e01",
+          "value": "DEVOLUÇÃO DE MATERIAIS",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "31d3fb73-78f4-408e-8454-f86574a57dac",
+      "type": "checkboxes",
+      "title": "QUAIS OS TIPOS DE EQUIPAMENTOS ESTÃO SENDO ENTREGUES OU RECEBIDOS:",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "13482e6b-dfd2-42dd-bb84-cfc3a59e76dd",
+          "value": "GalileoSky",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "e2bb1ba6-54cc-4eff-84d9-419c5616cf5c",
+          "value": "Câmeras",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "db2c12db-a936-4d39-8767-dff0a397d85d",
+          "value": "JR12",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "9e4dc22a-257f-44ba-8d37-f4f85939a5c6",
+          "value": "JR11",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "6c675597-b340-4547-b9b6-42499db9349d",
+          "value": "RASTREADOR BASICO",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "e5d6e1b9-85fd-4d6e-a2e9-a3273b5ffb51",
+          "value": "OUTROS",
+          "position": 5,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "97cb8212-9f59-41c6-9fcd-c605d67d9c6d",
+      "type": "numeric",
+      "title": "QUANTIDADE DE GALILEOS QUE ESTÃO SENDO ENTREGUES OU RECEBIDOS?",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "31d3fb73-78f4-408e-8454-f86574a57dac",
+            "title": "QUAIS OS TIPOS DE EQUIPAMENTOS ESTÃO SENDO ENTREGUES OU RECEBIDOS:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0c0f8282-d1f8-42e3-a58e-43f8c6132a78",
+      "type": "numeric",
+      "title": "QUANTIDADE DE CÂMERAS QUE ESTÃO SENDO ENTREGUES OU RECEBIDOS?",
+      "description": "",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [],
+      "conditions": [
+        {
+          "value": "Câmeras",
+          "operator": "equal",
+          "question": {
+            "id": "31d3fb73-78f4-408e-8454-f86574a57dac",
+            "title": "QUAIS OS TIPOS DE EQUIPAMENTOS ESTÃO SENDO ENTREGUES OU RECEBIDOS:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "5082e5a0-6768-4283-881b-e5a0c5b870ac",
+      "type": "numeric",
+      "title": "QUANTIDADE DE JR12 ENTREGUES OU RECEBIDOS",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "31d3fb73-78f4-408e-8454-f86574a57dac",
+            "title": "QUAIS OS TIPOS DE EQUIPAMENTOS ESTÃO SENDO ENTREGUES OU RECEBIDOS:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6f5d590b-249c-46b7-8d1e-31c40cfe5059",
+      "type": "numeric",
+      "title": "QUANTIDADE DE JR11 ENTREGUES OU RECEBIDOS",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR11",
+          "operator": "equal",
+          "question": {
+            "id": "31d3fb73-78f4-408e-8454-f86574a57dac",
+            "title": "QUAIS OS TIPOS DE EQUIPAMENTOS ESTÃO SENDO ENTREGUES OU RECEBIDOS:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3d477fbf-c558-4a88-97a4-c0950ba4b976",
+      "type": "numeric",
+      "title": "QUANTIDADE DE RASTREADORES ENTREGUES OU RECEBIDOS:",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [],
+      "conditions": [
+        {
+          "value": "RASTREADOR BASICO",
+          "operator": "equal",
+          "question": {
+            "id": "31d3fb73-78f4-408e-8454-f86574a57dac",
+            "title": "QUAIS OS TIPOS DE EQUIPAMENTOS ESTÃO SENDO ENTREGUES OU RECEBIDOS:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ae434fe4-3d24-42bd-b681-30a0910e3046",
+      "type": "short-answer",
+      "title": "QUAL TIPO DE EQUIPAMENTO ESTÁ SENDO ENTREGUE OU RECEBIDO?",
+      "description": "",
+      "required": true,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "OUTROS",
+          "operator": "equal",
+          "question": {
+            "id": "31d3fb73-78f4-408e-8454-f86574a57dac",
+            "title": "QUAIS OS TIPOS DE EQUIPAMENTOS ESTÃO SENDO ENTREGUES OU RECEBIDOS:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "53501287-e5d3-4e00-9d80-75baad813ef9",
+      "type": "numeric",
+      "title": "QUANTIDADE DE EQUIPAMENTOS ENTREGUES OU RECEBIDOS",
+      "description": "",
+      "required": true,
+      "position": 8,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [],
+      "conditions": [
+        {
+          "value": "OUTROS",
+          "operator": "equal",
+          "question": {
+            "id": "31d3fb73-78f4-408e-8454-f86574a57dac",
+            "title": "QUAIS OS TIPOS DE EQUIPAMENTOS ESTÃO SENDO ENTREGUES OU RECEBIDOS:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f36f6f27-7d2f-4b47-a05a-fbf3b82a07f8",
+      "type": "multiple-picture",
+      "title": "COLOQUE FOTO DO IMEI DOS GALILEOS DEVOLVIDOS ABAIXO",
+      "description": "",
+      "required": true,
+      "position": 9,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "31d3fb73-78f4-408e-8454-f86574a57dac",
+            "title": "QUAIS OS TIPOS DE EQUIPAMENTOS ESTÃO SENDO ENTREGUES OU RECEBIDOS:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "30a1ed3a-5fdc-4aff-85ba-2f70a381ccf3",
+      "type": "multiple-picture",
+      "title": "COLOQUE FOTO DO IMEI DOS JR122 DEVOLVIDOS ABAIXO",
+      "description": "",
+      "required": true,
+      "position": 10,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "31d3fb73-78f4-408e-8454-f86574a57dac",
+            "title": "QUAIS OS TIPOS DE EQUIPAMENTOS ESTÃO SENDO ENTREGUES OU RECEBIDOS:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "feb1ec51-bb12-4dce-be8d-e30d293cb4fa",
+      "type": "multiple-picture",
+      "title": "COLOQUE FOTO DO IMEI DAS CÂMERAS DEVOLVIDAS ABAIXO",
+      "description": "",
+      "required": true,
+      "position": 11,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Câmeras",
+          "operator": "equal",
+          "question": {
+            "id": "31d3fb73-78f4-408e-8454-f86574a57dac",
+            "title": "QUAIS OS TIPOS DE EQUIPAMENTOS ESTÃO SENDO ENTREGUES OU RECEBIDOS:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "adfd6731-26f4-441f-9a84-ff98835f76ba",
+      "type": "multiple-picture",
+      "title": "COLOQUE FOTO DO IMEI DOS RASTREADORES BASICOS DEVOLVIDOS ABAIXO",
+      "description": "",
+      "required": true,
+      "position": 12,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "RASTREADOR BASICO",
+          "operator": "equal",
+          "question": {
+            "id": "31d3fb73-78f4-408e-8454-f86574a57dac",
+            "title": "QUAIS OS TIPOS DE EQUIPAMENTOS ESTÃO SENDO ENTREGUES OU RECEBIDOS:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "47a0b5e3-60fa-4281-a8b5-10af96107920",
+      "type": "multiple-picture",
+      "title": "EM CASO DE PRECISAR ANEXAR MAIS FOTOS QUE NÃO COUBERAM NO CAMPO ORIGINAL, COLOQUE AQUI (CASO NÃO POSSUA FOTOS ESSE CAMPO PODE SER PULADO)",
+      "description": "",
+      "required": false,
+      "position": 13,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "fc62118d-9b97-45a0-87b5-57caa1b7708e",
+      "type": "multiple-choice",
+      "title": "NOS MATERIAIS DEVOLVIDOS EXISTE ALGUMA AVARIA NOS EQUIPAMENTOS OU PERIFÉRICOS?",
+      "description": "",
+      "required": true,
+      "position": 14,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "b4c9168b-0c92-4ef2-a10c-b95c79e46ad3",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "9d1ddf37-dfcb-4a3b-bfb8-42bd352e44dd",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "d9b59be2-61bb-4e25-9219-a611b50efd8e",
+      "type": "paragraph",
+      "title": "RELATE AS AVARIAS ENCONTRADAS NOS EQUIPAMENTOS OU PERIFÉRICOS",
+      "description": "",
+      "required": true,
+      "position": 15,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "fc62118d-9b97-45a0-87b5-57caa1b7708e",
+            "title": "NOS MATERIAIS DEVOLVIDOS EXISTE ALGUMA AVARIA NOS EQUIPAMENTOS OU PERIFÉRICOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "adacbd9a-8e73-4dff-8672-9588abc56a70",
+      "type": "multiple-picture",
+      "title": "ANEXE FOTO DAS AVARIAS ENCONTRADAS NOS EQUIPAMENTOS OU PERIFÉRICOS",
+      "description": "",
+      "required": true,
+      "position": 16,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "fc62118d-9b97-45a0-87b5-57caa1b7708e",
+            "title": "NOS MATERIAIS DEVOLVIDOS EXISTE ALGUMA AVARIA NOS EQUIPAMENTOS OU PERIFÉRICOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "91bbcdea-c8a0-44ac-b90c-56242557460a",
+      "type": "multiple-choice",
+      "title": "EXISTE ALGUM EQUIPAMENTO OU PERIFÉRICO EXTRAVIADO (PERDIDO) NOS KITS DEVOLVIDOS?",
+      "description": "",
+      "required": true,
+      "position": 17,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "ce5ccae8-fe72-4d01-9e17-6ec5fd2ac0a1",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "fb97cf4b-95f8-4762-8b5e-f631087de5ca",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "4b04dbed-0258-40c7-8231-b88b4fe7b846",
+      "type": "paragraph",
+      "title": "DESCREVA OQUE FOI EXTRAVIADO",
+      "description": "",
+      "required": true,
+      "position": 18,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "91bbcdea-c8a0-44ac-b90c-56242557460a",
+            "title": "EXISTE ALGUM EQUIPAMENTO OU PERIFÉRICO EXTRAVIADO (PERDIDO) NOS KITS DEVOLVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d3b46e23-5341-445c-912d-8ee4a47bc166",
+      "type": "multiple-picture",
+      "title": "TIRE UMA FOTO DE TODOS OS MATERIAIS DEVOLVIDOS, NESSA FOTO ANEXE A FOTO DE TODOS OS MATERIAIS JUNTOS. PERIFÉRICOS E EQUIPAMENTOS",
+      "description": "",
+      "required": true,
+      "position": 19,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "a5e50d12-7eba-4ad2-aff7-a78824eca008",
+      "type": "short-answer",
+      "title": "NOME DO CLIENTE",
+      "description": "",
+      "required": false,
+      "position": 20,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "00c3e5e2-e9f8-4ae2-8e1d-398a79271fdc",
+      "type": "signature",
+      "title": "ASSINATURA DO CLIENTE",
+      "description": "",
+      "required": false,
+      "position": 21,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}

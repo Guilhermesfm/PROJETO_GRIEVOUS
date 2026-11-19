@@ -1,0 +1,872 @@
+{
+  "name": "MANUTENÇÃO INOPRIME V2",
+  "type": "public",
+  "description": "",
+  "questionsCount": 31,
+  "questions": [
+    {
+      "id": "6e195ee5-1b5c-4ce5-aac1-2d9fbbb68865",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTO DA PLACA DO VEÍCULO",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "613baa87-5b1b-4986-8410-988acb7f910e",
+      "type": "multiple-picture",
+      "title": "EVIDENCIE AVARIAS FÍSICAS OU ALERTAS APRESENTADOS NO PAINEL DO VEÍCULO",
+      "description": "ESTA OPÇÃO NÃO É OBRIGATÓRIA PARA REGISTRO",
+      "required": false,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "296b3d5c-802e-448f-89df-e854fd23a639",
+      "type": "checkboxes",
+      "title": "LISTE QUAIS OS ITENS DA INOPRIME QUE FORAM EXTRAVIADOS",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "7e4d3421-3a42-4618-8274-893392c99de8",
+          "value": "TELEMETRIA",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "9211eb63-6884-46df-bb24-a58fe49fb343",
+          "value": "CAMERA ADAS",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "1672177b-2e0f-433c-a1dd-487b25e47275",
+          "value": "CAMERA DMS",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "49dfac52-bf24-4258-8123-5df621d2fdf3",
+          "value": "CAMERA SALÃO",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "c5d08c3f-be38-4764-ba2c-1274f4911109",
+          "value": "REDUNDANTE",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "11be4e33-84f1-4870-83a9-73aba5195e17",
+          "value": "LEITOR DE MOTORISTA",
+          "position": 5,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "8a459476-1326-4897-9743-db39b718d0e7",
+          "value": "LEITOR DE PASSAGEIRO",
+          "position": 6,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "0f8cf409-a855-487d-ac05-645a29483942",
+          "value": "BAFOMETRO",
+          "position": 7,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "a8a3402e-45aa-4c8a-a36d-5453621fc4bc",
+          "value": "ANTENA SATELITAL",
+          "position": 8,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "eb57c16a-79f7-461a-bb35-4f8cb2d07a45",
+          "value": "ANTENA GPS",
+          "position": 9,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "1ac630c4-f6c8-448e-a314-89eee404800e",
+          "value": "ANTENA GPRS",
+          "position": 10,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "2bb0da22-8aa7-4b25-9cbe-765fd5bfe249",
+          "value": "CHICOTE DE ALIMENTAÇÃO PRINCIPAL",
+          "position": 11,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "28db8ad2-6ba5-446c-8e65-1552d328b317",
+          "value": "NENHUMA DAS OPÇÕES",
+          "position": 12,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "9e3b3a7e-c79e-461a-805c-590c0d6f0595",
+          "value": "TODOS OS ITENS",
+          "position": 13,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "98f5eb80-d6f8-45b3-99ea-edb62911dd0a",
+      "type": "checkboxes",
+      "title": "LISTE OS ITENS QUE NECESSITAM DE MANUTENÇÃO",
+      "description": "",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "a47c3a5b-cdad-4025-bcbc-dc724e77bc75",
+          "value": "TELEMETRIA",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "b8286ec2-981e-413e-bd17-d80f6dfd0ec0",
+          "value": "SISTEMA DE FADIGA",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "c15996f4-f73a-4acf-9145-81b8daa4778e",
+          "value": "REDUNDANTE",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "7fbfb4e4-496f-4abe-af52-545f7dbf47cc",
+          "value": "LEITOR DE MOTORISTA",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "1cb4630f-24e4-4d65-99c6-cad0d843c61d",
+          "value": "LEITOR DE PASSAGEIRO",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "d478f3ee-3559-45be-8583-60d4588c755e",
+          "value": "BAFOMETRO",
+          "position": 5,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "39f1ea79-fc45-4c00-932e-02ae3c324fcd",
+          "value": "ANTENA SATELITAL",
+          "position": 6,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "a47b3e51-a953-4545-94ff-934353e803b1",
+          "value": "TROCA ANTENA GPS",
+          "position": 7,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "a939049f-06a9-48ca-b950-98d8ea872eb3",
+          "value": "TROCA ANTENA GPRS",
+          "position": 8,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "3e62a3b5-82b4-4279-a692-f37a671a472b",
+          "value": "CHIP DE DADOS",
+          "position": 9,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "2c413a7a-5653-4bf6-9a08-f1c99244837a",
+          "value": "CARTÃO DE MEMÓRIA V5",
+          "position": 10,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "681685a4-8b7b-4277-b1bb-92a42337d35f",
+          "value": "BUZZER TELEMETRIA",
+          "position": 11,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "ee68c32b-aafa-4c3d-a56f-db7d7df8507e",
+          "value": "NENHUM",
+          "position": 12,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "af56b04f-e65a-4142-aafb-e7aa3aec2bdc",
+      "type": "checkboxes",
+      "title": "QUAL MOTIVO DA TROCA DO CARTÃO DE MEMORIA DO V5",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "af3be82f-c57b-4dff-8e5a-309edc78d3ec",
+          "value": "EXTRAÇÃO DE VÍDEO",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "dd7a957d-56c8-4e67-be33-bf301e16f520",
+          "value": "CORROMPIDO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "CARTÃO DE MEMÓRIA V5",
+          "operator": "equal",
+          "question": {
+            "id": "98f5eb80-d6f8-45b3-99ea-edb62911dd0a",
+            "title": "LISTE OS ITENS QUE NECESSITAM DE MANUTENÇÃO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "566d45cc-76db-40e3-b33f-a3a3a687cce6",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTO DO PAINEL CONTENDO HODOMETRO, RPM E HORIMETRO",
+      "description": "LIGUE O MOTOR",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "215beb60-408c-405c-934b-d175a5aab061",
+      "type": "checkboxes",
+      "title": "A TELEMETRIA PRECISA SER TROCADA?",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "9bd33358-b43d-4bd9-81c2-8c270a4f9565",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "49db98c5-1246-461f-8239-39ddab9ae878",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "TELEMETRIA",
+          "operator": "equal",
+          "question": {
+            "id": "98f5eb80-d6f8-45b3-99ea-edb62911dd0a",
+            "title": "LISTE OS ITENS QUE NECESSITAM DE MANUTENÇÃO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "96f59b5b-e822-421a-84e4-1cf33ec9b3e0",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTO DO SERIAL DA TELEMETRIA",
+      "description": "CASO O APARELHO POSSUA ANTENA EXTERNA TIRE UMA FOTO CONTENDO AS ANTENAS FIXADAS JUNTOS COM A TRAVA.",
+      "required": true,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "215beb60-408c-405c-934b-d175a5aab061",
+            "title": "A TELEMETRIA PRECISA SER TROCADA?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bda2c91c-350d-4c5b-95ec-3084611e4d70",
+      "type": "checkboxes",
+      "title": "HOUVE A NECESSIDADE DE ATUALIZAÇÃO DO SCRIPT CLIENTE E REDE CAN DA TELEMERTIA",
+      "description": "",
+      "required": true,
+      "position": 8,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "69ec2972-96ee-4c59-8a9a-a0eb74284fd6",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "0d9f4314-ed67-4abe-a978-5f7e2b667490",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "NÃO",
+          "operator": "equal",
+          "question": {
+            "id": "215beb60-408c-405c-934b-d175a5aab061",
+            "title": "A TELEMETRIA PRECISA SER TROCADA?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0e563843-d16e-49d0-b3e1-aa3589a312ca",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTO DO PROCESSO DE ATUALIZAÇÃO E AS ALTERAÇÕES EXECUTADAS",
+      "description": "INSIRA FOTO DO PROCESSO DE ENVIO DE COMANDOS DE FORMATSD, UPGRADE DE FIRMWARE, SCRIP E SEUS RESPECTIVOS COMANDOS",
+      "required": true,
+      "position": 9,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "TELEMETRIA",
+          "operator": "equal",
+          "question": {
+            "id": "98f5eb80-d6f8-45b3-99ea-edb62911dd0a",
+            "title": "LISTE OS ITENS QUE NECESSITAM DE MANUTENÇÃO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d60108b1-18a4-4fb0-bd6d-d6e9d8bbcba4",
+      "type": "checkboxes",
+      "title": "FOI NECESSÁRIO REVISAR A INSTALAÇÃO FISICA?",
+      "description": "CHICOTE PRINCIPAL, PONTOS DE ALIMENTAÇÃO, PONTO REDE CAN, ABRAÇADEIRAS ETC..",
+      "required": true,
+      "position": 10,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "4b51be3f-419e-4dbe-9d94-c9d3af2f17fb",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "d5722af5-7b52-42e4-b050-5d172b12e0b7",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "TELEMETRIA",
+          "operator": "equal",
+          "question": {
+            "id": "98f5eb80-d6f8-45b3-99ea-edb62911dd0a",
+            "title": "LISTE OS ITENS QUE NECESSITAM DE MANUTENÇÃO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f5fac0de-236e-41c1-b474-6969a4d4116f",
+      "type": "multiple-picture",
+      "title": "INSIRA AS FOTOS DA REVISÃO FISICA REALIZADA",
+      "description": "Insira uma foto do ponto de alimentação e rede can contendo os fios ligados ao chicote da telemetria e suas respectivas abraçadeiras.",
+      "required": true,
+      "position": 11,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "d60108b1-18a4-4fb0-bd6d-d6e9d8bbcba4",
+            "title": "FOI NECESSÁRIO REVISAR A INSTALAÇÃO FISICA?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ea338b53-e1be-4662-a020-f5e9bf7be4bb",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTO DO POSICIONAMENTO DO MÓDULO DE TELEMETRIA",
+      "description": "ESTAS FOTOS DEVEM CONTE O POSICIONAMENTO DA TELEMETRIA E O LOCAL ONDE FOI INSTALADO.",
+      "required": true,
+      "position": 12,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "TELEMETRIA",
+          "operator": "equal",
+          "question": {
+            "id": "98f5eb80-d6f8-45b3-99ea-edb62911dd0a",
+            "title": "LISTE OS ITENS QUE NECESSITAM DE MANUTENÇÃO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2952b638-aed8-46f9-a845-d72953521262",
+      "type": "checkboxes",
+      "title": "HOUVE NECESSIDADE DE TROCAR O SISTEMA DE FADIGA",
+      "description": "",
+      "required": true,
+      "position": 13,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "de39d5a2-7b4c-487b-8e68-ac80597808e5",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "75bb38c3-7fbb-4488-84cd-290408c64a9e",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "SISTEMA DE FADIGA",
+          "operator": "equal",
+          "question": {
+            "id": "98f5eb80-d6f8-45b3-99ea-edb62911dd0a",
+            "title": "LISTE OS ITENS QUE NECESSITAM DE MANUTENÇÃO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6da774b6-60ac-4d84-9d07-abe9204b4dfb",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTO DO SERIAL DO SISTEMA DE FADIGA",
+      "description": "",
+      "required": true,
+      "position": 14,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "2952b638-aed8-46f9-a845-d72953521262",
+            "title": "HOUVE NECESSIDADE DE TROCAR O SISTEMA DE FADIGA"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bebbc9af-9760-4741-979d-1295ed5b09a6",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTO DOS POSICIONAMENTOS DO SISTEMA DE FADIGA",
+      "description": "FOTOS DA CÂMERA ADAS, DSM, TERICERA E QUARTA CAMERA JUNTAMENTE COM SEUS RESPECTIVOS LACRES",
+      "required": false,
+      "position": 15,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "2952b638-aed8-46f9-a845-d72953521262",
+            "title": "HOUVE NECESSIDADE DE TROCAR O SISTEMA DE FADIGA"
+          }
+        }
+      ]
+    },
+    {
+      "id": "1626e110-5c68-4211-a8de-3f83c62cfba9",
+      "type": "checkboxes",
+      "title": "HOUVE NECESSIDADE DE TROCAR O REDUNDANTE?",
+      "description": "",
+      "required": true,
+      "position": 16,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "41ec4cc6-85d4-48b5-a928-413112251c77",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "0ffb8087-f651-41c7-9973-5da198e61937",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "REDUNDANTE",
+          "operator": "equal",
+          "question": {
+            "id": "98f5eb80-d6f8-45b3-99ea-edb62911dd0a",
+            "title": "LISTE OS ITENS QUE NECESSITAM DE MANUTENÇÃO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "68932488-c99a-415d-969d-f321ae333bef",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTO DO SERIAL DO REDUNDANTE",
+      "description": "",
+      "required": true,
+      "position": 17,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "1626e110-5c68-4211-a8de-3f83c62cfba9",
+            "title": "HOUVE NECESSIDADE DE TROCAR O REDUNDANTE?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f388bc9e-b296-43fd-958e-efcddd5aaf79",
+      "type": "multiple-picture",
+      "title": "INSIRA UMA FOTO DE ONDE FOI INSTALADO O REDUNDANTE",
+      "description": "",
+      "required": true,
+      "position": 18,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "1626e110-5c68-4211-a8de-3f83c62cfba9",
+            "title": "HOUVE NECESSIDADE DE TROCAR O REDUNDANTE?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "47d55e1c-d44d-4076-8057-b80d2f1df479",
+      "type": "checkboxes",
+      "title": "HOUVE NECESSIDADE DE TROCAR BAFOMETRO?",
+      "description": "",
+      "required": true,
+      "position": 19,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "ae507e27-6063-427f-972b-14d64ce11e20",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "7242469c-5933-4e1d-9125-850398d9938d",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "BAFOMETRO",
+          "operator": "equal",
+          "question": {
+            "id": "98f5eb80-d6f8-45b3-99ea-edb62911dd0a",
+            "title": "LISTE OS ITENS QUE NECESSITAM DE MANUTENÇÃO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "b10937ad-53d0-4527-9b78-422e7d56c9f9",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTO DA ETIQUETA DO BAFOMETRO CONTENDO DATA/VALIDADE",
+      "description": "ESTA ETIQUETA ESTÁ NO ETILOMETRO",
+      "required": false,
+      "position": 20,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "47d55e1c-d44d-4076-8057-b80d2f1df479",
+            "title": "HOUVE NECESSIDADE DE TROCAR BAFOMETRO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "e3a40878-c09e-4a83-815b-794064995a89",
+      "type": "paragraph",
+      "title": "QUAL A CAUSA DA MANUTENÇÃO?",
+      "description": "",
+      "required": true,
+      "position": 21,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "NENHUM",
+          "operator": "equal",
+          "question": {
+            "id": "98f5eb80-d6f8-45b3-99ea-edb62911dd0a",
+            "title": "LISTE OS ITENS QUE NECESSITAM DE MANUTENÇÃO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "b909cb8c-c7f5-4473-809d-2fcbd80ebaf6",
+      "type": "multiple-picture",
+      "title": "FOTO DOS PERIFÉRICOS AVARIADOS DA INOPRIME",
+      "description": "",
+      "required": false,
+      "position": 22,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "fc22333c-658d-43e5-9db1-ea98456b3216",
+      "type": "checkboxes",
+      "title": "HOUVE NECESSIDADE DE TROCAR ANTENA SATELITAL?",
+      "description": "",
+      "required": true,
+      "position": 23,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "f20bf3d4-8855-4b06-99a9-1527caf3ef9a",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "a819f0a3-8e00-423a-bf7c-51f87119cd1e",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "ANTENA SATELITAL",
+          "operator": "equal",
+          "question": {
+            "id": "98f5eb80-d6f8-45b3-99ea-edb62911dd0a",
+            "title": "LISTE OS ITENS QUE NECESSITAM DE MANUTENÇÃO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "9ba97f3c-6241-4701-83cd-83c7986b99b3",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTO DO ICCID DO CHIP",
+      "description": "",
+      "required": false,
+      "position": 24,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "CHIP DE DADOS",
+          "operator": "equal",
+          "question": {
+            "id": "98f5eb80-d6f8-45b3-99ea-edb62911dd0a",
+            "title": "LISTE OS ITENS QUE NECESSITAM DE MANUTENÇÃO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d01a529f-ae48-4a66-aeed-0cd71969838c",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTO DO SERIAL DA ANTENA SATELITAL",
+      "description": "",
+      "required": false,
+      "position": 25,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "fc22333c-658d-43e5-9db1-ea98456b3216",
+            "title": "HOUVE NECESSIDADE DE TROCAR ANTENA SATELITAL?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bc003c80-562d-4437-8528-06d57641b900",
+      "type": "multiple-picture",
+      "title": "INSIRA OS PRINTS ENVIADOS PELA VALIDAÇÃO",
+      "description": "POSIÇÕES, CONTROLE E IDENTIFICAÇÕES, RELATÓRIO DE INFRAÇÕES E VIAGENS ETC",
+      "required": true,
+      "position": 26,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "5b57c7db-b8f6-4431-9ec2-3a76397a6fd3",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTO DO PAINEL MONTADO APÓS A INSTALAÇÃO",
+      "description": "",
+      "required": true,
+      "position": 27,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "8c66fff7-3037-4f08-9ca4-37fd9752de7b",
+      "type": "short-answer",
+      "title": "QUAL O NOME DO ATENDENTE QUE ACOMPANHOU SEU ATENDIMENTO?",
+      "description": "",
+      "required": true,
+      "position": 28,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "56f01a82-ab61-46cc-916e-44ecb45446f3",
+      "type": "paragraph",
+      "title": "QUAL A CAUSA DA MANUTENÇÃO FÍSICA?",
+      "description": "",
+      "required": false,
+      "position": 29,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "b5cbdc8c-80d0-466f-884f-37df9fd8c668",
+      "type": "signature",
+      "title": "ASSINATURA DO CLIENTE",
+      "description": "",
+      "required": false,
+      "position": 30,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}

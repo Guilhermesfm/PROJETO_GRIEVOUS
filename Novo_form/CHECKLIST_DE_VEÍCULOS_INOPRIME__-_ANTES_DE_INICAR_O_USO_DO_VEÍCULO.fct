@@ -1,0 +1,114 @@
+{
+  "name": "CHECKLIST DE VEÍCULOS INOPRIME  - ANTES DE INICAR O USO DO VEÍCULO",
+  "type": "public",
+  "description": "",
+  "questionsCount": 6,
+  "questions": [
+    {
+      "id": "6bd355be-4cf2-497b-ba41-e0098b564906",
+      "type": "multiple-picture",
+      "title": "FOTO DA PLACA DO VEÍCULO",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "422965b7-cbd0-4de1-913f-1fc6147904be",
+      "type": "multiple-picture",
+      "title": "FOTO DO PAINEL DO VEÍCULO COM MOTOR LIGADO",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "0ca77571-11d8-4316-bde8-11336b96e562",
+      "type": "multiple-choice",
+      "title": "ALGUMA AVARIA PRESENTE NO VEÍCULO",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "e7037c5c-4cbb-425b-bcab-e233af633d59",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "b77c6433-1708-4952-9b9a-b9ea2ad8d05d",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "c54ac773-5551-48db-8130-2a3dbc88e79a",
+      "type": "multiple-picture",
+      "title": "INSERIR FOTOS DAS AVARIAS",
+      "description": "",
+      "required": false,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "0ca77571-11d8-4316-bde8-11336b96e562",
+            "title": "ALGUMA AVARIA PRESENTE NO VEÍCULO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f1124153-11f6-4f38-a8ed-fe4a2e433d7c",
+      "type": "paragraph",
+      "title": "DESCREVA AS AVARIAS APONTADAS",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "0ca77571-11d8-4316-bde8-11336b96e562",
+            "title": "ALGUMA AVARIA PRESENTE NO VEÍCULO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "afaefaa8-7697-4aa6-ac77-249915e67241",
+      "type": "multiple-picture",
+      "title": "INSERIR FOTOS (INTERNA E EXTERNA) DO VEÍCULO ANTES DE INCIAR DESLOCAMENTO",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}

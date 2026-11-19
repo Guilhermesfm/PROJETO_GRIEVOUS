@@ -1,0 +1,2019 @@
+{
+  "name": "REMANEJAMENTO - INSTALAÇÃO",
+  "type": "public",
+  "description": "",
+  "questionsCount": 86,
+  "questions": [
+    {
+      "id": "b7d44688-c3cc-4f69-a648-88cfa93222df",
+      "type": "picture",
+      "title": "PLACA DO VEICULO",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "f57971a0-cdfa-4961-99d6-901b16b134ad",
+      "type": "checkboxes",
+      "title": "CHECK-UP INICIAL",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "6806571c-ae92-4957-a5c9-0ccc0322225d",
+          "value": "SETAS - OK",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "a381d7b4-7e5c-45f9-ad63-8f5243da8c87",
+          "value": "PISCA ALERTA - OK",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "50524c37-c73d-4a0b-bae5-7a5b5c15348a",
+          "value": "BUZZINA - OK",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "4accc187-4504-4581-ad03-ef980daf769e",
+          "value": "VIDROS ELETRICOS - OK",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "577b43af-6b55-4621-9010-ed214e764df0",
+          "value": "RETROVISOR ELETRICO - OK",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "12c84a72-2dbb-477e-955c-ee4520d71e52",
+          "value": "RADIO - OK",
+          "position": 5,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "9d889fbc-5964-4cc8-85eb-88b41b603e9d",
+          "value": "PAINEL DE INSTRUMENTOS - OK",
+          "position": 6,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "ee434ebb-c124-4f01-a8b8-87bfeb77027a",
+          "value": "ALARME - OK",
+          "position": 7,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "7ee3c95b-4b36-46f3-ae61-02008ce90272",
+          "value": "TRAVA ELETRICA - OK",
+          "position": 8,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "319e18e3-a43b-496c-8a8e-4c0e9b36720b",
+      "type": "picture",
+      "title": "PAINEL MOTOR LIGADO (ANTES DA INSTALAÇÃO)",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "595ad2bc-01b1-4650-9679-4cdd675ef677",
+      "type": "picture",
+      "title": "HODOMETRO",
+      "description": "",
+      "required": false,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "ee1330ae-b130-40cc-8357-8441bbdd1c8f",
+      "type": "picture",
+      "title": "HORIMETRO",
+      "description": "",
+      "required": false,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "14707832-4f9c-43b9-a389-1f3a41d467d8",
+      "type": "multiple-choice",
+      "title": "ALGUMA AVARIA ANTES DA INSTALAÇÃO?",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "34a5337b-3786-4a88-91c3-85e33dae492a",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "db74e617-9bf6-46f2-9c9f-16c8d2f2d2fa",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "595b9efc-82f4-40dd-b331-cb25a957f8dc",
+      "type": "multiple-picture",
+      "title": "ANEXAR FOTOS DE AVARIAS",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "14707832-4f9c-43b9-a389-1f3a41d467d8",
+            "title": "ALGUMA AVARIA ANTES DA INSTALAÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "b8d697c2-6e21-47ef-8484-4228b6233bd9",
+      "type": "paragraph",
+      "title": "DESCRIÇÃO DA AVARIAS",
+      "description": "",
+      "required": false,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "14707832-4f9c-43b9-a389-1f3a41d467d8",
+            "title": "ALGUMA AVARIA ANTES DA INSTALAÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "1b5c5fff-502f-4356-aef5-2f8819a822d4",
+      "type": "short-answer",
+      "title": "QUAL A MARCA DO VEICULO? (EX: VOLKSWAGEM)",
+      "description": "",
+      "required": true,
+      "position": 8,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "c7fe995f-8eaf-4675-a421-e1eb208953ea",
+      "type": "short-answer",
+      "title": "QUAL O MODELO DO VEICULO? (EX: CONSTALLATION 24.250 2021)",
+      "description": "",
+      "required": true,
+      "position": 9,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+      "type": "checkboxes",
+      "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?",
+      "description": "",
+      "required": true,
+      "position": 10,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "66489633-5310-49e5-9bb9-c522ca301b8c",
+          "value": "GALILEOSKY",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "f84eb6ca-e374-47f3-9c95-4b061042ba36",
+          "value": "CÂMERAS",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "07c6b5be-3c01-4575-a14a-9b1768268009",
+          "value": "JR11",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "e238d022-f7f8-4bca-b83d-3d5d76c0891f",
+          "value": "JR12",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "42e990e4-cfc7-41bb-b506-5b89ce046adc",
+          "value": "RASTREADOR BASICO",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "0b730579-7836-4640-b359-579cdf30a54c",
+          "value": "BAFOMETRO",
+          "position": 5,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "65a159b2-e7c0-4cac-9903-79867ece4bb5",
+          "value": "TABLET",
+          "position": 6,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "391237b2-9687-4fde-806d-906eb47470ce",
+          "value": "OUTROS",
+          "position": 7,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "0ebf72d9-833e-46ca-9fd7-2ba91ab5dcba",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO GALILEOSKY",
+      "description": "",
+      "required": true,
+      "position": 11,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6d61b723-7d31-4325-ab43-e689f2ef1717",
+      "type": "picture",
+      "title": "FOTO DO LACRE DA ANTENA DO GALILEOSKY",
+      "description": "",
+      "required": true,
+      "position": 12,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "520ca7ac-c041-44c1-afac-e0ea4bb19c02",
+      "type": "picture",
+      "title": "FOTO DO IMEI DA CÂMERA",
+      "description": "",
+      "required": true,
+      "position": 13,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "CÂMERA V5",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6c8c40d6-f532-4b44-91e4-ad497dfad3fa",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO JR 12",
+      "description": "",
+      "required": true,
+      "position": 14,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "9889bc3d-f981-4ad8-a249-0839f19c2c31",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO JR11",
+      "description": "",
+      "required": true,
+      "position": 15,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR11",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d3e0173d-79e3-48a0-957c-7ae4ba01b104",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO BAFOMETRO",
+      "description": "",
+      "required": true,
+      "position": 16,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "BAFOMETRO",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c3d3483c-d574-4aff-a5ea-c28fcfbdef04",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO RASTREADOR BASICO",
+      "description": "",
+      "required": true,
+      "position": 17,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "RASTREADOR BASICO",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "e4fd35b5-3944-4475-90be-23579eb16b75",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO TABLET",
+      "description": "",
+      "required": true,
+      "position": 18,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "TABLET",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "175a094f-3bfc-47d8-a436-18369933a766",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO EQUIPAMENTO - OUTROS",
+      "description": "",
+      "required": true,
+      "position": 19,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "OUTROS",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0cf4878d-fe51-466a-9019-55c8590a1671",
+      "type": "checkboxes",
+      "title": "ENVIE FOTOS DO PAINEL, PLACA E IMEI DO EQUIPAMENTO INSTALADO PARA O SUPORTE",
+      "description": "",
+      "required": true,
+      "position": 20,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "e7fc202e-ba75-4745-a85f-620f8723e6bc",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "7bf4ac91-f6f8-4f09-b09b-20af822eb9c3",
+      "type": "multiple-choice",
+      "title": "O VEICULO INSTALADO POSSUI ECONOMIA? (SE NÃO SOUBER PERGUNTE AO SUPORTE)",
+      "description": "",
+      "required": true,
+      "position": 21,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "f0da7afa-1c69-4edd-b218-f2e85ffa2750",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "2a3dadc1-ab58-4000-af2f-f12c574990d2",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "5e800968-a214-4b4e-966b-a8e881446c6a",
+      "type": "checkboxes",
+      "title": "ENVIE A FOTO DO CONTA GIRO COM O MOTOR LIGADO PARA O AGENDAMENTO",
+      "description": "",
+      "required": true,
+      "position": 22,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "9dd7b4b0-aed7-4b85-8d7b-9172310ff9c2",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "7bf4ac91-f6f8-4f09-b09b-20af822eb9c3",
+            "title": "O VEICULO INSTALADO POSSUI ECONOMIA? (SE NÃO SOUBER PERGUNTE AO SUPORTE)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d5a667dd-502b-4da6-a95a-f999d290085f",
+      "type": "checkboxes",
+      "title": "OBS: O RASTREADOR DEVE SER INSTALADO EM LOCAL OCULTO E DIFERENTE DOS DEMAIS (TELEMETRIA, CÂMERAS ETC.). A FONTE DE ALIMENTAÇÃO TAMBÉM NÃO PODE SER A MESMA. ISSO É ESSENCIAL PARA QUE, EM CASO DE ROUBO, O DISPOSITIVO NÃO SEJA FACILMENTE ENCONTRADO.",
+      "description": "",
+      "required": true,
+      "position": 23,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "f0dbf958-33bd-4385-a4fd-396aa4f03528",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "RASTREADOR BASICO",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "1d7203fe-5dac-460d-a5b1-1a0945221964",
+      "type": "short-answer",
+      "title": "QUAL LOCAL FOI PEGO A ALIMENTAÇÃO PRO RASTREADOR?",
+      "description": "",
+      "required": true,
+      "position": 24,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "RASTREADOR BASICO",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "22ac4f73-9b9d-4cbd-b3ab-3342b7c69e99",
+      "type": "multiple-picture",
+      "title": "FOTO DO PONTO DE ALIMENTAÇÃO DO RASTREADOR",
+      "description": "",
+      "required": true,
+      "position": 25,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "RASTREADOR BASICO",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3d96d525-93cd-4a7d-bd5a-5a0f0cf047e0",
+      "type": "short-answer",
+      "title": "QUAL O PONTO DO VEICULO FOI TIRADO ALIMENTAÇÃO? (EX: TACOGRAFO)",
+      "description": "",
+      "required": true,
+      "position": 26,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "RASTREADOR BASICO",
+          "operator": "not-equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2bb7f455-db03-4727-8986-7bfb60a72e21",
+      "type": "multiple-picture",
+      "title": "FOTOS DAS EMENDAS DOS FIOS DE ALIMENTAÇÃO (FIOS ISOLADOS MOSTRANDO CADA LIGAÇÃO)",
+      "description": "",
+      "required": true,
+      "position": 27,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "RASTREADOR BASICO",
+          "operator": "not-equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "aa7045b7-9f54-46e8-8517-c1247bc92f80",
+      "type": "checkboxes",
+      "title": "O RPM (GIRO DO MOTOR) FOI COLETADO ATRAVES DE:",
+      "description": "",
+      "required": true,
+      "position": 28,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "4dab2590-e564-42a0-a5d1-45417d978a79",
+          "value": "REDE CAN",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "920d56b5-69ea-4a02-928a-0da87606289a",
+          "value": "SENSORES ANALÓGICOS",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "c05b034a-4bd0-4853-aefe-2600ce55b5c1",
+          "value": "NÃO FOI NECESSARIO COLETAR RPM",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "20c8ff3e-6c5a-4a2b-8f03-f9d329213e12",
+      "type": "short-answer",
+      "title": "O SINAL DA CAN É DE QUAL PONTO DO VEICULO (EX: PAINEL)",
+      "description": "",
+      "required": true,
+      "position": 29,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "REDE CAN",
+          "operator": "equal",
+          "question": {
+            "id": "aa7045b7-9f54-46e8-8517-c1247bc92f80",
+            "title": "O RPM (GIRO DO MOTOR) FOI COLETADO ATRAVES DE:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "e45f840f-b13c-4985-8a6e-e5a2520483cb",
+      "type": "multiple-picture",
+      "title": "FOTOS DOS FIOS DA CAN ISOLADOS (FOTO MOSTRANDO OS FIOS SEM ACABAMENTO)",
+      "description": "",
+      "required": true,
+      "position": 30,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "REDE CAN",
+          "operator": "equal",
+          "question": {
+            "id": "aa7045b7-9f54-46e8-8517-c1247bc92f80",
+            "title": "O RPM (GIRO DO MOTOR) FOI COLETADO ATRAVES DE:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "1d43e9c5-64bd-44de-b760-971bddb5b61e",
+      "type": "multiple-picture",
+      "title": "FOTO DO PONTO DA LIGAÇÃO DO SENSOR DO RPM",
+      "description": "",
+      "required": true,
+      "position": 31,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SENSORES ANALÓGICOS",
+          "operator": "equal",
+          "question": {
+            "id": "aa7045b7-9f54-46e8-8517-c1247bc92f80",
+            "title": "O RPM (GIRO DO MOTOR) FOI COLETADO ATRAVES DE:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "22a967c3-f7f4-4824-b8e2-2013866d8515",
+      "type": "paragraph",
+      "title": "PORQUE NÃO FOI NECESSARIO COLETAR RPM?",
+      "description": "",
+      "required": true,
+      "position": 32,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "NÃO FOI NECESSARIO COLETAR RPM",
+          "operator": "equal",
+          "question": {
+            "id": "aa7045b7-9f54-46e8-8517-c1247bc92f80",
+            "title": "O RPM (GIRO DO MOTOR) FOI COLETADO ATRAVES DE:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0c5fc616-b21c-4998-8900-757a8931af00",
+      "type": "multiple-choice",
+      "title": "FOI INSTALADO BLOQUEIO? (OBS: Bloqueio deve ser feito exclusivamente no arranque, é proibido bloquear outro ponto)",
+      "description": "",
+      "required": true,
+      "position": 33,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "d098a521-d842-47fe-8382-67b29f8571bb",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "72853614-2004-490b-9ee3-23b020c0970c",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "532141cd-d101-4c1d-9036-ffb7d1d2e80e",
+      "type": "multiple-picture",
+      "title": "FOTOS DO PONTO DE BLOQUEIO (MOSTRANDO O FIO DO ARRANQUE)",
+      "description": "",
+      "required": true,
+      "position": 34,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "0c5fc616-b21c-4998-8900-757a8931af00",
+            "title": "FOI INSTALADO BLOQUEIO? (OBS: Bloqueio deve ser feito exclusivamente no arranque, é proibido bloquear outro ponto)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2dd7268e-29fb-47de-af39-0e92805c8813",
+      "type": "multiple-picture",
+      "title": "FOTOS DAS EMENDAS DO RELE E NOS FIOS DO BLOQUEIO",
+      "description": "",
+      "required": true,
+      "position": 35,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "0c5fc616-b21c-4998-8900-757a8931af00",
+            "title": "FOI INSTALADO BLOQUEIO? (OBS: Bloqueio deve ser feito exclusivamente no arranque, é proibido bloquear outro ponto)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "eb17e271-7f87-4c2c-9e0f-cfe05cee983b",
+      "type": "checkboxes",
+      "title": "EM CASOS QUE O HORIMETRO NÃO FOR COLETADO PELA CAN É OBRIGATORIO PEGAR O D+ QUE VEM DO ALTERNADOR PARA CALCULAR O HORIMETRO (ESSA REGRA SE APLICA APENAS NOS CLIENTES LAFAETE, AL MAQ, JSL E ACTECH). PARA A LEITURA DO SINAL D+ DEVE SER USADO A IN3 DO GALILEO",
+      "description": "",
+      "required": true,
+      "position": 36,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "e726e26d-58d4-4c16-82b9-08982998fd26",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "8438d19d-2298-45c8-b84f-82ad09fb4326",
+      "type": "multiple-choice",
+      "title": "VOCÊ TEM ACESSO AO CONFIGURADOR DO GALILEOSKY?",
+      "description": "",
+      "required": true,
+      "position": 37,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "86c0baf6-2354-4809-b653-cdb91287d859",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "0be35c4e-0c64-4003-a616-3a6edcb22543",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bc39b085-8d1f-4b3b-86f4-43562309c358",
+      "type": "multiple-choice",
+      "title": "O HORIMETRO FOI COLETADO PELA REDE CAN?",
+      "description": "",
+      "required": true,
+      "position": 38,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "5fbb9d73-fb39-4db9-8bb4-af01b20fde63",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "08f668ac-78bc-4004-a938-f65fdfb9b70f",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "92dade63-dc99-4370-9071-8467dd308e9e",
+      "type": "short-answer",
+      "title": "ANEXE FOTOS DO PONTO QUE FOI PEGO O SINAL DO D+ (SINAL PÓS MOTOR)",
+      "description": "",
+      "required": true,
+      "position": 39,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "NÃO",
+          "operator": "equal",
+          "question": {
+            "id": "bc39b085-8d1f-4b3b-86f4-43562309c358",
+            "title": "O HORIMETRO FOI COLETADO PELA REDE CAN?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dcab3cbe-e853-443c-8094-c5556d586325",
+      "type": "checkboxes",
+      "title": "ATUALIZE O REPOSITORIO E VERSÃO DO CONFIGURADOR ANTES DE PASSAR PRO PROXIMO PASSO",
+      "description": "",
+      "required": true,
+      "position": 40,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "684b985b-ecd5-4410-a820-55ba922e86bf",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "8438d19d-2298-45c8-b84f-82ad09fb4326",
+            "title": "VOCÊ TEM ACESSO AO CONFIGURADOR DO GALILEOSKY?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bb88b2ca-d6b0-4320-a062-789244cb28e5",
+      "type": "multiple-picture",
+      "title": "ANEXE UMA FOTO NITIDA DO FIRMWARE E DO SCRIPT DO CLIENTE ATUALIZADOS",
+      "description": "",
+      "required": true,
+      "position": 41,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "8438d19d-2298-45c8-b84f-82ad09fb4326",
+            "title": "VOCÊ TEM ACESSO AO CONFIGURADOR DO GALILEOSKY?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "662422db-c932-4add-9ced-685163f77bd1",
+      "type": "picture",
+      "title": "ANEXE UMA FOTO DA ABA DE DIAGNÓSTICO (MOSTRANDO OS DADOS COLETADOS. EX: RPM, HORIMETRO, HODOMETRO)",
+      "description": "",
+      "required": true,
+      "position": 42,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "8438d19d-2298-45c8-b84f-82ad09fb4326",
+            "title": "VOCÊ TEM ACESSO AO CONFIGURADOR DO GALILEOSKY?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c4608af4-ae66-469b-bc8b-1760443f9716",
+      "type": "checkboxes",
+      "title": "APENAS 1 SCRIPT DO VEICULO E DO CLIENTE DEVEM ESTAR CARREGADOS NO GALILEO",
+      "description": "",
+      "required": true,
+      "position": 43,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "d76bd573-2073-4ede-8ad6-072e06b4636f",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "8438d19d-2298-45c8-b84f-82ad09fb4326",
+            "title": "VOCÊ TEM ACESSO AO CONFIGURADOR DO GALILEOSKY?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d6603458-89a8-4d46-b5cd-d8d6798d98a3",
+      "type": "checkboxes",
+      "title": "QUAIS PERIFERICOS FORAM INSTALADOS?",
+      "description": "",
+      "required": true,
+      "position": 44,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "8a6c8422-cde8-42af-baa5-c7a9b791d86b",
+          "value": "LEITORA DE IDENTIFICAÇÃO DE MOTORISTAS",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "904a4ebc-d9df-4468-bfb9-a48aa67475d4",
+          "value": "LEITORA DE IDENTIFICAÇÃO DE PASSAGEIROS",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "de3ffaca-982e-4f41-a2b2-cb2b53478dda",
+          "value": "NENHUM PERIFERICO FOI INSTALADO",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "a3520e29-c1a0-4d2e-aed3-ecfac0a1e522",
+      "type": "checkboxes",
+      "title": "ATENÇÃO: AS LEITORAS NÃO PODEM SER FIXADAS EM LOCAIS QUE O CHICOTE DELES FIQUE PRENSADO, ELES DEVEM PASSAR LIVRE SEM SER AMASSADOS POR ALGUM ACABAMENTO DO VEICULO",
+      "description": "",
+      "required": true,
+      "position": 45,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "656dd44f-9a89-41e8-85da-1c724b45a615",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "NENHUM PERIFERICO FOI INSTALADO",
+          "operator": "not-equal",
+          "question": {
+            "id": "d6603458-89a8-4d46-b5cd-d8d6798d98a3",
+            "title": "QUAIS PERIFERICOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3c0947a1-835d-4a6a-89c0-e3f300633f19",
+      "type": "multiple-picture",
+      "title": "FOTO DAS ABRAÇADEIRAS PRENDENDO OS CONECTORES DA LEITORA (MOTORISTA)",
+      "description": "",
+      "required": true,
+      "position": 46,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "LEITORA DE IDENTIFICAÇÃO DE MOTORISTAS",
+          "operator": "equal",
+          "question": {
+            "id": "d6603458-89a8-4d46-b5cd-d8d6798d98a3",
+            "title": "QUAIS PERIFERICOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "af28364e-6775-45c1-b5ed-9b00f4bcef69",
+      "type": "picture",
+      "title": "FOTO AMPLA DA LEITORA DE MOTORISTA FIXADA",
+      "description": "",
+      "required": true,
+      "position": 47,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "3e5a446d-79f3-4d33-bb98-9a658993bdc5",
+      "type": "multiple-picture",
+      "title": "FOTO DOS LOCAIS QUE O EXTENSOR DA LEITORA DE PASSAGEIRO FOI PASSADO (COM O VEICULO MONTADO)",
+      "description": "",
+      "required": true,
+      "position": 48,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "LEITORA DE IDENTIFICAÇÃO DE PASSAGEIROS",
+          "operator": "equal",
+          "question": {
+            "id": "d6603458-89a8-4d46-b5cd-d8d6798d98a3",
+            "title": "QUAIS PERIFERICOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "5b8c8e05-8351-4a73-86c0-356f9fb147bc",
+      "type": "multiple-picture",
+      "title": "FOTO DAS ABRAÇADEIRAS PRENDENDO OS CONECTORES DA LEITORA (PASSAGEIRO)",
+      "description": "",
+      "required": true,
+      "position": 49,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "LEITORA DE IDENTIFICAÇÃO DE PASSAGEIROS",
+          "operator": "equal",
+          "question": {
+            "id": "d6603458-89a8-4d46-b5cd-d8d6798d98a3",
+            "title": "QUAIS PERIFERICOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "b114cfa5-1277-4778-90c1-d8a82d65942c",
+      "type": "picture",
+      "title": "FOTO AMPLA DA LEITORA DE PASSAGEIRO FIXADA",
+      "description": "",
+      "required": true,
+      "position": 50,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "LEITORA DE IDENTIFICAÇÃO DE PASSAGEIROS",
+          "operator": "equal",
+          "question": {
+            "id": "d6603458-89a8-4d46-b5cd-d8d6798d98a3",
+            "title": "QUAIS PERIFERICOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3b92d690-b614-4f56-a52f-6f7fa622936c",
+      "type": "multiple-choice",
+      "title": "VOCÊ TEM ACESSO AO CONFIGURADOR DAS CÂMERAS?",
+      "description": "",
+      "required": true,
+      "position": 51,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "a4fac890-0a0d-46fe-bec6-80d0a8902da9",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "4781be4a-c909-4453-bf11-85030d6d83dd",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "CÂMERAS",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "e6268dff-f6c4-4524-b4f5-d527ad5668cf",
+      "type": "picture",
+      "title": "PRINT DA TELA DA CÂMERA ADAS CALIBRADA",
+      "description": "",
+      "required": true,
+      "position": 52,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "3b92d690-b614-4f56-a52f-6f7fa622936c",
+            "title": "VOCÊ TEM ACESSO AO CONFIGURADOR DAS CÂMERAS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "402b1674-4606-4ddc-830b-cc4f5c16b38a",
+      "type": "picture",
+      "title": "PRINT DA TELA DA CÂMERA DMS CALIBRADA",
+      "description": "",
+      "required": true,
+      "position": 53,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "3b92d690-b614-4f56-a52f-6f7fa622936c",
+            "title": "VOCÊ TEM ACESSO AO CONFIGURADOR DAS CÂMERAS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "10c852f6-9892-4d26-828d-9a88d21f56cf",
+      "type": "picture",
+      "title": "PRINT DA TELA DE TODAS AS CÂMERAS LIGADAS",
+      "description": "",
+      "required": true,
+      "position": 54,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "3b92d690-b614-4f56-a52f-6f7fa622936c",
+            "title": "VOCÊ TEM ACESSO AO CONFIGURADOR DAS CÂMERAS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "14d23dd7-b9a4-40b0-8590-d84294d99197",
+      "type": "picture",
+      "title": "PRINT DA TELA \"SIMPLE SETUP\" - ONLINE ID DO EQUIPAMENTO",
+      "description": "",
+      "required": true,
+      "position": 55,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "3b92d690-b614-4f56-a52f-6f7fa622936c",
+            "title": "VOCÊ TEM ACESSO AO CONFIGURADOR DAS CÂMERAS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3528dc2d-682c-4951-a169-9c1cd2547866",
+      "type": "multiple-choice",
+      "title": "VOCÊ POSSUI OS LACRES ANTI VIOLAÇÃO PARA CÂMERAS?",
+      "description": "",
+      "required": true,
+      "position": 56,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "ec25458c-9eee-4ee3-978c-0a61fc81fe54",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "491b7af9-405e-43dd-bc93-fb07cd59f022",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "CÂMERAS",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2fa91cd9-f906-4e16-bafa-7f7fbcb6c2e4",
+      "type": "multiple-picture",
+      "title": "CÂMERA DMS, FADIGA E ADAS FIXADAS COM OS LACRES EM TODAS",
+      "description": "",
+      "required": true,
+      "position": 57,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "3528dc2d-682c-4951-a169-9c1cd2547866",
+            "title": "VOCÊ POSSUI OS LACRES ANTI VIOLAÇÃO PARA CÂMERAS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "e8c8c942-0a57-4af8-8d4a-4aa8e6d6b805",
+      "type": "multiple-picture",
+      "title": "LACRES DOS CONECTORES DAS CAMERAS (ADAS, FADIGA E LACRE NO SLOT DE CHIP DA CÂMERA)",
+      "description": "",
+      "required": true,
+      "position": 58,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "3528dc2d-682c-4951-a169-9c1cd2547866",
+            "title": "VOCÊ POSSUI OS LACRES ANTI VIOLAÇÃO PARA CÂMERAS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "5a1ecda2-9a35-4377-8766-33625fec8fe4",
+      "type": "multiple-picture",
+      "title": "LACRE DO CONECTOR DE ALIMENTAÇÃO DA CÂMERA",
+      "description": "",
+      "required": true,
+      "position": 59,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "3528dc2d-682c-4951-a169-9c1cd2547866",
+            "title": "VOCÊ POSSUI OS LACRES ANTI VIOLAÇÃO PARA CÂMERAS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "e8556f9c-f428-435b-8ef4-eca25a4397b0",
+      "type": "paragraph",
+      "title": "PORQUE VOCÊ NÃO TEM LACRES PARA AS CÂMERAS?",
+      "description": "",
+      "required": true,
+      "position": 60,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "NÃO",
+          "operator": "equal",
+          "question": {
+            "id": "3528dc2d-682c-4951-a169-9c1cd2547866",
+            "title": "VOCÊ POSSUI OS LACRES ANTI VIOLAÇÃO PARA CÂMERAS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dc83260f-578c-45a8-be3a-58be4fe9d425",
+      "type": "multiple-picture",
+      "title": "FOTO DA ABRAÇADEIRA PRENDENDOS OS FUSIVEIS DOS CHICOTES",
+      "description": "",
+      "required": true,
+      "position": 61,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "CÂMERAS",
+          "operator": "not-equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "1c48c52e-48fb-48a0-a839-f4f5ea4bb82e",
+      "type": "checkboxes",
+      "title": "TODOS OS EQUIPAMENTOS DEVEM SER FIXADOS  EM LOCAL SEM OBSTRUÇÃO (MATERIAIS QUE IMPEÇAM TRANSMISSÃO GSM E GPS) EX: CHAPAS DE METAL",
+      "description": "",
+      "required": true,
+      "position": 62,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "154bbe18-af0a-45fc-abc6-df8d1b629ef2",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "1165e7a7-ec9a-483b-b58d-bcaffa6d83c3",
+      "type": "short-answer",
+      "title": "QUAL LOCAL O GALILEO FOI FIXADO? (EX: ATRAS DO PAINEL)",
+      "description": "",
+      "required": true,
+      "position": 63,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bb08afb4-3d6e-488d-8ff0-10443188d2ce",
+      "type": "multiple-picture",
+      "title": "FOTO AMPLA DO GALILEO FIXADO NO VEICULO",
+      "description": "",
+      "required": true,
+      "position": 64,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3f0549f9-397a-43f6-9e58-73d31dc1186a",
+      "type": "short-answer",
+      "title": "DESCREVA O LOCAL ONDE FOI FIXADO O JR12 (EX: CENTRAL DE FUSIVEIS)",
+      "description": "",
+      "required": true,
+      "position": 65,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "abfda963-cab6-4b70-b522-d2a87294401b",
+      "type": "multiple-picture",
+      "title": "FOTO AMPLA DO JR12 FIXADO NO VEICULO",
+      "description": "",
+      "required": true,
+      "position": 66,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "37dde8c0-33af-403b-a980-d6bf7f02f660",
+      "type": "short-answer",
+      "title": "DESCREVA O LOCAL ONDE FOI FIXADO O JR11 (EX: CENTRAL DE FUSIVEIS)",
+      "description": "",
+      "required": true,
+      "position": 67,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR11",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "25263673-3cef-4b08-b6d8-cf1257676e5a",
+      "type": "multiple-picture",
+      "title": "FOTO AMPLA DO JR11 FIXADO",
+      "description": "",
+      "required": true,
+      "position": 68,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR11",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "255ec022-635e-410d-8303-3d1423c647f5",
+      "type": "short-answer",
+      "title": "ONDE FOI FIXADO O RASTREADOR (EX: CENTRAL DE FUSIVEIS)",
+      "description": "",
+      "required": true,
+      "position": 69,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "RASTREADOR BASICO",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "a14f1e69-34f3-4639-8c1c-5f9b42d22d58",
+      "type": "multiple-picture",
+      "title": "FOTO AMPLA DO RASTREADOR FIXADO NO VEICULO",
+      "description": "",
+      "required": true,
+      "position": 70,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "RASTREADOR BASICO",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0797dd85-d033-40a1-86dd-b6a839cbe88e",
+      "type": "multiple-picture",
+      "title": "FOTOS DO LOCAL QUE DESMONTOU PARA FIXAR O RASTREADOR",
+      "description": "",
+      "required": true,
+      "position": 71,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "RASTREADOR BASICO",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "becb0d2a-b462-4816-b592-06e98e117ff8",
+      "type": "picture",
+      "title": "FOTO AMPLA DO TABLET FIXADO NO VEICULO",
+      "description": "",
+      "required": true,
+      "position": 72,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "TABLET",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "14e70e64-0745-4e14-8a6e-f37766d71ec7",
+      "type": "picture",
+      "title": "FOTO AMPLA DO BAFOMETRO FIXADO NO VEICULO",
+      "description": "",
+      "required": true,
+      "position": 73,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "BAFOMETRO",
+          "operator": "equal",
+          "question": {
+            "id": "ebfc80aa-c1d2-485e-8a64-6fb3196b8112",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "eb9a79a3-de1f-4e00-924e-187c8f140731",
+      "type": "picture",
+      "title": "FOTO PAINEL PÓS INSTALAÇÃO (MOTOR LIGADO)",
+      "description": "",
+      "required": true,
+      "position": 74,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "4c444595-9821-48c9-9294-336d1b70d581",
+      "type": "multiple-picture",
+      "title": "FOTO LOCAL QUE DESMONTOU PARA INSTALAR OS EQUIPAMENTOS (APÓS MONTAR)",
+      "description": "",
+      "required": true,
+      "position": 75,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "9de22593-cbda-4fdf-a026-12fc6f4a58c5",
+      "type": "multiple-choice",
+      "title": "CLIENTE POSSUI CONTROLE DE CARTÃO RFID EMBARCADO?",
+      "description": "",
+      "required": true,
+      "position": 76,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "edc6f648-e87c-487c-8390-a1b52536e64e",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "11dd9e75-bdda-43ef-81a4-9065afa45522",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "5c37366a-a6cc-44ae-9f2b-55c8144b3f6f",
+      "type": "picture",
+      "title": "FOTO DO CARTÃO RFID DEIXADO NO VEICULO (CARTÃO DE IDENTIFICAÇÃO) MOSTRANDO O NUMERO DO CARTÃO",
+      "description": "",
+      "required": true,
+      "position": 77,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "LEITORA DE IDENTIFICAÇÃO DE MOTORISTAS",
+          "operator": "equal",
+          "question": {
+            "id": "d6603458-89a8-4d46-b5cd-d8d6798d98a3",
+            "title": "QUAIS PERIFERICOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cb268dcb-34c0-4e79-bf31-c6b7a83127dd",
+      "type": "multiple-choice",
+      "title": "ALGUMA AVARIA APÓS A INSTALAÇÃO?",
+      "description": "",
+      "required": true,
+      "position": 78,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "6fd7ea41-5d59-460f-9916-0bdaa8d34dc7",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "2700c1de-e44c-4515-994a-bd949de78e06",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "c1392a68-6325-463f-ac44-1089aec79610",
+      "type": "paragraph",
+      "title": "Relate a avaria identificada e avise imediatamente o responsável do cliente sobre o ocorrido.",
+      "description": "",
+      "required": true,
+      "position": 79,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "cb268dcb-34c0-4e79-bf31-c6b7a83127dd",
+            "title": "ALGUMA AVARIA APÓS A INSTALAÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "8b9edb74-c0e8-4714-b2b9-e67358e956a6",
+      "type": "multiple-picture",
+      "title": "FOTO DA AVARIA PROVOCADA",
+      "description": "",
+      "required": true,
+      "position": 80,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "cb268dcb-34c0-4e79-bf31-c6b7a83127dd",
+            "title": "ALGUMA AVARIA APÓS A INSTALAÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "5a268ab5-cfea-4c8f-93e4-c832080685f8",
+      "type": "checkboxes",
+      "title": "GRAVE UM VIDEO DO QUE FIZEMOS NO VEICULO E MOSTRE O VEICULO EM FUNCIONAMENTO E CARREGUE NA ABA \"ANEXOS\"",
+      "description": "",
+      "required": true,
+      "position": 81,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "d077ebf9-7379-45b5-87a2-151e1f4e8eb7",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "9e12b885-1418-433e-858b-7bdcd37d07fe",
+      "type": "checkboxes",
+      "title": "FOI REALIZADO VALIDAÇÃO POR:",
+      "description": "",
+      "required": true,
+      "position": 82,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "b63ab779-41db-4aa0-88df-269818ae1e4e",
+          "value": "ACOMPANHAMENTO TÉCNICO",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "0fdb7535-9eab-4c73-b7ee-95f249776658",
+          "value": "PROPRIO TECNICO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "6cfc8352-baae-4010-954c-8ccfe9ec9556",
+          "value": "NÃO FOI FEITO A VALIDAÇÃO",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "68b1cd7c-3725-4ad6-8518-00a5ae1ca276",
+      "type": "paragraph",
+      "title": "JUSTIFIQUE O MOTIVO DA NÃO VALIDAÇÃO",
+      "description": "",
+      "required": true,
+      "position": 83,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "NÃO FOI FEITO A VALIDAÇÃO",
+          "operator": "equal",
+          "question": {
+            "id": "9e12b885-1418-433e-858b-7bdcd37d07fe",
+            "title": "FOI REALIZADO VALIDAÇÃO POR:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ffda7e8d-d51b-4d81-9b04-f1731f4e9ca6",
+      "type": "checkboxes",
+      "title": "ANEXE O PDF DA VALIDAÇÃO NA ABA ANEXOS (VALIDAÇÃO FEITA PELO APP INOFIELD)",
+      "description": "",
+      "required": true,
+      "position": 84,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "2137a0fc-4f4e-489a-8723-e50181837f8e",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "PROPRIO TECNICO",
+          "operator": "equal",
+          "question": {
+            "id": "9e12b885-1418-433e-858b-7bdcd37d07fe",
+            "title": "FOI REALIZADO VALIDAÇÃO POR:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "4be7b506-6328-4edb-b3d3-57c78a098bab",
+      "type": "picture",
+      "title": "PERGUNTE AO SUPORTE SE O VEICULO FOI LIBERADO E ANEXE O PRINT DA CONFIRMAÇÃO DELES ABAIXO:",
+      "description": "",
+      "required": true,
+      "position": 85,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "ACOMPANHAMENTO TÉCNICO",
+          "operator": "equal",
+          "question": {
+            "id": "9e12b885-1418-433e-858b-7bdcd37d07fe",
+            "title": "FOI REALIZADO VALIDAÇÃO POR:"
+          }
+        }
+      ]
+    }
+  ],
+  "isEvaluated": false
+}

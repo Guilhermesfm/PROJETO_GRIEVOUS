@@ -1,0 +1,330 @@
+{
+  "name": "NOVO FORMULÁRIO DE MANUTENÇÃO",
+  "type": "public",
+  "description": "",
+  "questionsCount": 14,
+  "questions": [
+    {
+      "id": "1fb77138-d00f-41b5-a5ba-a7941d2a75d8",
+      "type": "picture",
+      "title": "FOTO PLACA VEICULO",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "8602bb4e-9c6f-4068-99c6-8af82ac683a8",
+      "type": "picture",
+      "title": "FOTO PAINEL (MOTOR LIGADO)",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "9144e4a9-4ebd-451b-b691-917894215b0d",
+      "type": "multiple-picture",
+      "title": "FOTO DO HODOMETRO E FOTO DO HORIMETRO",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "78bf7cb6-d57d-4ad9-8987-1c2521da0a78",
+      "type": "multiple-choice",
+      "title": "VEÍCULO POSSUI AVARIAS?",
+      "description": "",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "4f21234d-a7a5-4803-9335-7c688ce8e6f2",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "c68dc90f-5ed3-4707-a028-e5aad6bf3583",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "f18a1585-f535-4232-885c-083fdedb5f74",
+      "type": "multiple-picture",
+      "title": "FOTO DAS AVARIAS",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "78bf7cb6-d57d-4ad9-8987-1c2521da0a78",
+            "title": "VEÍCULO POSSUI AVARIAS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c0c8e92f-1629-4dd2-91dd-dae862fbea03",
+      "type": "paragraph",
+      "title": "DESCREVA DETALHADAMENTE AS AVARIAS PRESENTES NO VEÍCULO",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "78bf7cb6-d57d-4ad9-8987-1c2521da0a78",
+            "title": "VEÍCULO POSSUI AVARIAS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "7c58d5fa-3a7b-4172-a30d-067b21b848dc",
+      "type": "checkboxes",
+      "title": "QUAIS EQUIPAMENTOS FORAM SOLICITADOS PARA REALIZAR MANUTENÇÃO?",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "b1ff4884-503e-4020-8935-b6d7723cdb72",
+          "value": "GALILEOSKY",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "72982e62-4875-48a7-b7b3-d34505b32954",
+          "value": "J-R12",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "1fff3c81-e715-447e-b416-df3508219cb3",
+          "value": "RASTREADOR BÁSICO",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "60065bbd-02bb-4abc-91b7-60566b22abc9",
+          "value": "CÂMERA V5",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "3d549139-0149-41e5-9df4-a57c2d93f990",
+          "value": "CÂMERA NT407 PRO",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "af06e95e-97c9-415d-b6dc-337b0682515d",
+          "value": "MOMENTA",
+          "position": 5,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "40f1e324-dfdf-4afe-a9a1-0dcc1e2eb70d",
+          "value": "BAFOMETRO",
+          "position": 6,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "ab49f715-b090-41f6-93c7-aef711423c6d",
+      "type": "multiple-choice",
+      "title": "ALGUMA VIOLAÇÃO FOI ENCONTRADA NA INSTALAÇÃO ?",
+      "description": "",
+      "required": true,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "d3f495e1-23a1-495e-ad76-46b7775d77c7",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "45593f51-c0f8-474b-9ca7-29e3a165fb1f",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "2f112878-dd33-456d-b974-076f7db0bf24",
+      "type": "multiple-picture",
+      "title": "ANEXE FOTOS DAS VIOLAÇÕES ENCONTRADAS",
+      "description": "",
+      "required": true,
+      "position": 8,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "ab49f715-b090-41f6-93c7-aef711423c6d",
+            "title": "ALGUMA VIOLAÇÃO FOI ENCONTRADA NA INSTALAÇÃO ?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3989c7d0-2691-4eb6-b540-8e26a31ef5d1",
+      "type": "paragraph",
+      "title": "DESCREVA DETALHADAMENTE A VIOAÇÃO",
+      "description": "",
+      "required": true,
+      "position": 9,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "ab49f715-b090-41f6-93c7-aef711423c6d",
+            "title": "ALGUMA VIOLAÇÃO FOI ENCONTRADA NA INSTALAÇÃO ?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3aef8fe4-079e-48cf-979d-0feb25713a22",
+      "type": "checkboxes",
+      "title": "QUAIS DESSES ITENS FORAM SOLICITADOS MANUTENÇÃO?",
+      "description": "",
+      "required": true,
+      "position": 10,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "9a75af1f-8cc5-457c-b388-537c46417b98",
+          "value": "LEITORA DE IDENTIFICAÇÃO DE MOTORISTA",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "94c08305-b1d4-4a95-a48e-2aabfed7ebe2",
+          "value": "LEITORA DE IDENTIFICAÇÃO DE PASSAGEIRO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "8eaf2d36-4e96-4d3e-8f4a-190cd0af12bf",
+          "value": "NÃO FOI SOLICITADO MANUTENÇÃO PARA OS PRODUTOS ACIMA",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "43739161-932a-4257-bd62-9e3cab6ee85d",
+      "type": "multiple-choice",
+      "title": "NECESSÁRIO SUBSTITUIÇÃO DE EQUIPAMENTO",
+      "description": "",
+      "required": true,
+      "position": 11,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "afee14ea-1737-41b6-afb4-48c421495c7c",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "ec44a2b3-b43a-436f-acde-0a1670dc9150",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "7a09621a-5fcb-45c2-b739-bbfc41d1bebc",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO EQUIPAMENTO QUE ESTÁ SAINDO",
+      "description": "",
+      "required": true,
+      "position": 12,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "3d253af8-28ba-44d1-a563-29199ee42d13",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO EQUIPAMENTO QUE ESTÁ ENTRANDO",
+      "description": "",
+      "required": true,
+      "position": 13,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}

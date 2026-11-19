@@ -1,0 +1,299 @@
+{
+  "name": "1 - MANUTENÇÃO TÉCNICO TERRABEL",
+  "type": "public",
+  "description": "FORMULÁRIO DE USO EXCLUSIVO DA TERRABEL",
+  "questionsCount": 11,
+  "questions": [
+    {
+      "id": "5ec61324-18f2-4635-bd21-f93c056f4d02",
+      "type": "short-answer",
+      "title": "INSIRA SEU NOME COMPLETO",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "6489f17f-e346-4605-b854-56fedda21f0d",
+      "type": "checkboxes",
+      "title": "QUAIS OS PERIFÉRICOS SERÁ FEITO A MANUTENÇÃO",
+      "description": "",
+      "required": false,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "7d80850f-07bb-4767-82bd-bb838bd3ebcf",
+          "value": "TELEMETRIA",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "85fadaa9-1a2a-41c2-af86-3298b5b91475",
+          "value": "SISTEMA DE FADIGA",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "231290a4-39b0-415e-af35-474a3322f012",
+          "value": "REDUNDANTE",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "d3b5a7c6-eca0-4ba6-9b83-ccbacd904654",
+          "value": "BAFOMETRO",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "877874b4-7be3-4b80-b196-701b01675269",
+          "value": "LEITORA DE MOTORISTA",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "60cbc64a-2310-4242-a7cf-0d5234e5050f",
+          "value": "LEITORA DE PASSAGEIRO",
+          "position": 5,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "6f972db3-6cf4-4985-b309-5a6a6b2a0c8b",
+          "value": "ANTENA SATELITAL",
+          "position": 6,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "a9f437df-4cc0-4679-b906-3bd30ff36006",
+      "type": "checkboxes",
+      "title": "HOUVE NECESSIDADE DE TROCAR A TELEMETRIA?",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "623ec98f-14c2-4aaf-84cf-5843372bfaa3",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "7df4f637-cdb2-4c8d-9054-00b89f51a053",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "TELEMETRIA",
+          "operator": "equal",
+          "question": {
+            "id": "6489f17f-e346-4605-b854-56fedda21f0d",
+            "title": "QUAIS OS PERIFÉRICOS SERÁ FEITO A MANUTENÇÃO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6c30eeda-a9a1-4b06-b9df-418f7dcacd5a",
+      "type": "multiple-picture",
+      "title": "INSIRA UMA FOTO DO NOVO SERIAL DA TELEMERIA",
+      "description": "",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "a9f437df-4cc0-4679-b906-3bd30ff36006",
+            "title": "HOUVE NECESSIDADE DE TROCAR A TELEMETRIA?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fd5a989c-3436-4caf-bd9b-e62500f4c22e",
+      "type": "checkboxes",
+      "title": "HOUVE NECESSIDADE DE TROCAR O SISTEMA DE FADIGA?",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "26cf7cb0-e33e-4d27-b360-0665e9d9d724",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "081eecd6-6b65-4e5b-9d5c-d3e72dcd039b",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "SISTEMA DE FADIGA",
+          "operator": "equal",
+          "question": {
+            "id": "6489f17f-e346-4605-b854-56fedda21f0d",
+            "title": "QUAIS OS PERIFÉRICOS SERÁ FEITO A MANUTENÇÃO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "574ffeb2-9b12-4b24-a702-b5ba5a1c5393",
+      "type": "multiple-picture",
+      "title": "INSIRA UMA FOTO DO SERIAL DO NOVO SISTEMA DE FADIGA",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "fd5a989c-3436-4caf-bd9b-e62500f4c22e",
+            "title": "HOUVE NECESSIDADE DE TROCAR O SISTEMA DE FADIGA?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "4a9f15af-a387-44d4-abb5-489d03e88554",
+      "type": "paragraph",
+      "title": "DESCREVA A CAUSA DA TROCA DO SISTEMA DE FADIGA",
+      "description": "",
+      "required": false,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "fd5a989c-3436-4caf-bd9b-e62500f4c22e",
+            "title": "HOUVE NECESSIDADE DE TROCAR O SISTEMA DE FADIGA?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2543a806-9a65-4ee3-af1f-75210c4adf51",
+      "type": "checkboxes",
+      "title": "HOUVE NECESSIDADE DE TROCAR O BAFOMETRO",
+      "description": "",
+      "required": true,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "23bf2d1a-4609-4de7-824a-beca6bff8f9e",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "74f2a528-e5d4-4305-a58e-92c2bd237325",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "BAFOMETRO",
+          "operator": "equal",
+          "question": {
+            "id": "6489f17f-e346-4605-b854-56fedda21f0d",
+            "title": "QUAIS OS PERIFÉRICOS SERÁ FEITO A MANUTENÇÃO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "125380b5-240a-44bb-a170-a2b177630120",
+      "type": "multiple-picture",
+      "title": "INSIRA UMA FOTO DO SERIAL/VALIDADE DO NOVO BAFOMETRO",
+      "description": "ESTA ETIQUETA FICA NO ETILOMETRO",
+      "required": true,
+      "position": 8,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "2543a806-9a65-4ee3-af1f-75210c4adf51",
+            "title": "HOUVE NECESSIDADE DE TROCAR O BAFOMETRO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "7db31263-39dc-4bc4-9783-4b4d741557c3",
+      "type": "paragraph",
+      "title": "O QUE GEROU A MANUTENÇÃO FÍSICA?",
+      "description": "",
+      "required": true,
+      "position": 9,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "e74040bb-7ab8-4d52-b0c7-312f07bfced5",
+      "type": "short-answer",
+      "title": "INSIRA O NOME DO ATENDENTE DE SUPORTE QUE VALIDOU AS INFORMAÇÕES",
+      "description": "",
+      "required": true,
+      "position": 10,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}

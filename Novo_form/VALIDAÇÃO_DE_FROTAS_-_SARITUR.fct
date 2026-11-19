@@ -1,0 +1,162 @@
+{
+  "name": "VALIDAÇÃO DE FROTAS - SARITUR",
+  "type": "public",
+  "description": "Validações de telemetria instaladas na frota Saritur",
+  "questionsCount": 8,
+  "questions": [
+    {
+      "id": "1389dbd0-2f68-4c7d-842e-b50f864b5b24",
+      "type": "picture",
+      "title": "Placa",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "3ebd1294-7ac2-4892-8dc0-1e53ce38319a",
+      "type": "picture",
+      "title": "Hodômetro",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "3eb4b837-a51e-4034-9350-a7ff45bdb014",
+      "type": "multiple-choice",
+      "title": "TELEMTRIA INSTALADA",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "3806e98c-1b76-46b4-a28a-e80acbd3a140",
+          "value": "JR12",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "bfce996f-2de6-4122-a73d-cb6d46d09b70",
+          "value": "GALILEOSKY",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "9c67f727-161f-4110-aedb-6edb0a47e2c3",
+      "type": "picture",
+      "title": "IMEI DO GALILEOSKY",
+      "description": "",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "3eb4b837-a51e-4034-9350-a7ff45bdb014",
+            "title": "TELEMTRIA INSTALADA"
+          }
+        }
+      ]
+    },
+    {
+      "id": "01e9e30a-4717-4759-b7c4-5186ac91837c",
+      "type": "picture",
+      "title": "IMEI DO JR12",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "3eb4b837-a51e-4034-9350-a7ff45bdb014",
+            "title": "TELEMTRIA INSTALADA"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3a006f60-7fb8-4303-b31b-60739b02b5bf",
+      "type": "checkboxes",
+      "title": "IMEI DA PLATAFORMA E O MESMO DO VEICULO",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "fbae6cd8-9270-433c-94b5-3df4a436369e",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "fb061a22-618c-4714-8fad-fb533e4b5ac2",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "7fb38138-e4e0-49f8-ad9f-b915b84c2ad2",
+      "type": "picture",
+      "title": "PRINT DO EQUIPAMENTO CADASTRADO NA PLATAFORMA",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "NÃO",
+          "operator": "equal",
+          "question": {
+            "id": "3a006f60-7fb8-4303-b31b-60739b02b5bf",
+            "title": "IMEI DA PLATAFORMA E O MESMO DO VEICULO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "05a1ced5-3965-4fac-913c-05595c38b7c4",
+      "type": "multiple-picture",
+      "title": "VALIDACÃO DO SUPORTE",
+      "description": "",
+      "required": true,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}

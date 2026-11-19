@@ -1,0 +1,731 @@
+{
+  "name": "FORMULARIO DE INSTALAÇÃO - SARITUR",
+  "type": "public",
+  "description": "",
+  "questionsCount": 37,
+  "questions": [
+    {
+      "id": "6dab64e1-0b8a-433f-abc9-cb0f52436386",
+      "type": "picture",
+      "title": "PLACA DO VEICULO",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "79a217e3-2186-48b7-b1c5-f07de284687e",
+      "type": "picture",
+      "title": "PAINEL MOTOR LIGADO (ANTES DA INSTALAÇÃO)",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "09ea5584-a80f-4622-bcc6-07085b161094",
+      "type": "picture",
+      "title": "HODOMETRO",
+      "description": "",
+      "required": false,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "8b47cf9a-c3aa-4da4-8b90-aeda6d6e45f7",
+      "type": "picture",
+      "title": "HORIMETRO",
+      "description": "",
+      "required": false,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "facc46b7-ff86-4d12-81e5-a2aa180fb84f",
+      "type": "short-answer",
+      "title": "QUAL A MARCA DO VEICULO? (EX: VOLKSWAGEM)",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "c90eb40e-889e-4cd0-a607-62916a3cdee3",
+      "type": "short-answer",
+      "title": "QUAL O MODELO DO VEICULO? (EX: CONSTALLATION 24.250 2021)",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "0ce55cc9-9d45-4149-b857-cdc856e45a3a",
+      "type": "checkboxes",
+      "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "832908b2-ecb5-4ee1-87cc-e8da980cbc72",
+          "value": "GALILEOSKY",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "9c093a5e-cd6b-49c9-952a-29f47209b94a",
+          "value": "JR12",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "665b643b-7534-4db0-a094-f8dfd5ecf084",
+      "type": "checkboxes",
+      "title": "EQUIPAMENTO J-R12 DEVE SER UTILIZADO APENAS EM VEÍCULOS COM REDE CAN. EM CASOS ONDE O VEÍCULO FOR ANALÓGICO SERÁ NECESSÁRIO UTILIZAR O GALILEOSKY",
+      "description": "",
+      "required": false,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "9b283852-3420-4742-8fa8-f59060c14a48",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "0ce55cc9-9d45-4149-b857-cdc856e45a3a",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ff7eaf28-51eb-41ea-a74e-4d63974d0b31",
+      "type": "checkboxes",
+      "title": "TODA CONFIGURAÇÃO DE LEITURA DA REDE CAN PELO EQUIPAMENTO SERÁ REALIZADA DE MANEIRA REMOTA PELA EQUIPE DE ACOMPANHAMENTO TÉCNICO INOPRIME",
+      "description": "",
+      "required": false,
+      "position": 8,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "26821f36-ff9c-4ff6-a7bc-8423b27e1eda",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "0ce55cc9-9d45-4149-b857-cdc856e45a3a",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2dc7e25b-6086-4a82-8b9e-e0dff18b2693",
+      "type": "checkboxes",
+      "title": "ENVIE FOTOS DO PAINEL, PLACA E IMEI DO EQUIPAMENTO INSTALADO PARA O SUPORTE",
+      "description": "",
+      "required": true,
+      "position": 9,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "1670f7ee-3d24-4040-90b5-014668a42f56",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "42cdffea-b9d0-49b0-959c-0ab228e321af",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO GALILEOSKY",
+      "description": "",
+      "required": true,
+      "position": 10,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "0ce55cc9-9d45-4149-b857-cdc856e45a3a",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "13b0a10b-aac2-43d4-ba09-cfa49737f2a4",
+      "type": "picture",
+      "title": "FOTO DO LACRE DA ANTENA DO GALILEOSKY",
+      "description": "",
+      "required": true,
+      "position": 11,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "0ce55cc9-9d45-4149-b857-cdc856e45a3a",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f00feee1-d1a9-47f6-8124-3b5d957e7444",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO JR 12",
+      "description": "",
+      "required": true,
+      "position": 12,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "0ce55cc9-9d45-4149-b857-cdc856e45a3a",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "b1464076-bfc5-429c-b195-e09c3fb6ab6f",
+      "type": "short-answer",
+      "title": "QUAL O PONTO DO VEICULO FOI TIRADO ALIMENTAÇÃO? (EX: TACOGRAFO)",
+      "description": "",
+      "required": true,
+      "position": 13,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "241cbbdc-5267-4d5c-8ec1-8e6992f834ff",
+      "type": "multiple-picture",
+      "title": "FOTOS DAS EMENDAS DOS FIOS DE ALIMENTAÇÃO (FIOS ISOLADOS MOSTRANDO CADA LIGAÇÃO)",
+      "description": "",
+      "required": true,
+      "position": 14,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "38d9f7aa-67f8-48c8-9d58-c1c732df3f86",
+      "type": "checkboxes",
+      "title": "ENVIE A FOTO DO CONTA GIRO COM O MOTOR LIGADO EM MARCHA LENTA PARA O AGENDAMENTO",
+      "description": "",
+      "required": true,
+      "position": 15,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "5736408f-5845-4a8e-8080-09fdacb766ea",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "1e4e23c4-e6f7-495b-aea6-f06adcbdca8e",
+      "type": "checkboxes",
+      "title": "O RPM (GIRO DO MOTOR) FOI COLETADO ATRAVES DE:",
+      "description": "",
+      "required": true,
+      "position": 16,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "2e15ca8f-6e4c-402c-a1c6-5f3f2c0428eb",
+          "value": "REDE CAN",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "c97c3f04-c4e1-4c46-be25-87eaeb9aaf02",
+          "value": "SENSORES ANALÓGICOS",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "400ed2ed-70b0-4160-8c1e-6b20ab1882ca",
+      "type": "short-answer",
+      "title": "O SINAL DA CAN É DE QUAL PONTO DO VEICULO (EX: PAINEL)",
+      "description": "",
+      "required": true,
+      "position": 17,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "REDE CAN",
+          "operator": "equal",
+          "question": {
+            "id": "1e4e23c4-e6f7-495b-aea6-f06adcbdca8e",
+            "title": "O RPM (GIRO DO MOTOR) FOI COLETADO ATRAVES DE:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3c72f0a5-bf62-44f0-928f-056cd5612ac7",
+      "type": "multiple-picture",
+      "title": "FOTOS DOS FIOS DA CAN ISOLADOS (FOTO MOSTRANDO OS FIOS SEM ACABAMENTO)",
+      "description": "",
+      "required": true,
+      "position": 18,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "REDE CAN",
+          "operator": "equal",
+          "question": {
+            "id": "1e4e23c4-e6f7-495b-aea6-f06adcbdca8e",
+            "title": "O RPM (GIRO DO MOTOR) FOI COLETADO ATRAVES DE:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "7c74be1c-cb64-4d77-8393-12bd8e274e18",
+      "type": "multiple-picture",
+      "title": "FOTO DO PONTO DA LIGAÇÃO DO SENSOR DO RPM",
+      "description": "",
+      "required": true,
+      "position": 19,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SENSORES ANALÓGICOS",
+          "operator": "equal",
+          "question": {
+            "id": "1e4e23c4-e6f7-495b-aea6-f06adcbdca8e",
+            "title": "O RPM (GIRO DO MOTOR) FOI COLETADO ATRAVES DE:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "8eda174b-6399-48c2-99a5-e690230c832b",
+      "type": "multiple-choice",
+      "title": "VOCÊ TEM ACESSO AO CONFIGURADOR DO GALILEOSKY?",
+      "description": "",
+      "required": true,
+      "position": 20,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "8072ca0c-e326-4c24-a767-49eb51a754be",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "87627bbc-6c71-4401-9c14-56bcb5483358",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "0ce55cc9-9d45-4149-b857-cdc856e45a3a",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fdb82cbf-7fc5-4c44-ba26-d7498682f702",
+      "type": "picture",
+      "title": "ANEXE UMA FOTO DA ABA DE DIAGNÓSTICO (MOSTRANDO OS DADOS COLETADOS. EX: RPM, HORIMETRO, HODOMETRO)",
+      "description": "",
+      "required": true,
+      "position": 21,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "8eda174b-6399-48c2-99a5-e690230c832b",
+            "title": "VOCÊ TEM ACESSO AO CONFIGURADOR DO GALILEOSKY?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "27692629-751d-4bf8-b9b4-3b2360077126",
+      "type": "multiple-picture",
+      "title": "ANEXE UMA FOTO NITIDA DO FIRMWARE E DO SCRIPT DO CLIENTE ATUALIZADOS",
+      "description": "",
+      "required": true,
+      "position": 22,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "8eda174b-6399-48c2-99a5-e690230c832b",
+            "title": "VOCÊ TEM ACESSO AO CONFIGURADOR DO GALILEOSKY?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "a8b80c7f-3ce8-41f7-9736-4f49d29e1b29",
+      "type": "checkboxes",
+      "title": "ATUALIZE O REPOSITORIO E VERSÃO DO CONFIGURADOR ANTES DE PASSAR PRO PROXIMO PASSO",
+      "description": "",
+      "required": true,
+      "position": 23,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "35f7eeb1-44bb-477d-8497-15b17a1750ea",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "8eda174b-6399-48c2-99a5-e690230c832b",
+            "title": "VOCÊ TEM ACESSO AO CONFIGURADOR DO GALILEOSKY?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "df7ab42d-d883-4fba-bc02-7d71681f7c21",
+      "type": "checkboxes",
+      "title": "ATENÇÃO: A LEITORA DE MOTORISTA NÃO PODE SER FIXADA EM LOCAL QUE O CHICOTE  FIQUE PRENSADO, ELE DEVE PASSAR LIVRE SEM SER AMASSADO POR ALGUM ACABAMENTO DO VEICULO",
+      "description": "",
+      "required": true,
+      "position": 24,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "a4407f00-258e-41da-a5e7-43a29c8e2cf2",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "ce427a20-e433-42db-ab15-4e2b0256e31e",
+      "type": "multiple-picture",
+      "title": "FOTO DAS ABRAÇADEIRAS PRENDENDO OS CONECTORES DA LEITORA (MOTORISTA)",
+      "description": "",
+      "required": true,
+      "position": 25,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "53c924d2-7a32-425b-b106-3716970aa63c",
+      "type": "picture",
+      "title": "FOTO AMPLA DA LEITORA DE MOTORISTA FIXADA",
+      "description": "",
+      "required": true,
+      "position": 26,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "25198023-741b-4920-bdae-174741fabe92",
+      "type": "multiple-picture",
+      "title": "FOTO DA ABRAÇADEIRA PRENDENDOS OS FUSIVEIS DOS CHICOTES",
+      "description": "",
+      "required": true,
+      "position": 27,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "3c849911-4a39-4e62-90c2-6e90df6219ce",
+      "type": "checkboxes",
+      "title": "TODOS OS EQUIPAMENTOS DEVEM SER FIXADOS  EM LOCAL SEM OBSTRUÇÃO (MATERIAIS QUE IMPEÇAM TRANSMISSÃO GSM E GPS) EX: CHAPAS DE METAL",
+      "description": "",
+      "required": true,
+      "position": 28,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "1f8e5232-116d-43e1-b96c-c446faa77b12",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "42f3223d-2595-4e65-b13c-3f5df37e739d",
+      "type": "short-answer",
+      "title": "QUAL LOCAL O GALILEO FOI FIXADO? (EX: ATRAS DO PAINEL)",
+      "description": "",
+      "required": true,
+      "position": 29,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "0ce55cc9-9d45-4149-b857-cdc856e45a3a",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c5924d21-91c1-4b32-9b1c-13d2f0da0f81",
+      "type": "multiple-picture",
+      "title": "FOTO AMPLA DO GALILEO FIXADO NO VEICULO",
+      "description": "",
+      "required": true,
+      "position": 30,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "0ce55cc9-9d45-4149-b857-cdc856e45a3a",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0391bcd2-583c-4d6e-ad30-b61ebc2076d8",
+      "type": "short-answer",
+      "title": "DESCREVA O LOCAL ONDE FOI FIXADO O JR12 (EX: CENTRAL DE FUSIVEIS)",
+      "description": "",
+      "required": true,
+      "position": 31,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "0ce55cc9-9d45-4149-b857-cdc856e45a3a",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ea4626bc-5cfb-4a79-8676-94d45e010e9d",
+      "type": "multiple-picture",
+      "title": "FOTO AMPLA DO JR12 FIXADO NO VEICULO",
+      "description": "",
+      "required": true,
+      "position": 32,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "0ce55cc9-9d45-4149-b857-cdc856e45a3a",
+            "title": "QUAIS EQUIPAMENTOS FORAM INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "855ada85-bd02-46d9-9541-f001fe374590",
+      "type": "picture",
+      "title": "FOTO PAINEL PÓS INSTALAÇÃO (MOTOR LIGADO)",
+      "description": "",
+      "required": true,
+      "position": 33,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "a0eda10f-9dd9-411e-b89b-233a02067c9e",
+      "type": "checkboxes",
+      "title": "FOI REALIZADO VALIDAÇÃO POR:",
+      "description": "",
+      "required": true,
+      "position": 34,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "72b8fa5c-0594-4238-bfae-aba8f735594e",
+          "value": "ACOMPANHAMENTO TÉCNICO",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "1b19e5c2-6bf6-4e2e-8ea2-e1f183217079",
+          "value": "NÃO FOI FEITO A VALIDAÇÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "fba1d5de-d02d-4339-b5b1-c5bd8f44b8e1",
+      "type": "paragraph",
+      "title": "JUSTIFIQUE O MOTIVO DA NÃO VALIDAÇÃO",
+      "description": "",
+      "required": true,
+      "position": 35,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "NÃO FOI FEITO A VALIDAÇÃO",
+          "operator": "equal",
+          "question": {
+            "id": "a0eda10f-9dd9-411e-b89b-233a02067c9e",
+            "title": "FOI REALIZADO VALIDAÇÃO POR:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fb13a6d8-7640-49c0-a9f1-2acf34b0a4a3",
+      "type": "picture",
+      "title": "PERGUNTE AO SUPORTE SE O VEICULO FOI LIBERADO E ANEXE O PRINT DA CONFIRMAÇÃO DELES ABAIXO:",
+      "description": "",
+      "required": true,
+      "position": 36,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "ACOMPANHAMENTO TÉCNICO",
+          "operator": "equal",
+          "question": {
+            "id": "a0eda10f-9dd9-411e-b89b-233a02067c9e",
+            "title": "FOI REALIZADO VALIDAÇÃO POR:"
+          }
+        }
+      ]
+    }
+  ],
+  "isEvaluated": false
+}

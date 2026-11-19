@@ -1,0 +1,1125 @@
+{
+  "name": "PREPARAÇÃO DE MATERIAIS",
+  "type": "public",
+  "description": "",
+  "questionsCount": 49,
+  "questions": [
+    {
+      "id": "b255a3b3-73d0-40dd-b7e4-1ed753317cac",
+      "type": "short-answer",
+      "title": "Para qual cliente o equipamento está sendo preparado? Escreva o nome do cliente abaixo:",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "faf89a30-30b8-48e1-b96b-c8cc0c9d017b",
+      "type": "short-answer",
+      "title": "Para qual ticket o equipamento está sendo preparado?",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "e39dea71-511b-4e39-9cac-d4c1308eb9ca",
+      "type": "checkboxes",
+      "title": "Antes de preparar o pedido consulte as especificações do cliente na Wiki da InoPrime",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "0c228521-9134-423b-b2f4-ea12b1c0b45f",
+          "value": "Foi conferido na Wiki e os equipamento serão feitos de acordo com o padrão do cliente",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+      "type": "multiple-choice",
+      "title": "Qual modelo de equipamento está sendo preparado?",
+      "description": "",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "4e1c98f1-bf40-4120-b60f-af6c6cf4be56",
+          "value": "GalileoSky",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "005494a9-1b98-431e-9f9e-e180529703a7",
+          "value": "V5",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "43b21166-bc8e-4c57-97f8-37be75fa8b56",
+          "value": "JR-12",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "d48af728-bfb0-411b-89ec-6b2a05aa09bd",
+          "value": "XT-40",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "9c65ebe1-858a-45f1-9ae5-e8fe7f627139",
+          "value": "Bafômetro",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "3c4eae98-d6be-4981-aab1-a9e381daf3f7",
+          "value": "Momenta",
+          "position": 5,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "f458b5f3-1c01-4d34-85a8-52ec383e9cf2",
+          "value": "Satelital",
+          "position": 6,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "e5712ad4-f156-41c8-85cb-44847ec361b0",
+          "value": "Câmera NT407 PRO",
+          "position": 7,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "591122f7-97a6-4388-aa61-c8dd885a3cac",
+      "type": "picture",
+      "title": "Foto do IMEI do GalileoSky",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cd775b4a-3d6c-4066-ba79-2f65cb1c9ed7",
+      "type": "checkboxes",
+      "title": "Todas as configurações do Galileo devem ser feitas pelo configurador da InoPrime",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "5d650e7e-9e08-4afd-b4b4-f39c758cd173",
+          "value": "Estou ciente que as configurações do Galileo devem ser feitas no configurador do Galileo da InoPrime",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "19472132-a441-4392-b2ec-732dc59d6869",
+      "type": "checkboxes",
+      "title": "Formate o cartão de memoria e embarque as cercas de acordo com oque foi pedido no ticket (mesmo que no ticket não peça, embarque os arquivos de áudios)",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "b7e648f8-963d-4d85-b9c9-cb00bd8127ec",
+          "value": "O cartão de memoria foi formatado e as cercas foram embarcadas de acordo com o oque foi pedido no ticket",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "764594f1-bf0f-46ac-b460-e670d8b67011",
+      "type": "multiple-picture",
+      "title": "Anexe a foto da pasta \"geofences\" e a foto do arquivo \"zones.kml\" (Tire foto dos arquivos de áudios carregados)",
+      "description": "",
+      "required": true,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "5af45521-490a-4ce2-978a-85d65fde0293",
+      "type": "picture",
+      "title": "Foto ABA geral do configurador mostrando o Firmware e script do cliente atualizados",
+      "description": "",
+      "required": true,
+      "position": 8,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "26c88fb6-1e47-4651-9d68-aea5628fd1c1",
+      "type": "multiple-picture",
+      "title": "Teste as saídas e entradas na Giga de teste e coloque as fotos dos testes abaixo:",
+      "description": "",
+      "required": true,
+      "position": 9,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f5a9171b-d265-4d1b-841f-90734f33cf38",
+      "type": "multiple-picture",
+      "title": "Anexe a foto da aba de \"diagnóstico\" mostrando o \"Status\", \"dados de navegação\", \"informações do serviço\" e \"status de entradas\"",
+      "description": "",
+      "required": true,
+      "position": 10,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "00d83b07-c590-4103-af8b-10d6443f6eb1",
+      "type": "picture",
+      "title": "Foto do ICCID do chip que está indo no GalileoSky",
+      "description": "",
+      "required": true,
+      "position": 11,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f542f293-0485-48ff-a646-32f801632e37",
+      "type": "picture",
+      "title": "Foto da APN que está no equipamento",
+      "description": "",
+      "required": true,
+      "position": 12,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "7590f7ce-119c-4d4c-b8ec-dbf128e26513",
+      "type": "multiple-picture",
+      "title": "Foto do kit completo que está sendo enviado do GalileoSky",
+      "description": "",
+      "required": true,
+      "position": 13,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "71c5419b-18f3-4396-a27f-dd62ae45cc26",
+      "type": "picture",
+      "title": "Foto do IMEI da câmera V5",
+      "description": "",
+      "required": true,
+      "position": 14,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "V5",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c238e1ef-da92-491f-a3a2-c7762c530084",
+      "type": "multiple-picture",
+      "title": "Foto dos canais mostrando a imagem das câmeras (ABA \"Media\" opção \"realtime vídeo\"",
+      "description": "",
+      "required": true,
+      "position": 15,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "V5",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "10256986-d6d0-4cff-ac5d-8dee6dd1e12d",
+      "type": "multiple-picture",
+      "title": "Foto da ABA \"simple setup\" mostrando as informações do \"set device param\"",
+      "description": "",
+      "required": true,
+      "position": 16,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "V5",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ba9d430f-a1aa-459b-b4cd-d38b3e2d1938",
+      "type": "multiple-picture",
+      "title": "Foto dos eventos gerados na plataforma \"Trackerprime\"",
+      "description": "",
+      "required": true,
+      "position": 17,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "V5",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "9a75be54-d39f-4118-9460-4a7ec445b133",
+      "type": "picture",
+      "title": "Foto do ICCID do chip que está indo no V5",
+      "description": "",
+      "required": true,
+      "position": 18,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "V5",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "9cf2d234-6568-46de-8d5c-9bfa45d09197",
+      "type": "checkboxes",
+      "title": "Não esqueça de enviar todos os itens que compõem o kit do V5 que está sendo preparado",
+      "description": "",
+      "required": true,
+      "position": 19,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "6575bdce-c023-4b0e-b0ec-912733686835",
+          "value": "Pra câmera de fadiga enviar o extensor",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "10d8b879-b12e-45a7-bec2-8baeef8ce868",
+          "value": "Pra câmera externa enviar o extensor e adaptador pra V5",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "26caf9b5-4da2-4318-a2f6-9414d6323823",
+          "value": "Enviar lacres de papel e lacres para os conectores",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "V5",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "284d0042-908b-4851-bbaf-7cf47f2f01c1",
+      "type": "multiple-picture",
+      "title": "Foto do Kit completo que está sendo enviado para o V5",
+      "description": "",
+      "required": true,
+      "position": 20,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "V5",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0ddf5990-731a-4cab-800b-b7fb774e0378",
+      "type": "picture",
+      "title": "Foto do IMEI do JR12",
+      "description": "",
+      "required": true,
+      "position": 21,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR-12",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "5255bc5b-dbcd-40ea-9bac-de4ed3c37fba",
+      "type": "multiple-picture",
+      "title": "Foto do firmware atualizado e do perfil de configuração do JR12",
+      "description": "",
+      "required": true,
+      "position": 22,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR-12",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "76ea6aeb-9c0e-4f76-ab3c-60acf93c0e73",
+      "type": "picture",
+      "title": "Foto do ICCID do chip que está indo no JR12",
+      "description": "",
+      "required": true,
+      "position": 23,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR-12",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "825608d7-5088-4ad6-9fc6-0b27c372d592",
+      "type": "picture",
+      "title": "Foto do equipamento transmitindo na plataforma \"trackerprime\"",
+      "description": "",
+      "required": true,
+      "position": 24,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR-12",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "a704b064-7555-418f-8132-c8a856d6e70e",
+      "type": "multiple-picture",
+      "title": "Foto do kit que está sendo enviado junto ao JR12",
+      "description": "",
+      "required": true,
+      "position": 25,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR-12",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bd29edd7-d15e-4336-b02d-e57e52732af0",
+      "type": "picture",
+      "title": "Foto do IMEI do XT40",
+      "description": "",
+      "required": true,
+      "position": 26,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "XT-40",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2896819b-b919-44d9-aaec-1829b32313db",
+      "type": "picture",
+      "title": "Foto do configurador mostrando a configuração enviada para o XT40",
+      "description": "",
+      "required": true,
+      "position": 27,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "XT-40",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "532ee63a-44eb-4c2f-b49e-1d0066d7a2ac",
+      "type": "checkboxes",
+      "title": "Caso o cliente seja a Contourline, teste a saída de bloqueio do XT-40",
+      "description": "",
+      "required": true,
+      "position": 28,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "d0dd62bf-2b34-443c-b7ac-67b1b423259c",
+          "value": "Foi testado a saida de bloqueio e está funcionando de forma correta",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "XT-40",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ba53833b-6325-4eba-94b7-58e8e6112876",
+      "type": "picture",
+      "title": "Foto do equipamento transmitindo na plataforma \"TrackerPrime\"",
+      "description": "",
+      "required": true,
+      "position": 29,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "XT-40",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0a8098a4-fd1d-4f47-b1f6-cc42831fd687",
+      "type": "picture",
+      "title": "Foto do ICCID do chip que está indo no XT40",
+      "description": "",
+      "required": true,
+      "position": 30,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "XT-40",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cf116db0-a16a-47c8-a38f-8e131d815c84",
+      "type": "picture",
+      "title": "Foto do Numero de serie do Bafômetro",
+      "description": "",
+      "required": true,
+      "position": 31,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Bafômetro",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6e96ca9c-57b9-48d2-ac60-882bde82d409",
+      "type": "checkboxes",
+      "title": "Teste o bafômetro e anexe o vídeo mostrando o teste na aba de \"anexos\" e coloque no kit do bafômetro um rele de 12, um rele de 24v e um porta rele",
+      "description": "",
+      "required": true,
+      "position": 32,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "be8277b5-2a25-4879-8df2-9bf0c7759f48",
+          "value": "Video gravado e será anexado na aba de anexos fora do formulario",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "412b179f-c11a-40cd-a53b-aa6a206b8175",
+          "value": "Colocado os 2 reles e o porta rele no kit do bafômetro",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "74bae566-927f-4836-a425-174ffbd52414",
+          "value": "Colocado o acrílico na tela do do bafômetro para impedir o touch",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "Bafômetro",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d3b8c1fb-8138-4faf-ab15-6a776d7ab189",
+      "type": "picture",
+      "title": "Foto do IMEI da câmera momenta",
+      "description": "",
+      "required": true,
+      "position": 33,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Momenta",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2815d538-a49c-4e39-ace7-8d85c7efa9f2",
+      "type": "multiple-picture",
+      "title": "Foto dos canais mostrando a imagem das câmeras",
+      "description": "",
+      "required": true,
+      "position": 34,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Momenta",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "90a4b977-78d5-4ae2-a455-daaf50133042",
+      "type": "picture",
+      "title": "Foto dos eventos da câmera ADAS desabilitados",
+      "description": "",
+      "required": true,
+      "position": 35,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Momenta",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "414ac64e-5932-4be8-abdf-d01a316aedab",
+      "type": "multiple-picture",
+      "title": "Foto dos eventos de vídeos gerados na plataforma \"Trackerprime\"",
+      "description": "",
+      "required": true,
+      "position": 36,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Momenta",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "76361c2d-1495-4387-8fbc-4f8daf630588",
+      "type": "multiple-picture",
+      "title": "Foto do kit que está sendo enviado junto a momenta",
+      "description": "",
+      "required": true,
+      "position": 37,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Momenta",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "8c8a148f-f2b0-4065-aea9-bba1ef34931a",
+      "type": "picture",
+      "title": "Foto do ICCID do chip que está indo na momenta",
+      "description": "",
+      "required": true,
+      "position": 38,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Momenta",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "00e7360c-82d3-418a-bb03-409b7132368d",
+      "type": "picture",
+      "title": "Foto do IMEI do Satelital",
+      "description": "",
+      "required": true,
+      "position": 39,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Satelital",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3a911aeb-e20c-4319-ade8-88114282155e",
+      "type": "picture",
+      "title": "Vá em Configuração de transmissão no site da global star e tire foto da ultima mensagem recebida do satelital e anexe abaixo",
+      "description": "",
+      "required": true,
+      "position": 40,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Satelital",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2f103585-ee47-4951-9e0b-9335cb534b39",
+      "type": "checkboxes",
+      "title": "Todos os kits devem ir completos, antes de enviar para o técnico certifique-se que não ficou restando nada a enviar.",
+      "description": "",
+      "required": false,
+      "position": 41,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "fb235065-2667-41af-b33c-5da48e70d275",
+          "value": "Ciente",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "b744a7df-a09f-49fe-b1b9-8838b2fc49e6",
+      "type": "picture",
+      "title": "FOTO DO IMEI DA CAMERA NT407 PRO",
+      "description": "",
+      "required": true,
+      "position": 42,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Câmera NT407 PRO",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "821ff618-b3c2-40ba-a3e1-20483c73af16",
+      "type": "picture",
+      "title": "FOTO DO ICCID DO CHIP QUE ESTÁ NO NT407 PRO",
+      "description": "",
+      "required": true,
+      "position": 43,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Câmera NT407 PRO",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6e1e861e-33b9-4791-92c3-15e4da9f11e7",
+      "type": "picture",
+      "title": "FOTO DA APN QUE ESTÁ NO EQUIPAMENTO  NT407 PRO",
+      "description": "",
+      "required": true,
+      "position": 44,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Câmera NT407 PRO",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "94f8d086-5c0f-42c0-8ae7-863d98bb7cba",
+      "type": "multiple-picture",
+      "title": "EVIDÊNCIAS DO TRACKER REFERENTE A GERAÇÃO DE EVENTOS Câmera NT407 PRO",
+      "description": "",
+      "required": true,
+      "position": 45,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Câmera NT407 PRO",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "76583b81-542e-4fc8-8606-4f812c845e53",
+      "type": "multiple-picture",
+      "title": "EVIDENCIAS DO APLICATIVO REFERENTE AS CÂMERAS",
+      "description": "",
+      "required": true,
+      "position": 46,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Câmera NT407 PRO",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0d291639-b905-4384-8534-a96c4e416d22",
+      "type": "multiple-picture",
+      "title": "FOTO DO KIT",
+      "description": "",
+      "required": true,
+      "position": 47,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Câmera NT407 PRO",
+          "operator": "equal",
+          "question": {
+            "id": "8a2ca800-ab38-4309-a7fa-34b875623658",
+            "title": "Qual modelo de equipamento está sendo preparado?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "173dc3a5-95e5-4d25-8a50-d0988ba4d65f",
+      "type": "short-answer",
+      "title": "DIGITE O NOME DO TÉCNICO QUE RECEBERÁ O MATERIAL",
+      "description": "",
+      "required": false,
+      "position": 48,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}

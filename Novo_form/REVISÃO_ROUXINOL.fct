@@ -1,0 +1,563 @@
+{
+  "name": "REVISÃO ROUXINOL",
+  "type": "public",
+  "description": "",
+  "questionsCount": 23,
+  "questions": [
+    {
+      "id": "800021e3-a785-4744-9121-48b5af7cac05",
+      "type": "picture",
+      "title": "FOTO DA PLACA",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "a11663b5-4fed-478c-92fe-cb70ea8af086",
+      "type": "picture",
+      "title": "FOTO DO PAINEL C/ MOTOR LIGADO",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "38da4e9b-59e9-4b06-bb4f-f04b774f8ee2",
+      "type": "picture",
+      "title": "FOTO DO HODOMETRO",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "96774dad-06ee-4236-89ee-04a56a7d3bfc",
+      "type": "multiple-choice",
+      "title": "AVARIA NO VEÍCULO ANTES DO SERVIÇO",
+      "description": "",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "45e1b644-23ac-4a3e-9a32-180b22de282d",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "2c24856d-7b68-48fd-bba4-0c6f26826ef4",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "dd9a6aa7-e39a-403f-bb71-4336466af926",
+      "type": "multiple-picture",
+      "title": "FOTOS DA AVARIA",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "96774dad-06ee-4236-89ee-04a56a7d3bfc",
+            "title": "AVARIA NO VEÍCULO ANTES DO SERVIÇO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "b0186c13-fb13-42a9-9831-a3490ac62ee6",
+      "type": "multiple-choice",
+      "title": "VIOLAÇÃO NA INSTALAÇÃO",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "610717b7-a0d4-44d9-b2e7-32313a08f3b4",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "540b8c95-5bff-474c-9602-2a1898b8744b",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "49dd4261-b924-4260-a868-16a5aa13c884",
+      "type": "multiple-picture",
+      "title": "FOTOS DA VIOLAÇÃO",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "b0186c13-fb13-42a9-9831-a3490ac62ee6",
+            "title": "VIOLAÇÃO NA INSTALAÇÃO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "27efee39-4a72-4e52-ac0f-9a8ff9a91655",
+      "type": "multiple-choice",
+      "title": "ESTE EQUIPAMENTO JÁ PASSOU POR REVISÃO RECENTE?",
+      "description": "",
+      "required": true,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "12169c8c-6c04-42d6-98e7-e440b7d06e61",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "1a3d6da7-726b-45b6-9098-c9189654772f",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "a23bcc7d-a672-4bb3-b4e9-379f1d606bf5",
+      "type": "checkboxes",
+      "title": "Atualizações Físicas Necessárias",
+      "description": "",
+      "required": true,
+      "position": 8,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "a870590d-826a-4ba9-8489-5922dc46fb67",
+          "value": "SE O CHIP FOR DA CLARO DEVE SER TROCADO POR ESEYE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "c89d8313-60f5-4fbe-8752-8cb6315b8134",
+          "value": "O GALILEOSKY DEVE ESTAR POSICIONADO DE FORMA PLANA, NÃO PODE HAVER NENHUMA INCLINAÇÃO (IGUAL AO PROJETO DA CELERE)",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "b9499e53-547e-43f0-9d16-3ced14520079",
+          "value": "LEITORAS DE PASSAGEIRO E MOTORISTA DEVEM SER TROCADAS PELA NOVA VERSÃO",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "293460bd-ce49-43fc-829d-c0e89cf4feb3",
+          "value": "COLOCAR EXTENSOR DE PASSAGEIRO EM CARROS QUE NÃO POSSUEM O EXTENSOR DA INOPRIME",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "64a93400-c702-44c8-a86d-f07d206b2045",
+          "value": "ALIMENTAÇÃO QUE ESTIVER PROXIMO DO PAINEL DEVE ESTAR NO TACOGRAFO OU NO CONECTOR DO TAMBOR DE IGNIÇÃO",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "f689efd1-21c5-4847-8892-7d1b6442d949",
+          "value": "ALIMENTAÇÃO QUE ESTIVER EM CIMA NA CENTRAL ELETRICA DEVE ESTAR NOS BARRAMENTOS EURO 6 DEVE ESTAR NA TOMADA DE TELEMETRIA",
+          "position": 5,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "7d486024-b868-42f8-a392-1814de71de08",
+      "type": "multiple-choice",
+      "title": "NECESSÁRIO TROCA DO EQUIPAMENTO",
+      "description": "",
+      "required": true,
+      "position": 9,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "0d150ed9-9529-470e-a726-74a23f5dd5c5",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "2b147780-a738-4b94-8563-560b25617161",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "b53328a5-c8ee-47aa-858a-8d88a0230573",
+      "type": "multiple-choice",
+      "title": "VERIFICAÇÃO DAS POSIÇÕES ARMAZENADAS",
+      "description": "",
+      "required": true,
+      "position": 10,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "c7ac123d-2436-4940-a8ea-8ddf150f9380",
+          "value": "CONFERIR SE O EQUIPAMENTO TEM POSIÇÕES A SEREM DESCARREGADAS E EXTRAIR AS MESMAS",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "7d486024-b868-42f8-a392-1814de71de08",
+            "title": "NECESSÁRIO TROCA DO EQUIPAMENTO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "26e08a44-de53-4772-b87d-ed95643be8e5",
+      "type": "picture",
+      "title": "FOTO DO IMEI EQUIPAMENTO REMOVIDO",
+      "description": "",
+      "required": true,
+      "position": 11,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "7d486024-b868-42f8-a392-1814de71de08",
+            "title": "NECESSÁRIO TROCA DO EQUIPAMENTO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "a3ca71ac-0c98-4461-a3f2-1969bab813ba",
+      "type": "picture",
+      "title": "FOTO DO IMEI EQUIPAMENTO QUE ESTÁ SENDO INSTALADO",
+      "description": "",
+      "required": true,
+      "position": 12,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "7d486024-b868-42f8-a392-1814de71de08",
+            "title": "NECESSÁRIO TROCA DO EQUIPAMENTO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "de9b1b5d-a805-4974-8b1c-d972dc87fdfd",
+      "type": "multiple-choice",
+      "title": "FOI NECESSÁRIO TROCAR CHIP PARA ESEYE?",
+      "description": "",
+      "required": true,
+      "position": 13,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "e8765f0e-450a-49fe-89fe-bb4bb956c578",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "359ffa24-fe72-4c88-ad68-79312da73cb3",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "1d253e48-8a75-4684-85c3-adb4d9b61500",
+      "type": "picture",
+      "title": "FOTO DO CHIP CASO TENHA SIDO TROCADO",
+      "description": "",
+      "required": true,
+      "position": 14,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "de9b1b5d-a805-4974-8b1c-d972dc87fdfd",
+            "title": "FOI NECESSÁRIO TROCAR CHIP PARA ESEYE?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "7adb55c6-bebe-43cc-b215-9ffbf08c8556",
+      "type": "multiple-picture",
+      "title": "POSICIONAMENTO E FIXAÇÃO DO GALILEO",
+      "description": "",
+      "required": true,
+      "position": 15,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "44f26971-96c0-44f0-892f-a8988b56ea5c",
+      "type": "multiple-picture",
+      "title": "FOTO DO PONTO DE ALIMENTAÇÃO",
+      "description": "",
+      "required": true,
+      "position": 16,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "NÃO",
+          "operator": "equal",
+          "question": {
+            "id": "27efee39-4a72-4e52-ac0f-9a8ff9a91655",
+            "title": "ESTE EQUIPAMENTO JÁ PASSOU POR REVISÃO RECENTE?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "a2671888-6a5f-420e-a126-5555a77cbbc1",
+      "type": "multiple-picture",
+      "title": "FOTO COM PONTO DA REDE CAN",
+      "description": "",
+      "required": true,
+      "position": 17,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "NÃO",
+          "operator": "equal",
+          "question": {
+            "id": "27efee39-4a72-4e52-ac0f-9a8ff9a91655",
+            "title": "ESTE EQUIPAMENTO JÁ PASSOU POR REVISÃO RECENTE?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "48f1234a-9fef-43fe-bd2b-b581aaa217c8",
+      "type": "checkboxes",
+      "title": "EVIDENCIA DE COMANDOS",
+      "description": "",
+      "required": true,
+      "position": 18,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "2a0d02f4-90ec-44c2-94fe-6737f21f5146",
+          "value": "CLEARSCRIPT",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "54fa5b54-ca59-4821-a81a-32dff567d5fe",
+          "value": "FORMATSD COM CHAVE",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "b0ac3270-005a-48be-b48b-e34e6547fdec",
+          "value": "INOP 2,0,0",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "762cd0f1-3ae3-4c23-ab30-03f48a5de3b2",
+          "value": "INOP 6,0",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "e9ac642c-5a2c-425f-9f2e-625be44448ea",
+          "value": "INOP 7,83,83 / INOP 7,90,90",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "4f00b891-26ac-440c-b264-e9e52eefd286",
+          "value": "INOP 8,0",
+          "position": 5,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "81c29411-3526-419a-8eec-b710ce10cfee",
+          "value": "INOP 12,0",
+          "position": 6,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "d4cdccf7-8749-424c-8714-13b2c7760bbb",
+          "value": "SHOCK 0",
+          "position": 7,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "3ae4d03d-4881-4e45-939c-4a8c785e9bb8",
+          "value": "LISTA DE COMANDOS ADDKEY",
+          "position": 8,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "82dcfd45-309f-40cf-a072-541f03f3986e",
+          "value": "USERSPEC 010111111011011",
+          "position": 9,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "2a3df47c-9d56-41ac-bc27-28eef32dfdbb",
+      "type": "picture",
+      "title": "PRINT CONFIGURADOR GALILEO EVIDENCIANDO SCRIPT / FIRMWARE / SCRIPT CAN ATUALIZADOS",
+      "description": "",
+      "required": true,
+      "position": 19,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "9a86c225-a917-416d-b7eb-2dd95763cbe7",
+      "type": "multiple-picture",
+      "title": "FOTO AMPLA DAS LEITORAS FIXADAS",
+      "description": "",
+      "required": true,
+      "position": 20,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "NÃO",
+          "operator": "equal",
+          "question": {
+            "id": "27efee39-4a72-4e52-ac0f-9a8ff9a91655",
+            "title": "ESTE EQUIPAMENTO JÁ PASSOU POR REVISÃO RECENTE?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c1bc408f-41f2-4396-9532-e93f06c155c2",
+      "type": "multiple-picture",
+      "title": "PRINT COM VALIDAÇÃO ENVIADO PELO ACOMPANHAMENTO TÉCNICO",
+      "description": "",
+      "required": true,
+      "position": 21,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "f7a76158-9091-4b77-b23a-6a60a1928999",
+      "type": "multiple-picture",
+      "title": "FOTO AMPLA DOS PAINÉIS QUE FORAM ABERTOS DURANTE A MANUTENÇÃO",
+      "description": "",
+      "required": true,
+      "position": 22,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}

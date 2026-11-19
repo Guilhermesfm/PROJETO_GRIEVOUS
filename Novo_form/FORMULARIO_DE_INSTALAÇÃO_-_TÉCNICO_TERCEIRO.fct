@@ -1,0 +1,1599 @@
+{
+  "name": "FORMULARIO DE INSTALAÇÃO - TÉCNICO TERCEIRO",
+  "type": "public",
+  "description": "",
+  "questionsCount": 70,
+  "questions": [
+    {
+      "id": "ceac6f25-e38b-4aaa-ac7a-f18461e15085",
+      "type": "picture",
+      "title": "PLACA DO VEICULO",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "40c3452c-1f29-4ff7-96d1-e3549672f7d3",
+      "type": "picture",
+      "title": "PAINEL MOTOR LIGADO (ANTES DA INSTALAÇÃO)",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "50f817ba-ab3d-4302-806c-cefd89047303",
+      "type": "multiple-picture",
+      "title": "HODOMETRO / HORIMETRO",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "2e0c3ae5-1274-4e18-aa9a-40b6a90b3169",
+      "type": "multiple-choice",
+      "title": "ALGUMA AVARIA NO VEICULO ANTES DA INSTALAÇÃO? (EX.: ALERTA DE FALHAS NO PAINEL DE INSTRUMENTOS, PAINEL TRINCADO, VEÍCULO COM BATERIA DESCARREGADA, ETC)",
+      "description": "",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "d5f4cac6-9cf3-4b74-b920-d6bef285ef67",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "dd908586-d095-44dd-a8ed-7f39293f0127",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "d23a6668-ebf2-4ea0-b7ba-b1639224ed2f",
+      "type": "paragraph",
+      "title": "DESCRIÇÃO DA AVARIAS",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "2e0c3ae5-1274-4e18-aa9a-40b6a90b3169",
+            "title": "ALGUMA AVARIA NO VEICULO ANTES DA INSTALAÇÃO? (EX.: ALERTA DE FALHAS NO PAINEL DE INSTRUMENTOS, PAINEL TRINCADO, VEÍCULO COM BATERIA DESCARREGADA, ETC)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2c82df43-d6f1-417b-8b4a-c15cc30509d9",
+      "type": "multiple-picture",
+      "title": "ANEXAR FOTOS DE AVARIAS",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "2e0c3ae5-1274-4e18-aa9a-40b6a90b3169",
+            "title": "ALGUMA AVARIA NO VEICULO ANTES DA INSTALAÇÃO? (EX.: ALERTA DE FALHAS NO PAINEL DE INSTRUMENTOS, PAINEL TRINCADO, VEÍCULO COM BATERIA DESCARREGADA, ETC)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+      "type": "checkboxes",
+      "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "89650516-d84b-451a-a24c-6a5ff6ab307f",
+          "value": "GALILEOSKY",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "d2ff9a58-00d8-4005-b358-f46750a01bce",
+          "value": "CÂMERAS",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "e5c4d73b-12c3-4007-bcfc-c99ff659db28",
+          "value": "J-R12",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "87c648f3-f66a-4699-885a-47dfeafd321c",
+          "value": "J-R11",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "b09e1b12-9f71-4e72-958a-6253343f38bd",
+          "value": "RASTREADOR BASICO",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "c0fcc8f3-33a2-4300-90a3-248dda5375cc",
+      "type": "short-answer",
+      "title": "QUAL A MARCA DO VEÍCULO? (TOYOTA, VOLVO, FIAT, ETC)",
+      "description": "",
+      "required": true,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "600810af-f639-4c2c-adfb-52860475bbb8",
+      "type": "short-answer",
+      "title": "QUAL O MODELO DO VEÍCULO? (EX.: FH 540, POLO, STRADA, ETC)",
+      "description": "",
+      "required": true,
+      "position": 8,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "010863cd-8ab8-41df-b49e-efdef2fbd385",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO GALILEO. (IMEI É O CODIGO NUMÉRICO DESCRITO NO CORPO DO EQUIPAMENTO)",
+      "description": "",
+      "required": true,
+      "position": 9,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "15781f62-9cc7-4eae-8293-3678bed7af98",
+      "type": "picture",
+      "title": "FOTO DO IMEI DA CÂMERA. (IMEI É O CÓDIGO NUMÉRICO DESCRITO NA CÂMERA ADAS)",
+      "description": "",
+      "required": true,
+      "position": 10,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "CÂMERAS",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "28052765-7992-4536-b02a-01b60a13df1d",
+      "type": "picture",
+      "title": "IMEI DO J-R12. (IMEI É O CODIGO NUMÉRICO DESCRITO NO CORPO DO EQUIPAMENTO)",
+      "description": "",
+      "required": true,
+      "position": 11,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "37b72cd2-b0fc-49b4-bfbc-e7ce3ac3720e",
+      "type": "short-answer",
+      "title": "IMEI DO J-R11. (IMEI É O CODIGO NUMÉRICO DESCRITO NO CORPO DO EQUIPAMENTO)",
+      "description": "",
+      "required": true,
+      "position": 12,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "J-R11",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c4d8f919-ff5c-4eac-b298-c1a75c55bf5e",
+      "type": "picture",
+      "title": "IMEI DO RASTREADOR BÁSICO. (IMEI É O CODIGO NUMÉRICO DESCRITO NO CORPO DO EQUIPAMENTO)",
+      "description": "",
+      "required": true,
+      "position": 13,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "RASTREADOR BASICO",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "9809ccf1-c12d-47b8-b1c5-8cdb0e90d329",
+      "type": "checkboxes",
+      "title": "NECESSÁRIO ENVIAR AS SEGUINTES FOTOS PARA EQUIPE DE ACOMPANHAMENTO TÉCNICO: FOTO DO IMEI DO EQUIPAMENTO A SER INSTALADO, FOTO DO PAINEL COM MOTOR LIGADO, FOTO DO HORIMETRO E FOTO DO ODOMETRO",
+      "description": "",
+      "required": true,
+      "position": 14,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "5d11e913-5991-41c0-9ad9-138f622112dc",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "8da8a4be-9cf2-4740-8cc7-56c8f7034d18",
+      "type": "checkboxes",
+      "title": "PRÓXIMO PASSO: PONTOS DE ALIMENTAÇÃO",
+      "description": "",
+      "required": true,
+      "position": 15,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "490288a7-d84e-4e04-a346-037c048abbb0",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "a332edf4-4b79-4432-b115-ebe0a17735cb",
+      "type": "short-answer",
+      "title": "DESCREVA COM DETALHES LOCAL ONDE FOI RETIRADO POSITIVO DIRETO, NEGATIVO E PÓS CHAVE (EX.: CONECTOR A DO TACÓGRAFO, CAIXA DE FUSÍVEIS, ETC)",
+      "description": "",
+      "required": true,
+      "position": 16,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "60d078ea-a903-46ab-8fd4-4b7931f9358b",
+      "type": "multiple-picture",
+      "title": "FOTO COM AS EMENDAS DOS PONTOS DE ALIMENTAÇÃO (POSITIVO DIRETO, PÓS CHAVE E ATERRAMENTO)",
+      "description": "",
+      "required": true,
+      "position": 17,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "f0fedcec-127e-4a69-9490-d99ebd204115",
+      "type": "multiple-choice",
+      "title": "NESTA INSTALAÇÃO FOI REALIZADO O BLOQUEIO? (IMPORTANTE RESSALTAR QUE OBRIGATORIAMENTE O BLOQUEIO DEVERÁ SER REALIZADO PELO FIO DO ARRANQUE. É EXPRESSAMENTE PROIBIDO REALIZAR BLOQUEIO PELA BOMBA DE COMBUSTÍVEL E QUALQUER OUTRO PONTO QUE NÃO SEJA O ARRANQUE)",
+      "description": "",
+      "required": true,
+      "position": 18,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "529c131a-433b-4504-b1fb-641ec2a4fe94",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "0dd70916-fd9c-4978-a9a9-fe68da305771",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "4640e8aa-40d3-47d5-95cb-740964e99b34",
+      "type": "picture",
+      "title": "FOTO DO PONTO DE BLOQUEIO",
+      "description": "",
+      "required": true,
+      "position": 19,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "f0fedcec-127e-4a69-9490-d99ebd204115",
+            "title": "NESTA INSTALAÇÃO FOI REALIZADO O BLOQUEIO? (IMPORTANTE RESSALTAR QUE OBRIGATORIAMENTE O BLOQUEIO DEVERÁ SER REALIZADO PELO FIO DO ARRANQUE. É EXPRESSAMENTE PROIBIDO REALIZAR BLOQUEIO PELA BOMBA DE COMBUSTÍVEL E QUALQUER OUTRO PONTO QUE NÃO SEJA O ARRANQUE)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d74ec012-90ca-46ea-b42f-aa998ac6ec5c",
+      "type": "picture",
+      "title": "FOTO DOS FIOS DO PONTO DE BLOQUEIO ISOLADOS",
+      "description": "",
+      "required": true,
+      "position": 20,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "f0fedcec-127e-4a69-9490-d99ebd204115",
+            "title": "NESTA INSTALAÇÃO FOI REALIZADO O BLOQUEIO? (IMPORTANTE RESSALTAR QUE OBRIGATORIAMENTE O BLOQUEIO DEVERÁ SER REALIZADO PELO FIO DO ARRANQUE. É EXPRESSAMENTE PROIBIDO REALIZAR BLOQUEIO PELA BOMBA DE COMBUSTÍVEL E QUALQUER OUTRO PONTO QUE NÃO SEJA O ARRANQUE)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6dc305e2-55d5-4165-9fc4-ff473aebe320",
+      "type": "multiple-picture",
+      "title": "FOTOS DAS EMENDAS DO RELE DE BLOQUEIO",
+      "description": "",
+      "required": true,
+      "position": 21,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "f0fedcec-127e-4a69-9490-d99ebd204115",
+            "title": "NESTA INSTALAÇÃO FOI REALIZADO O BLOQUEIO? (IMPORTANTE RESSALTAR QUE OBRIGATORIAMENTE O BLOQUEIO DEVERÁ SER REALIZADO PELO FIO DO ARRANQUE. É EXPRESSAMENTE PROIBIDO REALIZAR BLOQUEIO PELA BOMBA DE COMBUSTÍVEL E QUALQUER OUTRO PONTO QUE NÃO SEJA O ARRANQUE)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "5b7ac81d-78a2-4ca5-bdf7-90311fcefe15",
+      "type": "multiple-choice",
+      "title": "VEÍCULO INSTALADO É ANALÓGICO OU POSSUI REDE CAN?",
+      "description": "",
+      "required": true,
+      "position": 22,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "48d94236-ecd8-48ce-b8ff-5b5ffa78997b",
+          "value": "ANALÓGICO",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "53bf7243-9aff-48a2-9d79-708d419aa5cc",
+          "value": "POSSUI REDE CAN",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "4d64ebe5-9e7c-49bb-8a43-e19984e0e2c5",
+      "type": "short-answer",
+      "title": "DESCREVA COM DETALHES O PONTO DE INSTALAÇÃO DA REDE CAN PARA INSTALAÇÃO DO GALILEOSKY.  (EX.: TOMADA DE DIAGNÓSTIVO, TACÓGRAFO, ATRÁS DO PAINEL DE INSTRUMENTOS, ETC)",
+      "description": "",
+      "required": true,
+      "position": 23,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "POSSUI REDE CAN",
+          "operator": "equal",
+          "question": {
+            "id": "5b7ac81d-78a2-4ca5-bdf7-90311fcefe15",
+            "title": "VEÍCULO INSTALADO É ANALÓGICO OU POSSUI REDE CAN?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "86755c3a-f4b1-427b-ac8c-0ace9932f99e",
+      "type": "picture",
+      "title": "FOTO DAS EMENDAS DA REDE CAN PARA INSTALAÇÃO DO GALILEOSKY",
+      "description": "",
+      "required": true,
+      "position": 24,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "POSSUI REDE CAN",
+          "operator": "equal",
+          "question": {
+            "id": "5b7ac81d-78a2-4ca5-bdf7-90311fcefe15",
+            "title": "VEÍCULO INSTALADO É ANALÓGICO OU POSSUI REDE CAN?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f7e69a16-bb70-4298-b3e3-ad5a40c2e959",
+      "type": "multiple-picture",
+      "title": "FOTO DO LOCAL ONDE FOI RETIRADO O  SINAL DE RPM, SINAL DO PEDAL DO ACELERADOR E FOTO DAS EMENDAS DE TODA A INSTALAÇÃO",
+      "description": "",
+      "required": true,
+      "position": 25,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "ANALÓGICO",
+          "operator": "equal",
+          "question": {
+            "id": "5b7ac81d-78a2-4ca5-bdf7-90311fcefe15",
+            "title": "VEÍCULO INSTALADO É ANALÓGICO OU POSSUI REDE CAN?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "9f8fbc63-dc14-47ab-81e4-ebeb819f3fed",
+      "type": "short-answer",
+      "title": "DESCREVA COM DETALHES O PONTO DE INSTALAÇÃO DA REDE CAN PARA INSTALAÇÃO DO J-R12. (EX.: TOMADA DE DIAGNÓSTIVO, TACÓGRAFO, ATRÁS DO PAINEL DE INSTRUMENTOS, ETC)",
+      "description": "",
+      "required": true,
+      "position": 26,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "J-R12",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6cbd8ed8-8ab9-4ae1-aaa8-0034bbe98c60",
+      "type": "short-answer",
+      "title": "FOTO DAS EMENDAS DA REDE CAN PARA INSTALAÇÃO DO J-R12",
+      "description": "",
+      "required": true,
+      "position": 27,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "J-R12",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "50c38c49-53bd-4cec-8755-f9c79146d313",
+      "type": "multiple-choice",
+      "title": "NESTA INSTALAÇÃO SERÁ INSTALADO O RASTREADOR BÁSICO COMO ?",
+      "description": "",
+      "required": true,
+      "position": 28,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "aa0a0272-6197-4a36-91fd-03fc3ec6fc2a",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "c54b0fae-662d-4657-8252-1d9048b6c41c",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "RASTREADOR BASICO",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "445dea81-ee14-4ec5-8d33-21db87e62ffc",
+      "type": "checkboxes",
+      "title": "IMPORTANTE: TODOS OS PONTOS DE ALIMENTAÇÃO DA INSTALAÇÃO ELÉTRICA DO RASRTREADOR BASICO DEVERÁ OBRIGATORIAMENTE SER FEITA DE FORMA SEPARADA E O EQUIPAMENTO DEVERÁ ESTAR EM UM LOCAL OCULTO E DE DIFÍCIL ACESSO",
+      "description": "",
+      "required": true,
+      "position": 29,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "4d653650-f108-4b2d-8df0-7eccf3c72f9d",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "50c38c49-53bd-4cec-8755-f9c79146d313",
+            "title": "NESTA INSTALAÇÃO SERÁ INSTALADO O RASTREADOR BÁSICO COMO ?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ef8cd221-1a8e-458d-823e-20fc70e53d0f",
+      "type": "multiple-choice",
+      "title": "FOI RETIRADO SINAL DO PÓS MOTOR PARA MARCAÇÃO DE HORIMETRO (SINAL PÓS MOTOR E O SINAL POSITIVO GERADO APENAS QUANDO O MOTOR ESTÁ LIGADO, OU SEJA, SINAL PROVENIENTE DO ALTERNADOR)",
+      "description": "",
+      "required": true,
+      "position": 30,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "0c77487d-bfdc-4bc8-b307-510fb26fab25",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "41253f19-824b-4f60-a119-7357137dd31a",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "1ee2ad8b-451d-4a88-b83b-a839322fb3fa",
+      "type": "multiple-picture",
+      "title": "FOTOS DO PONTO ONDE FOI RETIRADO SINAL PÓS MOTOR E FOTO DA INSTALAÇÃO (CASO O SINAL TENHA SIDO RETIRADO DO ALTERNADOR UM PORTA FUSÍVEL DEVERÁ SER UTILIZADO PRÓXIMO DO ALTERNADOR)",
+      "description": "",
+      "required": true,
+      "position": 31,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "ef8cd221-1a8e-458d-823e-20fc70e53d0f",
+            "title": "FOI RETIRADO SINAL DO PÓS MOTOR PARA MARCAÇÃO DE HORIMETRO (SINAL PÓS MOTOR E O SINAL POSITIVO GERADO APENAS QUANDO O MOTOR ESTÁ LIGADO, OU SEJA, SINAL PROVENIENTE DO ALTERNADOR)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "e551873e-8ba8-4f55-95a3-bf301315f701",
+      "type": "checkboxes",
+      "title": "FOI FEITO A INSTALAÇÃO DE ALGUM PERIFÉRICO ABAIXO?",
+      "description": "",
+      "required": true,
+      "position": 32,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "c14e3fed-cf56-4e60-bcd3-ecaa7ad08afd",
+          "value": "LEITORA DE IDENTIFICAÇÃO DE MOTORISTA",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "c3132805-4172-40e3-9f61-e1342452595e",
+          "value": "LEITORA DE PASSAGEIRO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "5bbe6f0f-da51-4f7a-b744-07083e05baf6",
+          "value": "ROTOGRAMA FALADO",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "92602013-9b72-4722-8721-a2a1142fad0c",
+          "value": "NENHUM PERIFPERICO FOI INSTALADO",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "05aeb790-94c4-4b8c-a2a6-b46ec98107e6",
+      "type": "picture",
+      "title": "FOTO DA LEITORA DE IDENTIFICAÇÃO DE MOTORISTA FIXADA",
+      "description": "",
+      "required": true,
+      "position": 33,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "LEITORA DE IDENTIFICAÇÃO DE MOTORISTA",
+          "operator": "equal",
+          "question": {
+            "id": "e551873e-8ba8-4f55-95a3-bf301315f701",
+            "title": "FOI FEITO A INSTALAÇÃO DE ALGUM PERIFÉRICO ABAIXO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "4597562d-61e4-43b2-abdc-71a4f5e9c254",
+      "type": "picture",
+      "title": "FOTO DA LEITORA DE PASSAGEIRO FIXADA",
+      "description": "",
+      "required": true,
+      "position": 34,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "LEITORA DE PASSAGEIRO",
+          "operator": "equal",
+          "question": {
+            "id": "e551873e-8ba8-4f55-95a3-bf301315f701",
+            "title": "FOI FEITO A INSTALAÇÃO DE ALGUM PERIFÉRICO ABAIXO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "9e2cd275-a4d7-476a-970a-378b295d4ad9",
+      "type": "picture",
+      "title": "FOTO DO ROTOGRAMA FALADO FIXADO",
+      "description": "",
+      "required": true,
+      "position": 35,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "ROTOGRAMA FALADO",
+          "operator": "equal",
+          "question": {
+            "id": "e551873e-8ba8-4f55-95a3-bf301315f701",
+            "title": "FOI FEITO A INSTALAÇÃO DE ALGUM PERIFÉRICO ABAIXO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "9e696dcb-5de0-48e1-bc99-5a9ffd57412d",
+      "type": "multiple-choice",
+      "title": "FOI INSTALADO LEITORA DE IDENTIFICAÇÃO DE MOTORISTA PARA RASTREADOR J-R12",
+      "description": "",
+      "required": true,
+      "position": 36,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "5e00ee07-1818-4ba1-8850-85837c649b10",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "7a98e24e-881e-41b1-8196-8a46228e0a56",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "J-R12",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "9dedb4bd-a97b-4482-b480-ceb38757ef9b",
+      "type": "picture",
+      "title": "FOTO DA LEITORA DE IDENTIFICAÇÃO DO MOTORISTA INSTALADA PARA RASTREADOR J-R12",
+      "description": "",
+      "required": true,
+      "position": 37,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "J-R12",
+          "operator": "equal",
+          "question": {
+            "id": "9e696dcb-5de0-48e1-bc99-5a9ffd57412d",
+            "title": "FOI INSTALADO LEITORA DE IDENTIFICAÇÃO DE MOTORISTA PARA RASTREADOR J-R12"
+          }
+        }
+      ]
+    },
+    {
+      "id": "af54cbc5-954a-45d1-be9d-2ad31daa604c",
+      "type": "multiple-choice",
+      "title": "FOI INSTALADO LEITORA DE IDENTIFICAÇÃO DE MOTORISTA PARA RASTREADOR J-R11",
+      "description": "",
+      "required": true,
+      "position": 38,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "f3e19cd6-0cc9-4771-990b-9659ad4b17fb",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "acd97638-d2f9-4543-8d1b-2c05b452ce30",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "J-R11",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bfdc389d-3012-4b06-9196-41d6cdb4a1b2",
+      "type": "picture",
+      "title": "FOTO DA LEITORA DE MOTORISTA INSTALADA PARA RESTREADOR J-R11",
+      "description": "",
+      "required": true,
+      "position": 39,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "J-R11",
+          "operator": "equal",
+          "question": {
+            "id": "af54cbc5-954a-45d1-be9d-2ad31daa604c",
+            "title": "FOI INSTALADO LEITORA DE IDENTIFICAÇÃO DE MOTORISTA PARA RASTREADOR J-R11"
+          }
+        }
+      ]
+    },
+    {
+      "id": "9aeb9728-a206-4489-9a34-f3927c70d2e5",
+      "type": "checkboxes",
+      "title": "PRÓXIMO PASSO: CONFIGURAÇÕES",
+      "description": "",
+      "required": true,
+      "position": 40,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "f257b463-622c-4628-a3ec-0efcee05dba4",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "6eb8f56f-c238-48a4-a0f8-1a3fe2729cee",
+      "type": "multiple-choice",
+      "title": "POSSUI ACESSO AO CONFIGURADOR DO GALILEOSKY?",
+      "description": "",
+      "required": true,
+      "position": 41,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "278c15d1-a459-46d7-9a54-1a805e01b921",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "2a67645c-36db-407d-b378-3c41049cfeea",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "986ad0f0-a81a-4d3c-9323-d79b96b81dcc",
+      "type": "picture",
+      "title": "FOTO DA VERSÃO DO SCRIPT (CLIENTE E PROCESSAMENTO CAN)",
+      "description": "",
+      "required": true,
+      "position": 42,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "6eb8f56f-c238-48a4-a0f8-1a3fe2729cee",
+            "title": "POSSUI ACESSO AO CONFIGURADOR DO GALILEOSKY?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cf6be4f8-db63-48a1-aef3-95b5116ae94f",
+      "type": "picture",
+      "title": "FOTO DA VERSÃO DO FIRMWARE",
+      "description": "",
+      "required": true,
+      "position": 43,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "6eb8f56f-c238-48a4-a0f8-1a3fe2729cee",
+            "title": "POSSUI ACESSO AO CONFIGURADOR DO GALILEOSKY?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c3d69bd3-67cf-4a09-9a18-bb538f67806d",
+      "type": "multiple-picture",
+      "title": "FOTO DA ABA DIAGNÓSTICO (MOSTRANDO TODOS OS DADOS QUE FORAM COLETADOR DO EQUIPAMENTO  COMO RPM, HORIMETRO, ETC)",
+      "description": "",
+      "required": true,
+      "position": 44,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "6eb8f56f-c238-48a4-a0f8-1a3fe2729cee",
+            "title": "POSSUI ACESSO AO CONFIGURADOR DO GALILEOSKY?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "27b24c7a-6977-4248-a506-02bde2fb3da2",
+      "type": "multiple-choice",
+      "title": "POSSUI ACESSO AO APLICATIVO DE CONFIGURAÇÃO DAS CÂMERAS",
+      "description": "",
+      "required": true,
+      "position": 45,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "db231339-7365-4429-9f29-70c1bdc0bc68",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "dfafce48-59e3-4746-a620-aedd293ece4e",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "CÂMERAS",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "b4b5a448-6fac-4a9a-b1fa-df0ec42c6483",
+      "type": "picture",
+      "title": "PRINT DA TELA DA CÂMERA ADAS CALIBRADA",
+      "description": "",
+      "required": true,
+      "position": 46,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "27b24c7a-6977-4248-a506-02bde2fb3da2",
+            "title": "POSSUI ACESSO AO APLICATIVO DE CONFIGURAÇÃO DAS CÂMERAS"
+          }
+        }
+      ]
+    },
+    {
+      "id": "296d2b01-6c50-4308-93b2-13491358f43d",
+      "type": "picture",
+      "title": "PRINT DA TELA DA CÂMERA DE FADIGA CALIBRADA",
+      "description": "",
+      "required": true,
+      "position": 47,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "27b24c7a-6977-4248-a506-02bde2fb3da2",
+            "title": "POSSUI ACESSO AO APLICATIVO DE CONFIGURAÇÃO DAS CÂMERAS"
+          }
+        }
+      ]
+    },
+    {
+      "id": "de6579bd-8bc4-428a-9f55-d080154e1159",
+      "type": "picture",
+      "title": "PRINT DE TODAS AS CÂMERAS LIGADAS",
+      "description": "",
+      "required": true,
+      "position": 48,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "27b24c7a-6977-4248-a506-02bde2fb3da2",
+            "title": "POSSUI ACESSO AO APLICATIVO DE CONFIGURAÇÃO DAS CÂMERAS"
+          }
+        }
+      ]
+    },
+    {
+      "id": "5f4a74a4-c00a-4f58-88c7-e1b057c8e937",
+      "type": "short-answer",
+      "title": "PRINT DA TELA \"SIMPLE SETUP\" - ONLINE ID DO EQUIPAMENTO",
+      "description": "",
+      "required": true,
+      "position": 49,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "27b24c7a-6977-4248-a506-02bde2fb3da2",
+            "title": "POSSUI ACESSO AO APLICATIVO DE CONFIGURAÇÃO DAS CÂMERAS"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f8459f62-6452-4c13-9c66-7f00da0fa593",
+      "type": "checkboxes",
+      "title": "PRÓXIMO PASSO: FIXAÇÃO DOS EQUIPAMENTOS",
+      "description": "",
+      "required": true,
+      "position": 50,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "3126d39c-c1ba-4fcd-b895-742752a15e53",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "ceca435c-7154-4544-b1ad-332c99dae63d",
+      "type": "picture",
+      "title": "FOTO AMPLA DA FIXAÇÃO DO GALILEOSKY",
+      "description": "",
+      "required": true,
+      "position": 51,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "7086ccb1-b5c0-41a8-9cb2-a4b663899277",
+      "type": "multiple-picture",
+      "title": "FOTOS DE TODAS AS CÂMERAS INSTALADAS",
+      "description": "",
+      "required": true,
+      "position": 52,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "CÂMERAS",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "920f50c2-5b42-41a5-ba44-4ab0b97d80b6",
+      "type": "picture",
+      "title": "FOTO AMPLA DA FIXAÇÃO DOS RASTREADOR J-R12",
+      "description": "",
+      "required": true,
+      "position": 53,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "J-R12",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "a85948fd-1d86-477e-a493-e2f79838df49",
+      "type": "picture",
+      "title": "FOTO AMPLA DA FIXAÇÃO DOS RASTREADOR J-R11",
+      "description": "",
+      "required": true,
+      "position": 54,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "J-R11",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0aa6f4c8-e137-444d-b4bd-fac94f4b909d",
+      "type": "paragraph",
+      "title": "FAVOR DESCREVER DETALHADAMENTE O LOCAL ONDE FOI FIXADO O RASTREADOR BÁSICO (LEMBRANDO QUE O RASTREADOR PRECISA ESTAR EM LOCAL OCULTO",
+      "description": "",
+      "required": true,
+      "position": 55,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "50c38c49-53bd-4cec-8755-f9c79146d313",
+            "title": "NESTA INSTALAÇÃO SERÁ INSTALADO O RASTREADOR BÁSICO COMO ?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dcf70e79-73d9-4630-8d59-f1ca5f6ee649",
+      "type": "picture",
+      "title": "FOTO DE INSTALAÇÃO DO RASTREADOR BÁSICO",
+      "description": "",
+      "required": true,
+      "position": 56,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "RASTREADOR BASICO",
+          "operator": "equal",
+          "question": {
+            "id": "dc57b98f-a2e9-4e3c-9bdc-d4a6be09db5d",
+            "title": "QUAL PRODUTO ESTÁ SENDO INSTALADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "9873248d-7672-4039-bf1d-4cf12930931e",
+      "type": "checkboxes",
+      "title": "PRÓXIMO PASSO: FINALIZAÇÃO DA INSTALAÇÃO",
+      "description": "",
+      "required": true,
+      "position": 57,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "3c6a206d-b201-4eb5-8fde-29808e2196ef",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "2b6baed3-3d2b-4ea5-9d97-b925b0f47cb4",
+      "type": "multiple-choice",
+      "title": "ALGUMA AVARIA GERADA APÓS A INSTALAÇÃO",
+      "description": "",
+      "required": true,
+      "position": 58,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "a4be341f-df78-4e65-8961-c5e465ae19c5",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "515bb7b6-8138-4fdc-ab01-33dc7037f083",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "bb54645a-0b40-46af-906f-8a97a1375f86",
+      "type": "paragraph",
+      "title": "DESCREVA DETALHADAMENTE AVARIA GERADA APÓS A INSTALAÇÃO",
+      "description": "",
+      "required": true,
+      "position": 59,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "2b6baed3-3d2b-4ea5-9d97-b925b0f47cb4",
+            "title": "ALGUMA AVARIA GERADA APÓS A INSTALAÇÃO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "54fa4695-9a03-401d-a65a-2eda175415ca",
+      "type": "multiple-picture",
+      "title": "FOTOS DA AVARIA GERADA APÓS A INSTALAÇÃO.",
+      "description": "",
+      "required": true,
+      "position": 60,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "2b6baed3-3d2b-4ea5-9d97-b925b0f47cb4",
+            "title": "ALGUMA AVARIA GERADA APÓS A INSTALAÇÃO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bfd57abf-79f5-4d08-8ad6-f12ff79a09c0",
+      "type": "checkboxes",
+      "title": "IMPORTANTE: AVISAR AO RESPONSÁVEL PELO EQUIPAMENTO E AO FUNCIONÁRIO DA INOPRIME QUE ESTIVER REALIZANDO O ACOMPANHAMENTO DA INSTALAÇÃO SOBRE A AVARIA GERADA. E ANEXAR NA ABA DE ANEXOS  DESTA OS UMA GRAVAÇÃO DE UM VÍDEO DE DEMONSTRAÇÃO DA AVARIA GERADA",
+      "description": "",
+      "required": true,
+      "position": 61,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "4dcb522a-7dbe-4439-bdb2-aadc82e9f4a4",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "2b6baed3-3d2b-4ea5-9d97-b925b0f47cb4",
+            "title": "ALGUMA AVARIA GERADA APÓS A INSTALAÇÃO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "1f27e8ed-3aaa-4a5f-995f-9318373cb1c4",
+      "type": "picture",
+      "title": "FOTO DO PAINEL DE INSTRUMENTOS COM MOTOR LIGADO APÓS A INSTALAÇÃO",
+      "description": "",
+      "required": true,
+      "position": 62,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "454fef12-9a58-46d3-8256-f971e1e45e76",
+      "type": "multiple-picture",
+      "title": "FOTO DE TODOS OS LOCAIS QUE FORAM DESMONTADOS DURANTE A INSTALÇÃO",
+      "description": "",
+      "required": true,
+      "position": 63,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "437459dd-4329-4baa-a215-baf46365ec3e",
+      "type": "multiple-choice",
+      "title": "CLIENTE POSSUI CONTROLE DE CARTÃO RFID EMBARCADO?",
+      "description": "",
+      "required": true,
+      "position": 64,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "ce666ea6-5251-400b-b4fe-6012bafffac1",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "3496ea76-9bdd-4d83-8c28-9ba1766d5c84",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "9f1a6dd0-edd1-4bf7-a8d8-0e23f0cfe14d",
+      "type": "picture",
+      "title": "NECESSÁRIO DEIXAR NO VEÍCULO OU COM O RESPONSÁVEL PELO VEÍCULO UM CARTÃO RFID DE IDENTIFICAÇÃO DE MOTORISTA. (FAVOR ANEXAR ABAIXO A FOTO DO CARTÃO RFID MOSTRANDO O NUMERO DO CARTÃO)",
+      "description": "",
+      "required": true,
+      "position": 65,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "437459dd-4329-4baa-a215-baf46365ec3e",
+            "title": "CLIENTE POSSUI CONTROLE DE CARTÃO RFID EMBARCADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "af8f481a-5488-4312-9e50-55482f4e479f",
+      "type": "checkboxes",
+      "title": "PRÓXIMO PASSO: VALIDAÇÃO DE FUNCIONAMENTO",
+      "description": "",
+      "required": true,
+      "position": 66,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "78a0cc03-22b9-46c6-806e-e2264bd311fc",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "32289513-07ae-45f1-abee-c51481ccc6dd",
+      "type": "checkboxes",
+      "title": "FOI REALIZADO VALIDAÇÃO DE FUNCIONAMENTO POR?",
+      "description": "",
+      "required": true,
+      "position": 67,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "8db51373-53ef-4dc0-aae3-c6d5bb3ddbd3",
+          "value": "ACOMPANHAMENTO TÉCNICO",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "2bc82972-53eb-4ee2-b5de-c61836206666",
+          "value": "NÃO FOI REALIZADO VALIDAÇÃO DE FUNCIONAMENTO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "58bba4ab-74a2-49f7-83ed-23a6842a6e5a",
+      "type": "picture",
+      "title": "ANEXAR PRINT DE VALIDAÇÃO ENVIADO PELA PESSOA RESPONSÁVEL PELO ACOMPANHAMENTO TÉCNICO",
+      "description": "",
+      "required": true,
+      "position": 68,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "ACOMPANHAMENTO TÉCNICO",
+          "operator": "equal",
+          "question": {
+            "id": "32289513-07ae-45f1-abee-c51481ccc6dd",
+            "title": "FOI REALIZADO VALIDAÇÃO DE FUNCIONAMENTO POR?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6d5a0f75-e26b-4845-b753-f75ac8bdc8b1",
+      "type": "paragraph",
+      "title": "RELATAR MOTIVO DA NÃO OCORRÊNCIA DE VALIDAÇÃO DE FUNCIONAMENTO",
+      "description": "",
+      "required": true,
+      "position": 69,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "NÃO FOI REALIZADO VALIDAÇÃO DE FUNCIONAMENTO",
+          "operator": "equal",
+          "question": {
+            "id": "32289513-07ae-45f1-abee-c51481ccc6dd",
+            "title": "FOI REALIZADO VALIDAÇÃO DE FUNCIONAMENTO POR?"
+          }
+        }
+      ]
+    }
+  ],
+  "isEvaluated": false
+}

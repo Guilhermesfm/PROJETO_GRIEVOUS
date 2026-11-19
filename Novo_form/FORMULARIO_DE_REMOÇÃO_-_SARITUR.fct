@@ -1,0 +1,169 @@
+{
+  "name": "FORMULARIO DE REMOÇÃO - SARITUR",
+  "type": "public",
+  "description": "",
+  "questionsCount": 10,
+  "questions": [
+    {
+      "id": "d1670e22-9fb0-4516-9f23-5301cadb1da4",
+      "type": "picture",
+      "title": "FOTO DA PLACA",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "89427ef9-82fc-4935-9b08-c60cbceb1c59",
+      "type": "multiple-choice",
+      "title": "QUAL TIPO DE EQUIPAMENTO ESTÁ SENDO REMOVIDO?",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "f8fa25c9-640f-49eb-9313-aa0370465c7c",
+          "value": "GALIELO 7X",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "7a8efba2-b927-4d82-a1c1-429c2c834989",
+          "value": "GALILEO 10",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "5cb19175-d8e9-4723-89ca-401ea046824d",
+          "value": "JR12",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "d0f36e95-d3cf-4348-b13c-aa5756a46c54",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO EQUIPAMENTO QUE ESTÁ SENDO REMOVIDO",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "e0533ed6-1f4f-4417-9a29-0d96921af09d",
+      "type": "multiple-picture",
+      "title": "FOTO DAS ANTENAS DO GALILEO COM O LACRE",
+      "description": "",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GALIELO 7X",
+          "operator": "equal",
+          "question": {
+            "id": "89427ef9-82fc-4935-9b08-c60cbceb1c59",
+            "title": "QUAL TIPO DE EQUIPAMENTO ESTÁ SENDO REMOVIDO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "1fef573f-c82f-4522-870c-3d0ee55f99c8",
+      "type": "multiple-picture",
+      "title": "FOTO DO ADAPATOR DA LEITORA DE MOTORISTA",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "not-equal",
+          "question": {
+            "id": "89427ef9-82fc-4935-9b08-c60cbceb1c59",
+            "title": "QUAL TIPO DE EQUIPAMENTO ESTÁ SENDO REMOVIDO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "021988f0-e011-4ca1-a9d3-4d10df9a5eb8",
+      "type": "multiple-picture",
+      "title": "TIRE FOTO DO CHICOTE QUE ESTÁ SENDO REMOVIDO",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "f338dd71-6c8c-49ca-8bc7-591e7d64728c",
+      "type": "multiple-picture",
+      "title": "FOTO DO BUZZER DO CHICOTE",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "b6dda7ae-d4e6-490f-9d8a-187a59aa00cd",
+      "type": "multiple-picture",
+      "title": "FOTO DA LEITORA DE MOTORISTA QUE FOI REMOVIDA",
+      "description": "",
+      "required": true,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "2677d3a3-fa92-486e-857f-9ae273a6506d",
+      "type": "multiple-picture",
+      "title": "FOTO DO CHICOTE DA LEITORA",
+      "description": "",
+      "required": true,
+      "position": 8,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "0df24547-1ed4-4ce2-aa56-f3d49303074c",
+      "type": "multiple-picture",
+      "title": "FOTO DO KIT MOSTRANDO A LEITORA E O CHIOCTE QUE FORAM REMOVIDOS",
+      "description": "",
+      "required": true,
+      "position": 9,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}

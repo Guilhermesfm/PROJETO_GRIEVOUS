@@ -1,0 +1,468 @@
+{
+  "name": "FORMULÁRIO DE REMOÇÃO - TÉCNICOS TERRABEL",
+  "type": "public",
+  "description": "",
+  "questionsCount": 21,
+  "questions": [
+    {
+      "id": "a64fac6e-5459-4b00-a35e-5c76abe03675",
+      "type": "checkboxes",
+      "title": "PONTOS IMPORTANTES A SEREM SEGUIDOS",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "87ea7cee-09e7-4a33-8df0-5a8ab59a7f58",
+          "value": "PERGUNTAR AOACOMPANHAMENTO TÉCNICO (INOPRIME) QUAIS EQUIPAMENTOS ESTÃO INSTALADOS",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "3b710198-5849-486d-bc42-1265efc5e6af",
+          "value": "ENVIAR FOTOS DA PLACA, PAINEL COM MOTOR  LIGADO E FOTO DO EQUIPAMENTO REMOVIDO (DESTACANDO O IMEI)",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "ce718990-294c-4f33-b637-4442e06064f8",
+          "value": "APÓS FINALIZAR A REMOÇÃO SERÁ NECESSÁRIO INFORMAR O ACOMPANHAMENTO TECNICO (INOPRIME)",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "533abe3c-5124-4755-af13-d566e2e7edba",
+      "type": "picture",
+      "title": "PLACA DO VEÍCULO",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "2dbfc311-aa37-4b82-a133-b17b2b7669ba",
+      "type": "short-answer",
+      "title": "FOTO DO PAINEL COM MOTOR LIGADO",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "5f3a614b-a4e2-4f96-9221-ddc16b66dbf6",
+      "type": "picture",
+      "title": "FOTO DO HODOMETRO",
+      "description": "",
+      "required": false,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "b7b7cb19-dbd7-46c2-a29f-04447959f3a1",
+      "type": "short-answer",
+      "title": "FOTO DO HORIMETRO",
+      "description": "",
+      "required": false,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "9b8b698f-34fc-4169-99dd-aa53d661d173",
+      "type": "multiple-choice",
+      "title": "ALGUMA AVARIA NO VEICULO ANTES DA REMOÇÃO? (EX: PAINEL QUEBRADO, LUZES DE FALHAS NO PAINEL, FALTANDO PARAFUSOS)",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "0ffa6c34-8dbe-4a31-9163-eac98ef8a7df",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "224f3073-aef8-49e7-bece-f9ef290c6d82",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "27d84b51-2eb7-4805-a8a8-8a7692b3aa25",
+      "type": "multiple-picture",
+      "title": "FOTOS DAS AVARIAS CONTIDAS NO VEÍCULO",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "9b8b698f-34fc-4169-99dd-aa53d661d173",
+            "title": "ALGUMA AVARIA NO VEICULO ANTES DA REMOÇÃO? (EX: PAINEL QUEBRADO, LUZES DE FALHAS NO PAINEL, FALTANDO PARAFUSOS)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f2911100-d9c3-43e1-8135-9a37b53ecb9f",
+      "type": "paragraph",
+      "title": "DESCREVAS DETALHADAMENTE AS AVARIAS CONTIDAS NO VEÍCULO",
+      "description": "",
+      "required": true,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "9b8b698f-34fc-4169-99dd-aa53d661d173",
+            "title": "ALGUMA AVARIA NO VEICULO ANTES DA REMOÇÃO? (EX: PAINEL QUEBRADO, LUZES DE FALHAS NO PAINEL, FALTANDO PARAFUSOS)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d3dee81b-be20-498a-b163-6dfba451886f",
+      "type": "checkboxes",
+      "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?",
+      "description": "",
+      "required": true,
+      "position": 8,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "d9440aef-898a-463f-be86-fb524b41862f",
+          "value": "GalileoSky",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "0af9e862-f5d1-4d67-9aff-d2859ab01aae",
+          "value": "Câmeras",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "b33e2a0f-a00f-498b-97a7-2db9b0f4f5a5",
+          "value": "JR12",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "1d41cc3d-98c4-46ae-9da5-ee9cf33e11f0",
+          "value": "Rastreador básico",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "3f042344-8204-459e-9b6e-53f89be7c1ee",
+          "value": "Tablet",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "8007e1e4-8b46-4cd5-9145-f7a97074a2ca",
+          "value": "OUTROS",
+          "position": 5,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "d66b8cfb-a02f-4a39-858f-49887ef03901",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO GALILEOSKY",
+      "description": "",
+      "required": true,
+      "position": 9,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "d3dee81b-be20-498a-b163-6dfba451886f",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ebf699f0-9218-464e-8602-5db66c7ea920",
+      "type": "picture",
+      "title": "FOTO DO IMEI DA CÂMERA",
+      "description": "",
+      "required": true,
+      "position": 10,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Câmeras",
+          "operator": "equal",
+          "question": {
+            "id": "d3dee81b-be20-498a-b163-6dfba451886f",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6154c483-a226-43ca-b555-1a1f1e2a9790",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO J-R12",
+      "description": "",
+      "required": true,
+      "position": 11,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "d3dee81b-be20-498a-b163-6dfba451886f",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d93288c2-a846-4548-8ac0-a6356210bc70",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO RASTREADOR BÁSICO",
+      "description": "",
+      "required": true,
+      "position": 12,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Rastreador básico",
+          "operator": "equal",
+          "question": {
+            "id": "d3dee81b-be20-498a-b163-6dfba451886f",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d703c263-277a-4925-bd02-0056ee14fc06",
+      "type": "short-answer",
+      "title": "FOTO DO IMEI DO RASTREADOR TABLET",
+      "description": "",
+      "required": true,
+      "position": 13,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Tablet",
+          "operator": "equal",
+          "question": {
+            "id": "d3dee81b-be20-498a-b163-6dfba451886f",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "1a16b2a6-df16-4253-b947-572d6473ccda",
+      "type": "multiple-picture",
+      "title": "FOTO ONDE ESTAVAM OS FIOS DE ALIMENTAÇÃO (APÓS REMOVER) ISOLE OS FIOS DE POSITIVO, NEGATIVO E PÓS CHAVE E TIRA FOTO DE CADA UM ISOLADO E ANEXE A IMAGEM ABAIXO",
+      "description": "",
+      "required": true,
+      "position": 14,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "fc9e2fd4-e8fe-45e4-a5bc-94597cdc5f54",
+      "type": "multiple-choice",
+      "title": "O EQUIPAMENTO ESTAVA CONECTADO A CAN DO VEICULO? Galileo",
+      "description": "",
+      "required": true,
+      "position": 15,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "d925b229-0777-4eb2-a0ea-b5e295ba65b4",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "7112e1df-f509-4df4-8a01-5c25e1326ab0",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "5058cdbe-4210-4cdc-91f0-d6e485465eb2",
+      "type": "multiple-picture",
+      "title": "FOTO DOS FIOS DA CAN ONDE O EQUIPAMENTO ESTAVA LIGADO (APÓS REMOVER) ANEXE A FOTO DOS FIOS ISOLADOS",
+      "description": "",
+      "required": true,
+      "position": 16,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "fc9e2fd4-e8fe-45e4-a5bc-94597cdc5f54",
+            "title": "O EQUIPAMENTO ESTAVA CONECTADO A CAN DO VEICULO? Galileo"
+          }
+        }
+      ]
+    },
+    {
+      "id": "e0c340a0-aa13-4164-9c78-f73caf802b00",
+      "type": "checkboxes",
+      "title": "QUAIS PEREFÉRICOS FORAM REMOVIDOS?",
+      "description": "",
+      "required": true,
+      "position": 17,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "4208c577-981c-422f-b384-99793b501743",
+          "value": "LEITORA DE MOTORISTA",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "e6087325-41a5-4dbc-810b-46ad84c1ef79",
+          "value": "LEITORA DE PASSAGEIRO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "651dd63c-da46-48f2-9028-5ec002549d6b",
+          "value": "NÃO FORAM REMOVIDOS PERIFÉRICOS",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "17007bb8-1c7e-421b-86a2-21ac9ebae7a5",
+      "type": "multiple-picture",
+      "title": "FOTO DO LOCAL ONDE A LEITORA DE MOTORISTA ESTAVA (APÓS REMOVER)",
+      "description": "",
+      "required": true,
+      "position": 18,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "LEITORA DE MOTORISTA",
+          "operator": "equal",
+          "question": {
+            "id": "e0c340a0-aa13-4164-9c78-f73caf802b00",
+            "title": "QUAIS PEREFÉRICOS FORAM REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0a41ce2d-cfdf-4815-be6f-0eb73c406e80",
+      "type": "short-answer",
+      "title": "FOTO DO LOCAL ONDE A LEITORA DE PASSAGEIRO ESTAVA (APÓS REMOVER)",
+      "description": "",
+      "required": true,
+      "position": 19,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "LEITORA DE PASSAGEIRO",
+          "operator": "equal",
+          "question": {
+            "id": "e0c340a0-aa13-4164-9c78-f73caf802b00",
+            "title": "QUAIS PEREFÉRICOS FORAM REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "88dbddaf-ef92-4aae-89d6-67dbb429237a",
+      "type": "picture",
+      "title": "FOTO DO PAINEL COM O MOTOR LIGADO (APÓS REMOÇÃO)",
+      "description": "",
+      "required": true,
+      "position": 20,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}

@@ -1,0 +1,148 @@
+{
+  "name": "LAUDO TÉCNICO INOPRIME V2",
+  "type": "internal",
+  "description": "",
+  "questionsCount": 5,
+  "questions": [
+    {
+      "id": "6d3ed902-86da-4a1f-9436-96d60b6e4cc1",
+      "type": "checkboxes",
+      "title": "QUAL APARELHO ESTÁ NA MANUTENÇÃO",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "911b79df-2fd7-4611-a95c-1005829e1b7b",
+          "value": "GALILEO 7",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "760122e6-2ef1-452b-b687-eced3d361a36",
+          "value": "GALILEO 10",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "89706bb0-ca56-4940-b7d9-6466fde5d102",
+          "value": "J-R12",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "252574ba-8a75-499a-8738-59ae69ded340",
+          "value": "J-M15",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "0cd910e8-e41b-44af-9f17-ced031b3ec62",
+          "value": "SGBRAS",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "b24a95fe-052f-4be7-8497-fffa7386f375",
+          "value": "XT40",
+          "position": 5,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "4c0c836b-89e0-4b31-86cc-240c1bd74e1a",
+          "value": "SUNTECH",
+          "position": 6,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "e4ec09ee-6d56-4058-8e50-2cc89286f88e",
+      "type": "paragraph",
+      "title": "DESCREVA O QUE FOI CONSTATADO",
+      "description": "",
+      "required": false,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "57197222-433a-4d36-9e0e-4cdd587c7203",
+      "type": "multiple-picture",
+      "title": "TIRE FOTOS DAS AVARIAS",
+      "description": "",
+      "required": false,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "d0367f68-feb8-47b6-9466-a31e60db46b5",
+      "type": "paragraph",
+      "title": "QUAL CLIENTE ENVIOU O APARELHO",
+      "description": "",
+      "required": false,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "6be01e6d-947b-4c90-903c-8d8353635e3b",
+      "type": "checkboxes",
+      "title": "RESPONSÁVEL TÉCNICO",
+      "description": "",
+      "required": false,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "bfd65e25-3726-467a-9ee5-588de3f7b554",
+          "value": "LUCAS MUZI",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "9ae655c8-2671-4639-b1fd-63f79c13611b",
+          "value": "BRUNO HENRIQUE",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "a94413fa-6214-450e-9208-f36ad5d06c23",
+          "value": "WILLIAN DE OLIVEIRA",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "3acbaa0d-1a7d-40c1-88b8-10a65b5b650d",
+          "value": "",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}

@@ -1,0 +1,854 @@
+{
+  "name": "REMANEJAMENTO - REMOÇÃO",
+  "type": "public",
+  "description": "",
+  "questionsCount": 36,
+  "questions": [
+    {
+      "id": "590506c0-863e-4b67-8cac-c59f63947a8b",
+      "type": "picture",
+      "title": "FOTO PLACA VEICULO",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "22744f8f-7080-4372-8416-2f50e807941b",
+      "type": "picture",
+      "title": "FOTO PAINEL MOTOR LIGADO",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "1075570f-aa83-4d34-8af1-67d7926b289a",
+      "type": "checkboxes",
+      "title": "EM QUAL TIPO DE VEICULO ESTÁ SENDO REALIZADO O SERVIÇO?",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "cf9c5a36-7076-4792-855c-5c470e870523",
+          "value": "MÁQUINA",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "ecf4e467-9bd1-47bc-bca1-d83c2491602a",
+          "value": "CAMINHÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "655aef83-5c22-44f8-b939-bf51d6bbcad3",
+          "value": "AUTOMOVEIS LEVES",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "8c42d1d7-6e17-424a-a3d9-35dfe5a22481",
+      "type": "short-answer",
+      "title": "QUAL A MARCA DO VEICULO? (EX: VOLKSWAGEM, VOLVO. SCANIA)",
+      "description": "",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "c6d3cbf1-9544-4324-9ed1-b7ef643b6631",
+      "type": "short-answer",
+      "title": "QUAL O MODELO DO VEICULO? (EX: FH540, HILUX, P380)",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "a64d534e-ab96-4696-9cb3-f3dd6e80a47a",
+      "type": "multiple-choice",
+      "title": "ALGUMA AVARIA NO VEICULO ANTES DA REMOÇÃO? (EX: PAINEL QUEBRADO, LUZES DE FALHAS NO PAINEL, FALTANDO PARAFUSOS)",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "5977ef35-1510-4553-afe5-df7eb9fb79a2",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "8c834365-5c28-49ae-ac46-2a3590995174",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "32aa5326-b417-430d-a9d4-155c4125cc11",
+      "type": "multiple-picture",
+      "title": "FOTO DA AVARIA",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "a64d534e-ab96-4696-9cb3-f3dd6e80a47a",
+            "title": "ALGUMA AVARIA NO VEICULO ANTES DA REMOÇÃO? (EX: PAINEL QUEBRADO, LUZES DE FALHAS NO PAINEL, FALTANDO PARAFUSOS)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "33f1865c-0f8f-41da-b471-40f347c2e64e",
+      "type": "checkboxes",
+      "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?",
+      "description": "",
+      "required": true,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "4e757449-e4ce-4b0d-b714-e06e29c831a2",
+          "value": "GalileoSky",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "502c2ddd-b4cb-475a-886a-521d2d0ad7f0",
+          "value": "Câmeras",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "5d5b843e-2415-44fc-aa30-335c2e5eff87",
+          "value": "JR12",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "f25b0d47-72a6-4d70-bd9c-525b9c9579c4",
+          "value": "JR11",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "a8b6dd29-c843-404a-8ff3-16516d98eb94",
+          "value": "Rastreador básico",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "c6938cc0-9607-48c0-a34a-2dd6b8fdfd3d",
+          "value": "Bafometro",
+          "position": 5,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "123073c1-5c75-4cfd-9d19-288f9b1d28d8",
+          "value": "Tablet",
+          "position": 6,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "d71c277e-5437-419b-9ff0-c4e44574289f",
+          "value": "Outros",
+          "position": 7,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "a8de666b-3699-485e-9d25-698e64664bf6",
+      "type": "checkboxes",
+      "title": "OBS: Caso os equipamentos não sejam encontrados (extravio) ou seja identificado algum dano nos equipamentos removidos, haverá campos específicos no final da OS para preenchimento.",
+      "description": "",
+      "required": false,
+      "position": 8,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "61dd8e73-3d22-4e69-881a-20df944f15b2",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "c5213d3d-1acf-41aa-9550-3c8cd35f1f24",
+      "type": "multiple-picture",
+      "title": "FOTO ONDE ESTÃO OS FIOS DE ALIMENTAÇÃO (ANTES DE REMOVER)",
+      "description": "",
+      "required": true,
+      "position": 9,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "908a7f7e-965d-420c-9ba0-48367b32c6dc",
+      "type": "multiple-picture",
+      "title": "FOTO ONDE ESTAVAM OS FIOS DE ALIMENTAÇÃO (APÓS REMOVER) ISOLE OS FIOS DE POSITIVO, NEGATIVO E PÓS CHAVE E TIRA FOTO DE CADA UM ISOLADO E ANEXE A IMAGEM ABAIXO",
+      "description": "",
+      "required": true,
+      "position": 10,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "89c60436-d234-4d5e-be9f-f4a503d9b238",
+      "type": "multiple-choice",
+      "title": "O EQUIPAMENTO ESTAVA CONECTADO A CAN DO VEICULO?",
+      "description": "",
+      "required": true,
+      "position": 11,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "afc5a703-987a-440c-b2b1-5bbc3e3db2f2",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "724f51a1-348d-4d2d-a637-6120f1e90961",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "33f1865c-0f8f-41da-b471-40f347c2e64e",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f39fd0a6-5283-4a5b-9ac4-81ebf7ef4388",
+      "type": "multiple-picture",
+      "title": "FOTO DOS FIOS DA CAN ONDE O EQUIPAMENTO ESTÁ LIGADO (ANTES DE REMOVER)",
+      "description": "",
+      "required": true,
+      "position": 12,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "33f1865c-0f8f-41da-b471-40f347c2e64e",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "a6436fbf-4e23-4bbe-9455-602787466eb1",
+      "type": "multiple-picture",
+      "title": "FOTO DOS FIOS DA CAN ONDE O EQUIPAMENTO ESTAVA LIGADO (APÓS REMOVER) ANEXE A FOTO DOS FIOS ISOLADOS",
+      "description": "",
+      "required": true,
+      "position": 13,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "33f1865c-0f8f-41da-b471-40f347c2e64e",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "a996d4d7-b5ae-4770-b828-23f92c070353",
+      "type": "picture",
+      "title": "FOTO DOS FIOS DA CAN ONDE O EQUIPAMENTO ESTÁ LIGADO (ANTES DE REMOVER).",
+      "description": "",
+      "required": true,
+      "position": 14,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "33f1865c-0f8f-41da-b471-40f347c2e64e",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "4018ab18-411e-4c77-a82a-8bf25a3ef012",
+      "type": "multiple-picture",
+      "title": "FOTO DOS FIOS DA CAN ONDE O EQUIPAMENTO ESTAVA LIGADO (APÓS REMOVER) ANEXE A FOTO DOS FIOS ISOLADOS.",
+      "description": "",
+      "required": true,
+      "position": 15,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "33f1865c-0f8f-41da-b471-40f347c2e64e",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ae34c359-fda1-43a2-900b-db8997c08790",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO GALILEOSKY",
+      "description": "",
+      "required": true,
+      "position": 16,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "33f1865c-0f8f-41da-b471-40f347c2e64e",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "7c46515d-db68-4f7c-abe7-ee4570467372",
+      "type": "picture",
+      "title": "FOTO DO IMEI DA CÂMERA",
+      "description": "",
+      "required": true,
+      "position": 17,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Câmeras",
+          "operator": "equal",
+          "question": {
+            "id": "33f1865c-0f8f-41da-b471-40f347c2e64e",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "40bb1d6d-3756-465b-a5e5-51c540881a03",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO JR12",
+      "description": "",
+      "required": true,
+      "position": 18,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "33f1865c-0f8f-41da-b471-40f347c2e64e",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "17213ebe-a303-495a-aaa4-22bcad9d240e",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO JR11",
+      "description": "",
+      "required": true,
+      "position": 19,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR11",
+          "operator": "equal",
+          "question": {
+            "id": "33f1865c-0f8f-41da-b471-40f347c2e64e",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6c71a6be-0fb0-4d62-9aff-0c15f17c19f6",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO RASTREADOR BASICO",
+      "description": "",
+      "required": true,
+      "position": 20,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Rastreador básico",
+          "operator": "equal",
+          "question": {
+            "id": "33f1865c-0f8f-41da-b471-40f347c2e64e",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "11a99987-264d-4acf-93ec-6cc7dc28de1c",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO BAFOMETRO",
+      "description": "",
+      "required": true,
+      "position": 21,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Bafometro",
+          "operator": "equal",
+          "question": {
+            "id": "33f1865c-0f8f-41da-b471-40f347c2e64e",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0aafed42-5bd9-4207-a59f-bc0f5fe9478d",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO TABLET",
+      "description": "",
+      "required": true,
+      "position": 22,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Tablet",
+          "operator": "equal",
+          "question": {
+            "id": "33f1865c-0f8f-41da-b471-40f347c2e64e",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6a18d6a6-a85a-4e2b-a547-aed1f474df43",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO EQUIPAMENTO REMOVIDO",
+      "description": "",
+      "required": true,
+      "position": 23,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Outros",
+          "operator": "equal",
+          "question": {
+            "id": "33f1865c-0f8f-41da-b471-40f347c2e64e",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO REMOVIDOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "188dd208-7b99-413c-9f60-2c60fa47f6a1",
+      "type": "checkboxes",
+      "title": "QUAIS PEREFÉRICOS FORAM REMOVIDOS?",
+      "description": "",
+      "required": true,
+      "position": 24,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "c56c4145-7120-4392-b9f0-a7c109c24e83",
+          "value": "LEITORA DE MOTORISTA",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "d905fa83-0742-4478-a75c-cdca3a631070",
+          "value": "LEITORA DE PASSAGEIRO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "56cf0fdc-0a81-4b79-bac5-fe0293e26c69",
+          "value": "NÃO FORAM REMOVIDOS PERIFÉRICOS",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "f05ae211-479e-4469-990b-1b23dfef869e",
+      "type": "multiple-choice",
+      "title": "ALGUM EQUIPAMENTO EXTRAVIADO? (QUE AO REMOVER O EQUIPAMENTO NÃO FOI LOCALIZADO)",
+      "description": "",
+      "required": true,
+      "position": 25,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "095f3e8c-7cfb-4e54-8ce9-6b02ff791bb8",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "82ca7629-1e53-465d-96bd-1b0b2e8cb768",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "859ccb76-a6ad-4531-b153-9c8b6701fd8b",
+      "type": "checkboxes",
+      "title": "Grave um vídeo mostrando que os equipamentos não foram encontrados. Registre as partes do veículo desmontadas durante a verificação e confirme a ausência do equipamento. Em seguida, anexe o vídeo na aba de anexos do formulário.",
+      "description": "",
+      "required": true,
+      "position": 26,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "61dc6dc5-dd5a-4664-8bbf-e18fd0e49711",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "f05ae211-479e-4469-990b-1b23dfef869e",
+            "title": "ALGUM EQUIPAMENTO EXTRAVIADO? (QUE AO REMOVER O EQUIPAMENTO NÃO FOI LOCALIZADO)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "23c3931a-7018-47bc-871c-9a63ed58b6db",
+      "type": "checkboxes",
+      "title": "QUAL EQUIPAMENTO FOI EXTRAVIADO?",
+      "description": "",
+      "required": true,
+      "position": 27,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "a800aab9-238e-4539-9815-56bdea95440d",
+          "value": "GalileoSky",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "5ddfcc23-704d-4355-af0a-fe773e28d185",
+          "value": "Câmeras",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "7fa7d56e-c683-429a-aa37-dbc5f93f5139",
+          "value": "JR12",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "1e8ff34a-992a-44d6-83d0-4c81e51abffd",
+          "value": "JR11",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "2dca1f74-bacc-4f7a-802d-baaa5adfc16b",
+          "value": "Bafometro",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "c541cdff-2f0a-41ab-94e9-f8e9c23037b7",
+          "value": "Tablet",
+          "position": 5,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "4f863829-6093-4a08-b752-dad2ee6a18d7",
+          "value": "Outros",
+          "position": 6,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "f05ae211-479e-4469-990b-1b23dfef869e",
+            "title": "ALGUM EQUIPAMENTO EXTRAVIADO? (QUE AO REMOVER O EQUIPAMENTO NÃO FOI LOCALIZADO)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "22d4fdd0-232d-4c3f-9fb2-ceb82525e92b",
+      "type": "multiple-picture",
+      "title": "ANEXE FOTO DOS DANOS IDENTIFICADOS MOSTRANDO EXPECIFICAMENTE OQUE ESTÁ DANIFICADO",
+      "description": "",
+      "required": true,
+      "position": 28,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "42f48683-f8e0-48be-82db-06199eeb3c43",
+      "type": "multiple-picture",
+      "title": "ANEXE ALGUM REGISTRO MOSTRANDO QUE FOI INFORMADO AO CLIENTE OU A INOPRIME SOBRE  OS EQUIPAMENTOS DANIFICADOS",
+      "description": "",
+      "required": true,
+      "position": 29,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "27e2ac8a-6dfb-4535-99cf-9d8e2e37074d",
+      "type": "checkboxes",
+      "title": "Grave um vídeo registrando os danos identificados nos equipamentos removidos e anexe o arquivo na aba de anexos do formulário.",
+      "description": "",
+      "required": true,
+      "position": 30,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "667658b5-8724-45ca-9389-c3f3a7d32ccc",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "4914fbcd-a830-4c46-ba68-0312bc41930d",
+      "type": "multiple-choice",
+      "title": "ALGUMA AVARIA APÓS A REMOÇÃO?",
+      "description": "",
+      "required": true,
+      "position": 31,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "76e4adf1-55e2-42a5-b91d-1d4e95d6698d",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "1c1f448e-52c0-4501-b97d-c1b410512604",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "1806e477-1d25-43f2-b958-728b48a84534",
+      "type": "checkboxes",
+      "title": "Relate a avaria identificada e avise imediatamente o responsável do cliente sobre o ocorrido.",
+      "description": "",
+      "required": true,
+      "position": 32,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "b531093e-9d1b-40f7-9fdb-84a5f414367f",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "4914fbcd-a830-4c46-ba68-0312bc41930d",
+            "title": "ALGUMA AVARIA APÓS A REMOÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "457a05ac-34c4-48ad-b8c9-7575a09fb816",
+      "type": "multiple-picture",
+      "title": "FOTO DA AVARIA PROVOCADA",
+      "description": "",
+      "required": true,
+      "position": 33,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "4914fbcd-a830-4c46-ba68-0312bc41930d",
+            "title": "ALGUMA AVARIA APÓS A REMOÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ca50c83c-73d6-4b0a-a3ad-89940a4f6b0d",
+      "type": "checkboxes",
+      "title": "Grave um vídeo mostrando o serviço realizado no veículo, incluindo o veículo em funcionamento, e anexe o arquivo na aba ‘Anexos’.”",
+      "description": "",
+      "required": true,
+      "position": 34,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "ba48fd9f-1497-4270-8234-bfed07ea4789",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "7113a1c7-647c-416b-9d55-c91d70b746fb",
+      "type": "picture",
+      "title": "FOTO DO PAINEL COM O MOTOR LIGADO (APÓS REMOÇÃO)",
+      "description": "",
+      "required": true,
+      "position": 35,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}

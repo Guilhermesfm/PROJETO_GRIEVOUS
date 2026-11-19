@@ -1,0 +1,93 @@
+{
+  "name": "CHECKLIST DE VEÍCULOS INOPRIME  - APÓS REALIZAR USO DO VEÍCULO",
+  "type": "public",
+  "description": "",
+  "questionsCount": 5,
+  "questions": [
+    {
+      "id": "46b4a707-b74e-4c7f-b30d-b751f1d63623",
+      "type": "picture",
+      "title": "FOTO DO PAINEL COM MOTOR LIGADO",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "e74b3a6e-3fa4-4aac-94c4-b83b980f5e39",
+      "type": "picture",
+      "title": "FOTO DO ODOMETRO",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "b8cd0180-464e-4d35-a103-90141626dca9",
+      "type": "multiple-picture",
+      "title": "INSERIR IMAGENS DO VEÍCULO (INTERNA E EXTERNA)",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "258fd850-3b16-4a70-a3cc-61ec961a532c",
+      "type": "multiple-choice",
+      "title": "AVARIAS APÓS USO DO VEÍCULO?",
+      "description": "",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "00e64197-33cd-48a4-a0ac-197eca30c742",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "c5bbe355-e8b9-4d0f-9e36-86b1943dd09d",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "95852a28-2bbc-4534-82c2-8c8fe82a7310",
+      "type": "multiple-picture",
+      "title": "INSERIR IMAGENS DAS AVARIAS GERADAS",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "258fd850-3b16-4a70-a3cc-61ec961a532c",
+            "title": "AVARIAS APÓS USO DO VEÍCULO?"
+          }
+        }
+      ]
+    }
+  ],
+  "isEvaluated": false
+}

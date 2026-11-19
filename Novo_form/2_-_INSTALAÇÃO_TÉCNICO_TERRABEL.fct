@@ -1,0 +1,224 @@
+{
+  "name": "2 - INSTALAÇÃO TÉCNICO TERRABEL",
+  "type": "public",
+  "description": "FOMULÁRIO DE USO EXCLUSIVO DA TERRABEL",
+  "questionsCount": 10,
+  "questions": [
+    {
+      "id": "9e9d123b-591b-40b0-907e-b127af93ffb4",
+      "type": "short-answer",
+      "title": "INSIRA SEU NOME COMPLETO",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "22994fef-6ec2-4f07-8ade-cdb496a45a61",
+      "type": "checkboxes",
+      "title": "QUAIS PERIFÉRICOS ESTÃO SENDO INSTALADOS?",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "8cfd34e4-1285-4f0d-bf6f-4840d8235adf",
+          "value": "GALILEOSKY",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "ac7b1aab-5458-419b-9aa5-7b899c8bfe87",
+          "value": "SISTEMA DE FADIGA",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "51307224-deb7-4cfb-88da-0edade6df5e9",
+          "value": "REDUNDANTE",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "ce037c3e-9dcf-4b0e-9bd1-2ee96b254871",
+          "value": "BAFOMETRO",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "0807a012-bfc4-4479-9c7f-5d23da63f858",
+          "value": "LEITORA DE MOTORISTA",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "8dc12a7e-4ae3-46eb-b3ac-b5206f0cf9d9",
+          "value": "LEITORA DE PASSAGEIRO",
+          "position": 5,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "22e7aa20-9c96-4081-a6da-79186d75714d",
+          "value": "ANTENA SATELITAL",
+          "position": 6,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "b0e88021-b381-46d0-bbc2-85afcda52f00",
+      "type": "multiple-picture",
+      "title": "INSIRA A FOTO DO SERIAL DO GALILEOSKY",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "22994fef-6ec2-4f07-8ade-cdb496a45a61",
+            "title": "QUAIS PERIFÉRICOS ESTÃO SENDO INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "876ff6b1-13c6-490c-bc23-11543edac69d",
+      "type": "multiple-picture",
+      "title": "INSIRA A FOTO DO PONTO DE ALIMENTAÇÃO E REDE CAN UTILIZADO NO GALILEOSKY",
+      "description": "FOTOS ALIMENTAÇÃO E REDE CAN",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "22994fef-6ec2-4f07-8ade-cdb496a45a61",
+            "title": "QUAIS PERIFÉRICOS ESTÃO SENDO INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "e0b22be1-b2e9-4c9a-aa46-34c1dbe51584",
+      "type": "multiple-picture",
+      "title": "INSIRA UMA FOTO DE COMO FICOU A INSTALAÇÃO DO GALILEOSKY",
+      "description": "LOCAL DA INSTALAÇÃO",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GALILEOSKY",
+          "operator": "equal",
+          "question": {
+            "id": "22994fef-6ec2-4f07-8ade-cdb496a45a61",
+            "title": "QUAIS PERIFÉRICOS ESTÃO SENDO INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "9ed34572-eeed-4f58-964c-74550d6be839",
+      "type": "multiple-picture",
+      "title": "INSIRA UMA FOTO DO SERIAL DO SISTEMA DE FADIGA",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SISTEMA DE FADIGA",
+          "operator": "equal",
+          "question": {
+            "id": "22994fef-6ec2-4f07-8ade-cdb496a45a61",
+            "title": "QUAIS PERIFÉRICOS ESTÃO SENDO INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "a1a89dfd-da5c-4e3b-b805-831319aae8fe",
+      "type": "multiple-picture",
+      "title": "INSIRA A FOTO DO PONTO DE ALIMENTAÇÃO UTILIZADO NO SISTEMA DE FADIGA",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SISTEMA DE FADIGA",
+          "operator": "equal",
+          "question": {
+            "id": "22994fef-6ec2-4f07-8ade-cdb496a45a61",
+            "title": "QUAIS PERIFÉRICOS ESTÃO SENDO INSTALADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "56373161-0922-4965-84a5-5c5e5f3feb35",
+      "type": "multiple-picture",
+      "title": "INSIRA UMA FOTO DE COMO FICOU A INSTALAÇÃO DO SISTEMA DE FADIGA",
+      "description": "FOTO DO ADAS, DSM E OUTRAS CÂMERAS INSTALADAS",
+      "required": true,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "44882e1b-25eb-405e-a2ad-b6a352255656",
+      "type": "multiple-picture",
+      "title": "INSIRA A FOTO DO SERIAL/VALIDADE DO BAFOMETRO",
+      "description": "ESTA INFORMAÇÃO ESTÁ NO ETILOMETRO",
+      "required": true,
+      "position": 8,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "194c7119-d49a-4c6a-b9b3-a9e1c6959f5f",
+      "type": "short-answer",
+      "title": "INSIRA O NOME DO ATENDENTE QUE VALIDOU AS INFORMAÇÕES.",
+      "description": "",
+      "required": true,
+      "position": 9,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}

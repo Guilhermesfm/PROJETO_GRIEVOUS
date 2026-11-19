@@ -16,6 +16,8 @@ folha-de-pagamento/*.xlsm
 folha-de-pagamento/*.csv
 # Ultima lista de formularios lida do Field (copia local)
 folha-de-pagamento/formularios/
+# Copia identica de um .fct ja versionado
+Novo_form/REMANEJAMENTO_INOPRIME_V2 (1).fct
 placas/*.xlsx
 
 # Grievous.exe vai versionado, para ser puxado em qualquer maquina.

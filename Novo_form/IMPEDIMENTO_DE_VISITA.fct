@@ -1,0 +1,236 @@
+{
+  "name": "IMPEDIMENTO DE VISITA",
+  "type": "public",
+  "description": "",
+  "questionsCount": 8,
+  "questions": [
+    {
+      "id": "a64ccac5-3d8b-4f05-883d-65d823392aa5",
+      "type": "checkboxes",
+      "title": "INFORME O MOTIVO DO SERVIÇO NÃO SER EXECUTADO",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "e61e78fa-e207-4d2d-82cb-4d8349b8c233",
+          "value": "VEICULO NAO ESTAVA NO ENDEREÇO AGENDADO",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "73d13ff0-42f3-4e72-bcd5-e6df1780a820",
+          "value": "ENDEREÇO QUE CLIENTE INFORMOU ESTA ERRADO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "1890528e-a2f3-4e3b-8851-e56dcfea0ebe",
+          "value": "VEICULO EM MANUTENÇÃO (OFICNA)",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "b7421b22-96ec-4b0a-be82-0b4d7ef3c8aa",
+          "value": "VEICULO BASCULADO EM MANUTENÇÃO (OFICINA)",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "7e237ee9-023f-414e-ac38-80a9297854ce",
+          "value": "VEICULO EM CIMA DE ELEVADOR EM OFICINA",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "7206b252-c2cb-41a9-ac0e-e470cbb2a9e4",
+          "value": "VEICULO DESMONTADO NA OFICINA",
+          "position": 5,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "f953c5bf-4786-42e7-a381-4085450b5349",
+          "value": "VEICULO SEM BATERIA OU DESCARREGADO",
+          "position": 6,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "750bc1ee-5d1a-4c03-b57a-aa789fd16570",
+          "value": "LOCAL DO ATENDIMENTO NAO POSSUI SINAL DE INTERNET PARA TESTES",
+          "position": 7,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "fd2c5bce-3def-46a3-86de-998bca1d178f",
+          "value": "VEICULO TRANCADO, SEM CHAVE E SEM REPRESENTANTE DA EMPRESA PARA ABRIR",
+          "position": 8,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "b601ae04-8534-404e-8002-75676d3c0419",
+          "value": "OUTROS",
+          "position": 9,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "4f28d924-582e-4a65-abdf-8106a8f44a1d",
+      "type": "paragraph",
+      "title": "DESCREVA DETALHADAMENTE APRESENTANDO TODA ESPECIFICAÇÃO REFERENTE AO MOTIVO DO SERVIÇO NÃO TER SIDO EXECUTADO (EX.: NOME DO RESPONSÁVEL QUE INFORMOU ENDEREÇO ERRADO DO EQUIPAMENTO, NOME DA OFICINA QUE ESTARIA OCORRENDO A MANUTENÇÃO DO VEÍCULO, NOME DO ENDEREÇO INOCRRETO, ETC)",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "OUTROS",
+          "operator": "not-equal",
+          "question": {
+            "id": "a64ccac5-3d8b-4f05-883d-65d823392aa5",
+            "title": "INFORME O MOTIVO DO SERVIÇO NÃO SER EXECUTADO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "8e7464f8-d4bb-4eb4-86eb-9f5f70381cbf",
+      "type": "paragraph",
+      "title": "DESCREVA DETALHADAMENTE O MOTIVO DO SERVIÇO NÃO TER SIDO EXECUTADO. APRESENTE TODA ESPECIFICAÇÃO DO MOTIVO E DA SITUAÇÃO DO IMPEDIMENTO  (EX.: NOME DO RESPONSÁVEL QUE INFORMOU ENDEREÇO ERRADO DO EQUIPAMENTO, NOME DA OFICINA QUE ESTARIA OCORRENDO A MANUTENÇÃO DO VEÍCULO, NOME DO ENDEREÇO INOCRRETO, ETC)",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "OUTROS",
+          "operator": "equal",
+          "question": {
+            "id": "a64ccac5-3d8b-4f05-883d-65d823392aa5",
+            "title": "INFORME O MOTIVO DO SERVIÇO NÃO SER EXECUTADO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "79519aac-271b-41ab-b745-1c41de5966ae",
+      "type": "multiple-picture",
+      "title": "ANEXAR FOTO MOSTRANDO IMPEDIMENTO",
+      "description": "",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "5bac1171-7597-407c-97ac-de5e5fac5469",
+      "type": "multiple-choice",
+      "title": "EXISTE ALGUEM NO LOCAL PARA ASSINAR A OS?",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "ae4d39ce-a9d4-49f7-90cc-e3c09db015e5",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "72f3f215-1382-460d-915b-b95c312e1f73",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "f6354d09-3812-4b98-a755-c8dd4e5a4664",
+      "type": "short-answer",
+      "title": "NOME CLIENTE RESPONSAVEL",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "5bac1171-7597-407c-97ac-de5e5fac5469",
+            "title": "EXISTE ALGUEM NO LOCAL PARA ASSINAR A OS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3f47643c-60f1-4efc-8069-8556b66acb89",
+      "type": "signature",
+      "title": "ASSINATURA RESPONSAVEL",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "5bac1171-7597-407c-97ac-de5e5fac5469",
+            "title": "EXISTE ALGUEM NO LOCAL PARA ASSINAR A OS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "479019a5-11be-4797-b7bf-3b5273a8a576",
+      "type": "paragraph",
+      "title": "DESCREVA MELHOR O MOTIVO DO CLIENTE NÃO TER ASSINADO",
+      "description": "",
+      "required": true,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "NÃO",
+          "operator": "equal",
+          "question": {
+            "id": "5bac1171-7597-407c-97ac-de5e5fac5469",
+            "title": "EXISTE ALGUEM NO LOCAL PARA ASSINAR A OS?"
+          }
+        }
+      ]
+    }
+  ],
+  "isEvaluated": false
+}

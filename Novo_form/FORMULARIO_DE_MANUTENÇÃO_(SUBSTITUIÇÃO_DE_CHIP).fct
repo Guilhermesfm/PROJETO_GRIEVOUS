@@ -1,0 +1,230 @@
+{
+  "name": "FORMULARIO DE MANUTENÇÃO (SUBSTITUIÇÃO DE CHIP)",
+  "type": "public",
+  "description": "",
+  "questionsCount": 12,
+  "questions": [
+    {
+      "id": "e0b6f197-8fca-412f-ac71-c9de11dcb42f",
+      "type": "picture",
+      "title": "FOTO PLACA VEICULO",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "de5b81f4-24df-4e13-bdf0-7d3235cf3a3f",
+      "type": "picture",
+      "title": "FOTO PAINEL (MOTOR LIGADO)",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "8f39bcc0-c404-4ade-ac0a-130dfe2b66b6",
+      "type": "picture",
+      "title": "FOTO HODOMETRO",
+      "description": "",
+      "required": false,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "f5d09239-8db3-494a-acfe-7453d649c1be",
+      "type": "picture",
+      "title": "FOTO HORIMETRO",
+      "description": "",
+      "required": false,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "9a67d6a1-0c14-4657-9615-a3dd64345852",
+      "type": "multiple-choice",
+      "title": "ALGUMA AVARIA NO VEICULO ANTES DO SERVIÇO?",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "af7df980-e33c-4484-887c-60ec3c3e2b2d",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "cb6d2be8-b201-4120-97cf-4727c82ec479",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "8a56cbda-46ea-42cd-b041-56b349fdc2b9",
+      "type": "multiple-picture",
+      "title": "FOTO DAS AVARIAS ENCONTRADAS",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "9a67d6a1-0c14-4657-9615-a3dd64345852",
+            "title": "ALGUMA AVARIA NO VEICULO ANTES DO SERVIÇO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c8c7b18d-e8ab-4f04-8dd4-74e0e47f73d1",
+      "type": "paragraph",
+      "title": "DESCREVA AS AVARIAS",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "9a67d6a1-0c14-4657-9615-a3dd64345852",
+            "title": "ALGUMA AVARIA NO VEICULO ANTES DO SERVIÇO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "30325124-cc69-4839-920d-c6a80a5b60e2",
+      "type": "picture",
+      "title": "FOTO DO ICCID DO CHIP QUE ESTÁ ENTRANDO",
+      "description": "",
+      "required": true,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "e0b08feb-fba9-495a-9ffa-034ccad7e272",
+      "type": "checkboxes",
+      "title": "ATUALIZE A VERSÃO DO FIRMWARE, SCRIPT DO CLIENTE E SCRIPT DO VEICULO. NA PROXIMA QUESTÃO IRÁ PEDIR UMA FOTO DOS ITENS ATUALIZADOS",
+      "description": "",
+      "required": true,
+      "position": 8,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "22d57470-4fbd-4356-aba8-8f9459835506",
+          "value": "ATUALIZADO O FIRMWARE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "fcb108d9-bcc8-4532-ae75-d9ec5863d873",
+          "value": "ATUALIZADO O SCRIPT DO CLIENTE",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "2e7ac4a7-d6f4-4fd2-9c96-2b0b2b330d95",
+          "value": "ATUALIZADO O SCRIPT DO VEICULO",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "5310e54e-1897-4d84-9ccf-411b4e644026",
+      "type": "short-answer",
+      "title": "ANEXE A FOTO DA APN ATUALIZADA DO CHIP > ABA DE CONFIGURAÇÕES >  TRANSMISSÃO DE DADOS . TIRE FOTO DA APN ATUALIZADA (PARA GALILEOSKY)",
+      "description": "",
+      "required": true,
+      "position": 9,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "c75d8d0a-0c20-4ca9-96e1-6c9e326ec90f",
+      "type": "picture",
+      "title": "FOTO DO PAINEL (COM MOTOR LIGADO) APÓS FINALIZAR A MANUTENÇÃO",
+      "description": "",
+      "required": true,
+      "position": 10,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "518a50e5-b30a-4d0a-a496-c5509fa9155c",
+      "type": "checkboxes",
+      "title": "FOI REALIZADO VALIDAÇÃO POR:",
+      "description": "",
+      "required": true,
+      "position": 11,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "08d689cf-f121-46dd-ba4a-7fd40240ee47",
+          "value": "ATENDIMENTO TÉCNICO",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "6bdc3984-d366-40fd-b57d-6dca61bd945e",
+          "value": "PROPRIO TÉCNICO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "c1d02c32-db0e-4f6a-882a-05be7241a0c8",
+          "value": "NÃO FOI REALIZADA A VALIDAÇÃO",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}

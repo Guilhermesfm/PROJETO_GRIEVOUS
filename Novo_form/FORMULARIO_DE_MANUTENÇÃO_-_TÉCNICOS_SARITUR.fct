@@ -1,0 +1,1239 @@
+{
+  "name": "FORMULARIO DE MANUTENÇÃO - TÉCNICOS SARITUR",
+  "type": "public",
+  "description": "",
+  "questionsCount": 51,
+  "questions": [
+    {
+      "id": "453acdb1-6862-49e0-91f2-5df0d30a9443",
+      "type": "picture",
+      "title": "FOTO PLACA VEICULO",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "c208844f-573e-4723-8f5e-058e8776c62a",
+      "type": "picture",
+      "title": "FOTO PAINEL (MOTOR LIGADO)",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "1c1aa9d6-5d7d-44d4-a0cd-c1480dd670b7",
+      "type": "picture",
+      "title": "FOTO HODOMETRO",
+      "description": "",
+      "required": false,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "68da0707-481e-4444-ac9a-808b26807e03",
+      "type": "multiple-choice",
+      "title": "ALGUMA AVARIA NO VEICULO ANTES DO SERVIÇO?",
+      "description": "",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "cd30fa35-5a48-45a9-ae88-91cd673dfcde",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "e1d615ce-bb1c-4e00-97f5-6a0691b84c9a",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "9ce93e67-dce6-432b-828f-35b348bc3790",
+      "type": "multiple-picture",
+      "title": "FOTO DAS AVARIAS ENCONTRADAS",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "68da0707-481e-4444-ac9a-808b26807e03",
+            "title": "ALGUMA AVARIA NO VEICULO ANTES DO SERVIÇO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "4bed9fbb-6648-4476-a402-5159f56125b2",
+      "type": "paragraph",
+      "title": "DESCREVA AS AVARIAS",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "68da0707-481e-4444-ac9a-808b26807e03",
+            "title": "ALGUMA AVARIA NO VEICULO ANTES DO SERVIÇO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c0f08a58-0474-4ea6-9f6a-0150adfdfd83",
+      "type": "multiple-choice",
+      "title": "ALGUMA VIOLAÇÃO NA INSTALAÇÃO ENCONTRADA?",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "33bcb139-c3cb-4da5-94b9-1f6d5183d470",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "18194870-b9ba-40eb-a704-27cb22f3b4f1",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "b06f0560-c72f-4aaf-aa67-316ff16ffd63",
+      "type": "multiple-picture",
+      "title": "FOTOS DAS VIOLAÇÕES",
+      "description": "",
+      "required": true,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "c0f08a58-0474-4ea6-9f6a-0150adfdfd83",
+            "title": "ALGUMA VIOLAÇÃO NA INSTALAÇÃO ENCONTRADA?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d1963340-f1ee-4057-80fe-f59a8de2f9e7",
+      "type": "paragraph",
+      "title": "DESCREVA A VIOLAÇÃO",
+      "description": "",
+      "required": true,
+      "position": 8,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "c0f08a58-0474-4ea6-9f6a-0150adfdfd83",
+            "title": "ALGUMA VIOLAÇÃO NA INSTALAÇÃO ENCONTRADA?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c2b1472e-a96b-46d8-80dd-13d8b54336fa",
+      "type": "checkboxes",
+      "title": "QUAIS EQUIPAMENTOS FORAM SOLICITADOS PARA REALIZAR MANUTENÇÃO?",
+      "description": "",
+      "required": true,
+      "position": 9,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "64b2661b-3348-4f45-aac5-67bcd65e0f7c",
+          "value": "GalileoSky",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "7bdb9a23-cee9-4f46-9812-fbff2060a2ee",
+          "value": "JR12",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "700ff678-5224-4b7e-af82-d60401e79e61",
+      "type": "checkboxes",
+      "title": "QUAIS DESSES ITENS FORAM SOLICITADOS MANUTENÇÃO?",
+      "description": "",
+      "required": true,
+      "position": 10,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "1c956deb-842b-484f-a6d1-d516cab38c70",
+          "value": "LEITORA DE MOTORISTA",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "90dec6a9-c80a-44cd-9f84-aeb05bf81515",
+          "value": "NÃO FOI SOLICITADO MANUTENÇÃO PARA O PRODUTO ACIMA",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "2a2a3aed-0ac9-424e-a8b9-04c587e0693a",
+      "type": "multiple-choice",
+      "title": "NECESSARIO TROCA DE EQUIPAMENTO?",
+      "description": "",
+      "required": true,
+      "position": 11,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "8a8a1d2a-b7e8-473b-b11a-a9953c48f06a",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "314037bc-626f-4587-923f-fccb0f054306",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "c45ffff6-cab9-44be-8424-b275d3a17a0f",
+      "type": "checkboxes",
+      "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO TROCADOS?",
+      "description": "",
+      "required": true,
+      "position": 12,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "14af46d6-6c86-443e-b958-b48e040eae59",
+          "value": "GalileoSky",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "0f1b9197-4a41-4b42-8360-60bc2fed526c",
+          "value": "JR12",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "2a2a3aed-0ac9-424e-a8b9-04c587e0693a",
+            "title": "NECESSARIO TROCA DE EQUIPAMENTO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "a18b4301-a25d-407a-8f38-46d8288b6780",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO GALILEOSKY QUE ESTÁ SAINDO",
+      "description": "",
+      "required": true,
+      "position": 13,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "c45ffff6-cab9-44be-8424-b275d3a17a0f",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO TROCADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "83502dab-4dbf-404c-8287-a428c3d40c95",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO GALILEOSKY QUE ESTÁ ENTRANDO",
+      "description": "",
+      "required": true,
+      "position": 14,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "c45ffff6-cab9-44be-8424-b275d3a17a0f",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO TROCADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3725fa3e-e90d-4e81-a8a2-d151e0d18b57",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO JR12 QUE ESTÁ SAINDO",
+      "description": "",
+      "required": true,
+      "position": 15,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "c45ffff6-cab9-44be-8424-b275d3a17a0f",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO TROCADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c8d63532-0e2c-4753-a075-2bbdfd978135",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO JR12 QUE ESTÁ ENTRANDO",
+      "description": "",
+      "required": true,
+      "position": 16,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "c45ffff6-cab9-44be-8424-b275d3a17a0f",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO TROCADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "a4059076-f813-465a-a6b1-552e0ac97905",
+      "type": "paragraph",
+      "title": "QUAL MOTIVO DO GALILEO TER SIDO TROCADO? (DESCREVA OS DETALHES)",
+      "description": "",
+      "required": true,
+      "position": 17,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "c45ffff6-cab9-44be-8424-b275d3a17a0f",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO TROCADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "a9984416-27d5-4904-ac56-998aa39da3bb",
+      "type": "paragraph",
+      "title": "QUAL MOTIVO DO JR12 TER SIDO TROCADO? (DESCREVA OS DETALHES)",
+      "description": "",
+      "required": true,
+      "position": 18,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "c45ffff6-cab9-44be-8424-b275d3a17a0f",
+            "title": "QUAIS EQUIPAMENTOS ESTÃO SENDO TROCADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "09927714-4022-4980-a593-232e9c7cb7f4",
+      "type": "multiple-choice",
+      "title": "ALGUM PERIFÉRICO FOI TROCADO? (Periféricos são todos itens que não são o equipamento principal) ex: chip, leitora, chicote, fusível, buzzer, entre outros)",
+      "description": "",
+      "required": true,
+      "position": 19,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "84a9cf7d-e00f-4ebd-9397-1424ae6b1a06",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "bc50a890-d5a4-4225-b40e-77a1a96911ff",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "5beb2fc8-190b-4d1e-bbe5-d569f8d5a0e7",
+      "type": "checkboxes",
+      "title": "QUAIS PERIFÉRICOS FORAM TROCADOS?",
+      "description": "",
+      "required": true,
+      "position": 20,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "d8850964-1867-45bc-897f-7b472c58fb73",
+          "value": "CHICOTE DO GALILEOSKY",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "768cedc9-9932-474f-b67e-6a0978c94269",
+          "value": "CHICOTE DO JR12",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "0a07d978-c277-43b2-85c1-7836e18ad2ba",
+          "value": "ANTENA GSM",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "b7895ad3-f982-472b-8af4-7c3ca0cec357",
+          "value": "ANTENA GPS",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "5a6628a9-86bd-407b-be12-e74ea10bba79",
+          "value": "BUZZER",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "938c48c4-9ea4-4ce7-92f5-316f401d4292",
+          "value": "LEITORA DE MOTORISTA",
+          "position": 5,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "7453eb03-9d6f-4b4d-82fe-3f9600895ca4",
+          "value": "CHIP",
+          "position": 6,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "ec277359-757f-44f8-989c-01abfa76a72e",
+          "value": "FUSIVEIS",
+          "position": 7,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "124986ba-74ec-4b87-bcb0-59829039e23d",
+          "value": "RABICHO DO CONECTOR REDE CAN",
+          "position": 8,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "e9b2cd75-ff0b-4cf2-95fc-92ed2d320cea",
+          "value": "RABICHO DO CONECTOR DE ENTRADAS",
+          "position": 9,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "65be2b21-1426-4692-a494-5e76b67c390e",
+          "value": "PLACA ANALÓGICA DO GALILEO",
+          "position": 10,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "fd7a943f-15af-4b71-9343-075439e1881f",
+          "value": "ADAPTADOR LEITORA DE MOTORISTA",
+          "position": 11,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "20e8b753-191f-4580-9572-486e16842b44",
+          "value": "EXTENSOR LEITORA DE MOTORISTA",
+          "position": 12,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "2c1dfcd5-a02a-45a3-a65d-a3e10a705609",
+          "value": "RABICHO DE AIMENTAÇÃO DOS EQUIPAMENTOS",
+          "position": 13,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "09927714-4022-4980-a593-232e9c7cb7f4",
+            "title": "ALGUM PERIFÉRICO FOI TROCADO? (Periféricos são todos itens que não são o equipamento principal) ex: chip, leitora, chicote, fusível, buzzer, entre outros)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d57b2d35-442a-4b51-b16b-7dafeda64869",
+      "type": "picture",
+      "title": "FOTO DO ICCID DO CHIP QUE ESTÁ ENTRANDO",
+      "description": "",
+      "required": true,
+      "position": 21,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "CHIP",
+          "operator": "equal",
+          "question": {
+            "id": "5beb2fc8-190b-4d1e-bbe5-d569f8d5a0e7",
+            "title": "QUAIS PERIFÉRICOS FORAM TROCADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2268261c-8e08-478d-97a5-2c64bd05f32d",
+      "type": "picture",
+      "title": "FOTO DO ICCID DO CHIP QUE ESTÁ SAINDO",
+      "description": "",
+      "required": true,
+      "position": 22,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "CHIP",
+          "operator": "equal",
+          "question": {
+            "id": "5beb2fc8-190b-4d1e-bbe5-d569f8d5a0e7",
+            "title": "QUAIS PERIFÉRICOS FORAM TROCADOS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "342505fa-9c75-4a92-a808-86f4c7451def",
+      "type": "paragraph",
+      "title": "QUAL MOTIVO DE TER TROCADO OS PEREFÉRICOS SELECIONADOS? (DESCREVA COM DETALHES)",
+      "description": "",
+      "required": true,
+      "position": 23,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "09927714-4022-4980-a593-232e9c7cb7f4",
+            "title": "ALGUM PERIFÉRICO FOI TROCADO? (Periféricos são todos itens que não são o equipamento principal) ex: chip, leitora, chicote, fusível, buzzer, entre outros)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f71aa6af-5b54-450b-8d3a-8634a2e2fc8d",
+      "type": "multiple-choice",
+      "title": "VOCE TÊM ACESSO AO CONFIGURADOR DO GALILEOSKY?",
+      "description": "",
+      "required": true,
+      "position": 24,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "d6401abf-5245-413b-8787-9228f826ae18",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "43669526-0626-4b12-8cc1-32176cbfc308",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "c2b1472e-a96b-46d8-80dd-13d8b54336fa",
+            "title": "QUAIS EQUIPAMENTOS FORAM SOLICITADOS PARA REALIZAR MANUTENÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "5df6a0cc-232d-479e-bdce-d5b2a9328cd7",
+      "type": "checkboxes",
+      "title": "ATUALIZE A VERSÃO DO FIRMWARE, SCRIPT DO CLIENTE E SCRIPT DO VEICULO. NA PROXIMA QUESTÃO IRÁ PEDIR UMA FOTO DOS ITENS ATUALIZADOS",
+      "description": "",
+      "required": true,
+      "position": 25,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "88a4805a-954c-4839-9981-ac51a36b1067",
+          "value": "ATUALIZADO O FIRMWARE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "0a1098bf-fb89-4c81-a9fe-837efd2caac8",
+          "value": "ATUALIZADO O SCRIPT DO CLIENTE",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "60b05a65-d467-4e05-9ef0-1e47a7b1f909",
+          "value": "ATUALIZADO O SCRIPT DO VEICULO",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "f71aa6af-5b54-450b-8d3a-8634a2e2fc8d",
+            "title": "VOCE TÊM ACESSO AO CONFIGURADOR DO GALILEOSKY?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "263f371f-4c0c-4231-b954-8cb46a700a5e",
+      "type": "multiple-picture",
+      "title": "FOTO DO FIRMWARE, SCRIPT DO CLIENTE E SCRIPT DO VEICULO ATUALIZADOS",
+      "description": "",
+      "required": true,
+      "position": 26,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "f71aa6af-5b54-450b-8d3a-8634a2e2fc8d",
+            "title": "VOCE TÊM ACESSO AO CONFIGURADOR DO GALILEOSKY?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "48b9aee8-1722-4652-96bc-50c18c505ea4",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO GALILEOSKY",
+      "description": "",
+      "required": true,
+      "position": 27,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "c2b1472e-a96b-46d8-80dd-13d8b54336fa",
+            "title": "QUAIS EQUIPAMENTOS FORAM SOLICITADOS PARA REALIZAR MANUTENÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "51a7c1b3-af15-4650-8899-bf15c3a9f7bf",
+      "type": "short-answer",
+      "title": "QUAL LOCAL ESTÁ SENDO RETIRADO ALIMENTAÇÃO PARA O GALILEOSKY? (EX: TACOGRAFO, CENTRAL DE FUSIVEIS)",
+      "description": "",
+      "required": true,
+      "position": 28,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "c2b1472e-a96b-46d8-80dd-13d8b54336fa",
+            "title": "QUAIS EQUIPAMENTOS FORAM SOLICITADOS PARA REALIZAR MANUTENÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "44fd7ed9-b4c5-4b5a-9eed-c84b790a4556",
+      "type": "multiple-picture",
+      "title": "FOTO DO PONTO DE ALIMENTAÇÃO",
+      "description": "",
+      "required": true,
+      "position": 29,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "c2b1472e-a96b-46d8-80dd-13d8b54336fa",
+            "title": "QUAIS EQUIPAMENTOS FORAM SOLICITADOS PARA REALIZAR MANUTENÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "72364688-5eea-4dff-b538-f905693012dc",
+      "type": "multiple-choice",
+      "title": "O GALILEO ESTÁ LIGADO A CAN DO VEICULO?",
+      "description": "",
+      "required": true,
+      "position": 30,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "4a843b2e-5a7f-44df-b146-e30f6b807a28",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "b2001145-6d7c-492c-a203-56a556b3ac12",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "c2b1472e-a96b-46d8-80dd-13d8b54336fa",
+            "title": "QUAIS EQUIPAMENTOS FORAM SOLICITADOS PARA REALIZAR MANUTENÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "4a845b38-206f-4cc1-8901-17dc4c11b893",
+      "type": "short-answer",
+      "title": "QUAL PONTO FOI PEGO A CAN PRO EQUIPAMENTO",
+      "description": "",
+      "required": true,
+      "position": 31,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "72364688-5eea-4dff-b538-f905693012dc",
+            "title": "O GALILEO ESTÁ LIGADO A CAN DO VEICULO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "05b9be0a-b465-47b1-b6a5-00b778591986",
+      "type": "multiple-picture",
+      "title": "FOTO DO PONTO DA REDE CAN (MOSTRANDO OS FIOS LIGADOS AO CHICOTE DO VEICULO) GalileoSky",
+      "description": "",
+      "required": true,
+      "position": 32,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "72364688-5eea-4dff-b538-f905693012dc",
+            "title": "O GALILEO ESTÁ LIGADO A CAN DO VEICULO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "70dbe626-d526-4e37-b531-3af846df0aab",
+      "type": "short-answer",
+      "title": "QUAL PONTO DO VEICULO ESTÁ SENDO TIRADO A REDE CAN JR12? (EX: TACOGRAFO, PAINEL DE INSTRUMENTOS, TOMADA DE DIAGNÓSTICO)",
+      "description": "",
+      "required": true,
+      "position": 33,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "c2b1472e-a96b-46d8-80dd-13d8b54336fa",
+            "title": "QUAIS EQUIPAMENTOS FORAM SOLICITADOS PARA REALIZAR MANUTENÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3112ee9f-b98a-419f-b7b5-920a738d5611",
+      "type": "picture",
+      "title": "FOTO DO PONTO DA CAN JR12",
+      "description": "",
+      "required": true,
+      "position": 34,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "c2b1472e-a96b-46d8-80dd-13d8b54336fa",
+            "title": "QUAIS EQUIPAMENTOS FORAM SOLICITADOS PARA REALIZAR MANUTENÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "32024cd9-4ff3-4d5b-b646-55ac05fa0448",
+      "type": "picture",
+      "title": "FOTO DO PONTO DE ALIMENTAÇÃO DO JR12",
+      "description": "",
+      "required": true,
+      "position": 35,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "c2b1472e-a96b-46d8-80dd-13d8b54336fa",
+            "title": "QUAIS EQUIPAMENTOS FORAM SOLICITADOS PARA REALIZAR MANUTENÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ad6f9cf2-bbea-463d-a642-10b362c43cf0",
+      "type": "multiple-picture",
+      "title": "FOTO DA ABRAÇADEIRA PRENDENDO OS CONECTORES DA LEITORA DE MOTORISTA",
+      "description": "",
+      "required": true,
+      "position": 36,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "LEITORA DE MOTORISTA",
+          "operator": "equal",
+          "question": {
+            "id": "700ff678-5224-4b7e-af82-d60401e79e61",
+            "title": "QUAIS DESSES ITENS FORAM SOLICITADOS MANUTENÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "925a20f7-16e5-4ed1-8f3c-715697767d38",
+      "type": "picture",
+      "title": "FOTO DA LEITORA DE MOTORISTA FIXADA",
+      "description": "",
+      "required": true,
+      "position": 37,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "LEITORA DE MOTORISTA",
+          "operator": "equal",
+          "question": {
+            "id": "700ff678-5224-4b7e-af82-d60401e79e61",
+            "title": "QUAIS DESSES ITENS FORAM SOLICITADOS MANUTENÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "e8a1e216-ad0e-4e63-8a8e-88c5d3819831",
+      "type": "multiple-picture",
+      "title": "FOTO DAS ABRAÇADERIAS PRENDENDO OS FUSIVEIS DOS CHICOTES",
+      "description": "",
+      "required": true,
+      "position": 38,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "09927714-4022-4980-a593-232e9c7cb7f4",
+            "title": "ALGUM PERIFÉRICO FOI TROCADO? (Periféricos são todos itens que não são o equipamento principal) ex: chip, leitora, chicote, fusível, buzzer, entre outros)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "eae0d6a4-07ba-44e0-8598-9b27f4d74878",
+      "type": "multiple-picture",
+      "title": "FOTO DISTANTE E UMA APROXIMADA DO LOCAL QUE O GALILEO FOI FIXADO",
+      "description": "",
+      "required": true,
+      "position": 39,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "GalileoSky",
+          "operator": "equal",
+          "question": {
+            "id": "c2b1472e-a96b-46d8-80dd-13d8b54336fa",
+            "title": "QUAIS EQUIPAMENTOS FORAM SOLICITADOS PARA REALIZAR MANUTENÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "894f7d25-9337-4047-b9f6-bfa74b93f4f9",
+      "type": "multiple-picture",
+      "title": "FOTO DISTANTE E UMA APROXIMADA DO LOCAL QUE O JR12 FOI FIXADO",
+      "description": "",
+      "required": true,
+      "position": 40,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "c2b1472e-a96b-46d8-80dd-13d8b54336fa",
+            "title": "QUAIS EQUIPAMENTOS FORAM SOLICITADOS PARA REALIZAR MANUTENÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "7ebb8839-e1eb-4e75-85b9-6fd1c3875026",
+      "type": "paragraph",
+      "title": "DESCREVA DETALHADAMENTE OQUE FOI FEITO NO VEICULO",
+      "description": "",
+      "required": true,
+      "position": 41,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "e8b9f940-2c3f-4e79-818a-024e5d6a392e",
+      "type": "picture",
+      "title": "FOTO DO PAINEL (COM MOTOR LIGADO) APÓS FINALIZAR A MANUTENÇÃO",
+      "description": "",
+      "required": true,
+      "position": 42,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "4c29d8c4-08a9-4ff9-9c83-77911aabd7ea",
+      "type": "multiple-choice",
+      "title": "ALGUMA AVARIA APÓS A MANUTENÇÃO?",
+      "description": "",
+      "required": true,
+      "position": 43,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "f43a7ccb-cf85-4f59-92ff-978dc94b55ab",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "68fa7a39-a0be-4de7-ae9e-cade128a86e7",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "0a027ed1-bce1-4979-8721-c82fcc9fdb33",
+      "type": "paragraph",
+      "title": "DESCREVA A AVARIA",
+      "description": "",
+      "required": true,
+      "position": 44,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "4c29d8c4-08a9-4ff9-9c83-77911aabd7ea",
+            "title": "ALGUMA AVARIA APÓS A MANUTENÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "36931b62-2840-4ddf-a47d-ae10d1d987e6",
+      "type": "multiple-picture",
+      "title": "TIRE FOTO DAS AVARIAS CAUSADAS APÓS A MANUTENÇÃO",
+      "description": "",
+      "required": true,
+      "position": 45,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "4c29d8c4-08a9-4ff9-9c83-77911aabd7ea",
+            "title": "ALGUMA AVARIA APÓS A MANUTENÇÃO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "e7fcda52-d229-4df8-90ce-336bb508f933",
+      "type": "checkboxes",
+      "title": "GRAVE UM VIDEO DO QUE FIZEMOS NO VEICULO E MOSTRE O VEICULO EM FUNCIONAMENTO E CARREGUE NA ABA \"ANEXOS\"",
+      "description": "",
+      "required": false,
+      "position": 46,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "86b00084-1e8d-491b-a35c-72212048ea9b",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "9ad45fe7-4cbe-49e3-8029-6025b485b1f8",
+      "type": "multiple-picture",
+      "title": "FOTO DO LOCAL QUE ABRIU E FECHOU PARA ACESSAR OS EQUIPAMENTOS",
+      "description": "",
+      "required": true,
+      "position": 47,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "74c8412d-a826-4fde-858c-5a802e532ce8",
+      "type": "multiple-choice",
+      "title": "FOI REALIZADO VALIDAÇÃO POR:",
+      "description": "",
+      "required": true,
+      "position": 48,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "70ba89ee-cb7c-4b28-a5c7-05c48b45db57",
+          "value": "ATENDIMENTO TÉCNICO",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "435837d8-0499-4cf5-b9eb-6a65d8d73649",
+          "value": "NÃO FOI REALIZADA A VALIDAÇÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "c68afee8-d9df-4c5f-bf88-587160bf5b31",
+      "type": "paragraph",
+      "title": "JUSTIFIQUE O MOTIVO DA NÃO VALIDAÇÃO (EX: VEICULO ESTAVA EM AREA SEM SINAL, DEVIDO A ISSO NÃO TRANSMITIU PARA FAZER OS TESTES)",
+      "description": "",
+      "required": true,
+      "position": 49,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "NÃO FOI REALIZADA A VALIDAÇÃO",
+          "operator": "equal",
+          "question": {
+            "id": "74c8412d-a826-4fde-858c-5a802e532ce8",
+            "title": "FOI REALIZADO VALIDAÇÃO POR:"
+          }
+        }
+      ]
+    },
+    {
+      "id": "35c2827e-510e-41e5-a1e7-58218bf61cef",
+      "type": "multiple-picture",
+      "title": "PERGUNTE AO SUPORTE SE O VEICULO FOI LIBERADO E ANEXE O PRINT DA CONFIRMAÇÃO DELES ABAIXO:",
+      "description": "",
+      "required": true,
+      "position": 50,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "ATENDIMENTO TÉCNICO",
+          "operator": "equal",
+          "question": {
+            "id": "74c8412d-a826-4fde-858c-5a802e532ce8",
+            "title": "FOI REALIZADO VALIDAÇÃO POR:"
+          }
+        }
+      ]
+    }
+  ],
+  "isEvaluated": false
+}

@@ -1,0 +1,330 @@
+{
+  "name": "REMANEJAMENTO INOPRIME V2",
+  "type": "public",
+  "description": "",
+  "questionsCount": 18,
+  "questions": [
+    {
+      "id": "4d35c94a-21ad-499b-a58d-b8943d35ff70",
+      "type": "picture",
+      "title": "FOTO DA PLACA QUE ESTÁ SENDO RETIRADO",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "2a1ba791-b151-4dca-b1b5-f74758caf536",
+      "type": "multiple-picture",
+      "title": "FOTO DO PAINEL CONTENDO INFORMAÇÃO DE HODOMETRO, HORIMETRO E ALERTAS DE FALHA",
+      "description": "",
+      "required": false,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "e7eea588-d0a9-441c-b13c-867c37a2fbaf",
+      "type": "checkboxes",
+      "title": "ESTE VEÍCULO POSSUÍ AVARIAS?",
+      "description": "",
+      "required": false,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "be69ba83-7c9e-4d7a-8767-59f53870b3be",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "85152264-ea02-4f91-9069-a2127736aae9",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "e5ef32a4-e142-4809-ad3c-2c1792aa648b",
+      "type": "paragraph",
+      "title": "DESCREVA COM DETALHES",
+      "description": "ESSA OPÇÃO NÃO É OBRIGATÓRIO, MAS A PRÓXIMA SERÁ DE IMAGEM CASO PREFERIR",
+      "required": false,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "e7eea588-d0a9-441c-b13c-867c37a2fbaf",
+            "title": "ESTE VEÍCULO POSSUÍ AVARIAS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "61b92e0b-27ef-4220-ac2d-9faa5acefec7",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTOS DAS AVARIAS",
+      "description": "ESTA OPÇÃO NÃO É OBRIGATÓRIO",
+      "required": false,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "e7eea588-d0a9-441c-b13c-867c37a2fbaf",
+            "title": "ESTE VEÍCULO POSSUÍ AVARIAS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "4c932328-6530-4626-9d39-a8ca8da71cef",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTOS DOS APARELHOS QUE ESTÃO SENDO RETIRADOS",
+      "description": "INFORME A EQUIPE DE VALIDAÇÃO PARA CONFIRMAR OS SERIAIS E OS MODELOS DE APARELHOS QUE ESTÃO SENDO RETIRADOS",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "1c4ef663-22cc-4cbb-b2e3-106a75c99bb7",
+      "type": "checkboxes",
+      "title": "ALGUM PERIFÉRICO INOPRIME ESTÁ AVARIADO?",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "2dd216ca-5754-44e1-ba97-b6de289afa97",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "a15172d9-a032-4e59-bfda-bd36b638335a",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "43c001f3-9c26-49e0-bc47-3cc4e129dfdd",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTO DAS AVARIAS DOS PERIFÉRICOS INOPRIME",
+      "description": "",
+      "required": true,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "1c4ef663-22cc-4cbb-b2e3-106a75c99bb7",
+            "title": "ALGUM PERIFÉRICO INOPRIME ESTÁ AVARIADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "87d9ddb8-ed18-4cc2-970f-62688e1630c5",
+      "type": "checkboxes",
+      "title": "O VEICULO NOVO POSSUÍ ALGUMA AVARIA?",
+      "description": "",
+      "required": false,
+      "position": 8,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "bfafc856-37a8-4ea0-bd63-495b41775cb3",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "8c515f86-3a33-4345-976c-30cc9f619903",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "66b66f65-23f4-41fe-ac69-f57c6d06bcc9",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTOS DAS AVARIAS NO VEÍCULO",
+      "description": "",
+      "required": true,
+      "position": 9,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "87d9ddb8-ed18-4cc2-970f-62688e1630c5",
+            "title": "O VEICULO NOVO POSSUÍ ALGUMA AVARIA?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "475bb3e3-14c2-4d47-bf4f-b193a08ee665",
+      "type": "multiple-picture",
+      "title": "APÓS RETIRADA INSIRA FOTO DO LOCAL DEVIDAMENTE FECHADO E FOTO DO PAINEL DO PAINEL DO VEÍCULO",
+      "description": "AS FOTOS O VEICULO DEVE ESTAR COM O MOTOR LIGADO",
+      "required": true,
+      "position": 10,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "c9380d79-4966-4755-a8dc-e3e8c9a4496c",
+      "type": "picture",
+      "title": "INSIRA FOTO DA PLACA VEICULO QUE SERÁ INSTALADO",
+      "description": "",
+      "required": true,
+      "position": 11,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "667ad81e-d4a4-4afc-aec4-d5ded4b48df6",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTO DO PAINEL CONTENDO INFORMAÇÃO DE HODOMETRO E HORIMETRO",
+      "description": "",
+      "required": false,
+      "position": 12,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "0c24a928-f1c4-4f2b-b42e-486efdd080d0",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTO DOS SERIAIS QUE ESTÃO SENDO INSTALADOS",
+      "description": "",
+      "required": true,
+      "position": 13,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "27a91d61-02a3-45d4-8e4d-2c61ea86d174",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTOS DE ONDE ESTÁ INSTALADO A TELEMETRIA",
+      "description": "INSIRA FOTO DO LOCAL DA INSTALAÇÃO E COMO FICOU O POSICIONAMENTO DA TELEMETRIA JUNTAMENTE COM A UTILIZAÇÃO DOS ITENS DE ACABAMENTO",
+      "required": true,
+      "position": 14,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "ede8ddc0-ee21-43b6-8f21-61de6e886438",
+      "type": "checkboxes",
+      "title": "NO PROCESSO DE INSTALAÇÃO O VEICULO FOI AVARIADO OU GEROU ALERTAS NO PAINEL?",
+      "description": "",
+      "required": true,
+      "position": 15,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "37a44c8b-8b1b-4b4a-8ffc-6e0acba79b6c",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "86c0b03b-9f50-4332-a5b2-7e10edbdce66",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "121ea0a1-20a3-472f-a289-f0c3ed4f2961",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTOS DA AVARIA OCORRIDA",
+      "description": "",
+      "required": false,
+      "position": 16,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "ede8ddc0-ee21-43b6-8f21-61de6e886438",
+            "title": "NO PROCESSO DE INSTALAÇÃO O VEICULO FOI AVARIADO OU GEROU ALERTAS NO PAINEL?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "4cb5eb80-ab1e-4c10-8d50-c088c3502054",
+      "type": "short-answer",
+      "title": "INSIRA O NOME DO ATENDENTE INOPRIME QUE ACOMPANHOU SUA SOLICITAÇÃO",
+      "description": "",
+      "required": true,
+      "position": 17,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}

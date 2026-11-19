@@ -1,0 +1,409 @@
+{
+  "name": "LAUDO DE EQUIPAMENTOS - PREPARAÇÃO INOPRIME",
+  "type": "public",
+  "description": "",
+  "questionsCount": 17,
+  "questions": [
+    {
+      "id": "1ca07b96-1a50-49b7-b751-9ddc0aa6dd4c",
+      "type": "short-answer",
+      "title": "PLACA VINCULADA",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "f9e65441-0a21-4d34-a5d3-57cbcab18793",
+      "type": "multiple-choice",
+      "title": "QUAL TIPO DE EQUIPAMENTO ESTÁ SENDO ANALISADO?",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "599e91c6-24c2-4d65-9ab2-60d5595aed7b",
+          "value": "GALILEO 7X",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "34c1558b-7a75-49b4-b6fb-6af2856063ca",
+          "value": "GALILEO 10",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "733eb617-b22e-4c39-a0e1-e3716017670c",
+          "value": "JR12",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "d35669cb-566d-4ae6-a78b-23879a58eb3f",
+          "value": "JM15",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "480f6fef-aec6-4db8-b2ac-3aa450ece65e",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO EQUIPAMENTO QUE ESTÁ SENDO RECEBIDO",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "f20c12b5-1184-4d94-b2a3-e1aae8a32e95",
+      "type": "multiple-choice",
+      "title": "O EQUIPAMENTO GALILEO 7X VEIO COM ANTENAS?",
+      "description": "",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "c0d87121-b7e7-4075-a52f-f7fecea47ed7",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "b496de7d-c4b8-4b92-a022-1c91cf907478",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "GALILEO 7X",
+          "operator": "equal",
+          "question": {
+            "id": "f9e65441-0a21-4d34-a5d3-57cbcab18793",
+            "title": "QUAL TIPO DE EQUIPAMENTO ESTÁ SENDO ANALISADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "02fcc80e-a388-4d97-adb1-2fc341f69ac5",
+      "type": "picture",
+      "title": "TIRE FOTO DAS ANTENAS DO GALILEO 7X",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "f20c12b5-1184-4d94-b2a3-e1aae8a32e95",
+            "title": "O EQUIPAMENTO GALILEO 7X VEIO COM ANTENAS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "a5415c8d-e184-48fd-9afa-8e7d88bacabe",
+      "type": "paragraph",
+      "title": "QUAL É O PROBLEMA DO EQUIPAMENTO QUE O CLIENTE DESCREVEU? (ESCREVA ABAIXO)",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "0a2f12e4-83b5-474d-b59d-1fc4305a078c",
+      "type": "multiple-choice",
+      "title": "APÓS ANALISE FOI IDENTIFICADO UM REAL PROBLEMA NO EQUIPAMENTO?",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "a20fcf70-3acf-47c1-8fbe-54bbe933d951",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "0c0bf245-372c-4884-8703-9b1df63fd25d",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "444935a0-73d5-4296-a807-e29f0bd52936",
+      "type": "multiple-picture",
+      "title": "FOTO DOS PROBLEMAS IDENTIFICADOS NO EQUIPAMENTO (AVARIAS)",
+      "description": "",
+      "required": false,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "0a2f12e4-83b5-474d-b59d-1fc4305a078c",
+            "title": "APÓS ANALISE FOI IDENTIFICADO UM REAL PROBLEMA NO EQUIPAMENTO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "b1d59189-70a4-4585-bd74-84f5200e4a5d",
+      "type": "paragraph",
+      "title": "DESCREVA QUAL FOI O PROBLEMA IDENTIFICADO NO EQUIPAMENTO",
+      "description": "",
+      "required": true,
+      "position": 8,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "0a2f12e4-83b5-474d-b59d-1fc4305a078c",
+            "title": "APÓS ANALISE FOI IDENTIFICADO UM REAL PROBLEMA NO EQUIPAMENTO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c84f4253-fd44-45d5-a321-c2c652480ff5",
+      "type": "paragraph",
+      "title": "DESCREVA OQUE FOI FEITO PARA RESOLVER O PROBLEMA DO EQUIPAMENTO",
+      "description": "",
+      "required": true,
+      "position": 9,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "0a2f12e4-83b5-474d-b59d-1fc4305a078c",
+            "title": "APÓS ANALISE FOI IDENTIFICADO UM REAL PROBLEMA NO EQUIPAMENTO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "45a155b6-a39a-46ad-aeb3-9964d57a062f",
+      "type": "multiple-choice",
+      "title": "FOI NECESSARIO ENVIAR O EQUIPAMENTO PARA A ENGENHARIA ANALISAR O DEFEITO?",
+      "description": "",
+      "required": true,
+      "position": 10,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "fd9e004c-74f5-49d3-b95b-ded3360c662b",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "ea035429-a526-4bfe-907d-97983ded97b2",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "9fe8edd6-0c2b-40c1-9eb0-f939e00e027d",
+      "type": "multiple-choice",
+      "title": "FOI NECESSARIO SUBSTITUIR O EQUIPAMENTO POR UM NOVO?",
+      "description": "",
+      "required": true,
+      "position": 11,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "e827a907-0ae5-4a7e-8fae-92820f7a8f32",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "5c6d6fba-6ebd-46d9-9846-e947d6c32a6c",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "NÃO",
+          "operator": "equal",
+          "question": {
+            "id": "45a155b6-a39a-46ad-aeb3-9964d57a062f",
+            "title": "FOI NECESSARIO ENVIAR O EQUIPAMENTO PARA A ENGENHARIA ANALISAR O DEFEITO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "79401936-9a05-4a6b-972b-6a677b91d09c",
+      "type": "multiple-picture",
+      "title": "COLOQUE A FOTO DO EQUIPAMENTO QUE IRÁ SER ENTREGUE AO CLIENTE NO LUGAR DO QUE ESTÁ COM PROBLEMA",
+      "description": "",
+      "required": true,
+      "position": 12,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "45a155b6-a39a-46ad-aeb3-9964d57a062f",
+            "title": "FOI NECESSARIO ENVIAR O EQUIPAMENTO PARA A ENGENHARIA ANALISAR O DEFEITO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "b5c8aa80-49a3-4e12-8bf9-69241a0936e6",
+      "type": "multiple-picture",
+      "title": "COLOQUE UM PRINT ABAIXO DAS POSIÇÕES DESSE EQUIPAMENTO CHEGANDO NA PLATAFORMA",
+      "description": "",
+      "required": true,
+      "position": 13,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "equal",
+          "question": {
+            "id": "f9e65441-0a21-4d34-a5d3-57cbcab18793",
+            "title": "QUAL TIPO DE EQUIPAMENTO ESTÁ SENDO ANALISADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cf5a207f-8eb3-4fc1-b6d3-9e5819985410",
+      "type": "multiple-picture",
+      "title": "TESTE TODAS AS ENTRADAS E SAIDAS DO EQUIPAMENTO COM A GIGA DE TESTE PARA GARANTIR QUE TUDO ESTÁ FUNCIONANDO E COLOQUE A FOTO DA VALIDAÇÃO ABAIXO:",
+      "description": "",
+      "required": true,
+      "position": 14,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "JR12",
+          "operator": "not-equal",
+          "question": {
+            "id": "f9e65441-0a21-4d34-a5d3-57cbcab18793",
+            "title": "QUAL TIPO DE EQUIPAMENTO ESTÁ SENDO ANALISADO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "a946c062-1362-4bfc-a56d-563e2160da3d",
+      "type": "multiple-picture",
+      "title": "FOTO DO IMEI DO EQUIPAMENTO QUE ESTÁ INDO PARA O CLIENTE NO LUGAR DO QUE FOI SUBSTITUIDO",
+      "description": "",
+      "required": true,
+      "position": 15,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "9fe8edd6-0c2b-40c1-9eb0-f939e00e027d",
+            "title": "FOI NECESSARIO SUBSTITUIR O EQUIPAMENTO POR UM NOVO?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "9e684c12-6a24-4b40-9320-bff639bbf95c",
+      "type": "checkboxes",
+      "title": "ENVIE O EQUIPAMENTO PARA A ENGENHARIA E FAÇA UM NOVO EQUIPAMENTO PARA REPOR PARA O CLIENTE",
+      "description": "",
+      "required": true,
+      "position": 16,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "7dca036e-8bf3-4422-9968-a14a4afce322",
+          "value": "CIENTE",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "45a155b6-a39a-46ad-aeb3-9964d57a062f",
+            "title": "FOI NECESSARIO ENVIAR O EQUIPAMENTO PARA A ENGENHARIA ANALISAR O DEFEITO?"
+          }
+        }
+      ]
+    }
+  ],
+  "isEvaluated": false
+}

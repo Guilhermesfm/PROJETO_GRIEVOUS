@@ -1,0 +1,134 @@
+{
+  "name": "Extração de Video",
+  "type": "public",
+  "description": "",
+  "questionsCount": 7,
+  "questions": [
+    {
+      "id": "edab9ca4-c02b-49b2-a2e0-2f1f8a013078",
+      "type": "picture",
+      "title": "Placa do veiculo",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "36a17416-6442-4b48-bbb7-706113139032",
+      "type": "picture",
+      "title": "IMEI da câmera em que o vídeo será extraído",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "2234b0d6-ffdc-45c7-a32c-f0c1a65de67a",
+      "type": "checkboxes",
+      "title": "Tire o cartão de memoria da câmera e coloque em seu notebook e entre em contato com o suporte, eles irão realizar a extração do vídeo de forma remota",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "d53e093a-fdf4-49a1-afe8-2cab190d442c",
+          "value": "Para fazer o procedimento será necessario estar em area com sinal para que o suporte acesse seu notebook",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "41060b00-aae9-4d73-9ea8-1044195cebc2",
+      "type": "multiple-choice",
+      "title": "O vídeo foi extraído no local?",
+      "description": "",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "fdb5d92a-7b49-4e24-8398-63610ba072b7",
+          "value": "Sim",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "6f5631b5-bf7e-4401-99ca-7d2bf47bacd8",
+          "value": "Não",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "308bcb05-087b-48fa-a41f-2e811cd468b4",
+      "type": "multiple-picture",
+      "title": "Anexe a comprovação em que o vídeo foi retirado",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Sim",
+          "operator": "equal",
+          "question": {
+            "id": "41060b00-aae9-4d73-9ea8-1044195cebc2",
+            "title": "O vídeo foi extraído no local?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0265c362-a1be-4ae2-9f20-a7d98436389b",
+      "type": "paragraph",
+      "title": "Porque o vídeo não foi extraído? Relate com detalhes",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "Não",
+          "operator": "equal",
+          "question": {
+            "id": "41060b00-aae9-4d73-9ea8-1044195cebc2",
+            "title": "O vídeo foi extraído no local?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fa3c8403-6796-44a2-9161-7567f41ad3ff",
+      "type": "multiple-picture",
+      "title": "Coloque o cartão de memoria no slot da câmera e coloque a foto do cartão e do lacre no slot",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}

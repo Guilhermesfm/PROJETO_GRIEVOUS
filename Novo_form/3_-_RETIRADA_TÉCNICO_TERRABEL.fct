@@ -1,0 +1,127 @@
+{
+  "name": "3 - RETIRADA TÉCNICO TERRABEL",
+  "type": "public",
+  "description": "FORMULÁRIO DE USO EXCLUSIVO DA TERRABEL",
+  "questionsCount": 5,
+  "questions": [
+    {
+      "id": "ba8293c0-e75f-4218-bd58-0de22d345907",
+      "type": "short-answer",
+      "title": "INSIRA SEU NOME COMPLETO",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "f8567121-b5e4-4c44-9aaa-6f74ce679c8e",
+      "type": "multiple-picture",
+      "title": "INSIRA A FOTO DA PLACA DO VEÍCULO",
+      "description": "",
+      "required": false,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "adc155a4-96d8-4ae6-ac3f-ee65c2ba6479",
+      "type": "checkboxes",
+      "title": "QUAIS OS PERIFÉRICOS ESTÃO SENDO RETIRADOS",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "2ee68c33-a4e5-4a36-8424-87ffd702760c",
+          "value": "GALILEOSKY",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "381e8494-46fb-4bd0-b273-5c80069438d5",
+          "value": "SISTEMA DE FADIGA",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "9a2ebee5-d60a-4426-9522-9edac1924b25",
+          "value": "REDUNDANTE",
+          "position": 2,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "caf305d9-239f-4c2c-8f6a-9ca7772b07ee",
+          "value": "BAFOMETRO",
+          "position": 3,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "929ede0b-e3e5-419f-adc7-75e22b743c0b",
+          "value": "LEITORA DE MOTORISTA",
+          "position": 4,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "92ed8066-fac6-4204-a3b0-916bee7a050b",
+          "value": "LEITORA DE PASSAGEIRO",
+          "position": 5,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "58a0c887-937a-427e-af3c-bb7ebce039a7",
+      "type": "checkboxes",
+      "title": "FOI ENVIADO A FOTO DOS ITENS RETIRADOS PARA INOPRIME?",
+      "description": "",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "ff6d509d-63e9-4f16-b6e7-4e5ffc1fd987",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "a3847c43-9030-40b7-91de-d721ff6fb450",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "b5f508c4-6414-4811-b805-9dbf2fc8e7fc",
+      "type": "paragraph",
+      "title": "INFORME O NOME DO ATENDENTE DO SUPORTE QUE ACOMPANHOU ESSA SOLICITAÇÃO.",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}

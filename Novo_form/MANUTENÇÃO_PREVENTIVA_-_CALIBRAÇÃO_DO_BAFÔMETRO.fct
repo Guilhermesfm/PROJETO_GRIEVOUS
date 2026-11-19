@@ -1,0 +1,219 @@
+{
+  "name": "MANUTENÇÃO PREVENTIVA - CALIBRAÇÃO DO BAFÔMETRO",
+  "type": "public",
+  "description": "",
+  "questionsCount": 12,
+  "questions": [
+    {
+      "id": "7e4874ec-fa17-4ab7-8497-c1b0e50702df",
+      "type": "picture",
+      "title": "PLACA DO VEÍCULO",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "b3d129fa-b323-482e-ba08-c707e2879def",
+      "type": "picture",
+      "title": "FOTO DO PAINEL COM MOTOR LIGADO",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "02bb1172-05dc-4a1a-aa8d-31338272bc0b",
+      "type": "multiple-picture",
+      "title": "FOTO DO HODOMETRO E HORÍMETRO",
+      "description": "",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "411d8fb0-6c35-491e-bb73-26c0e14bac02",
+      "type": "multiple-choice",
+      "title": "VEICULO POSSUI AVARIAS?",
+      "description": "",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "118b8def-2227-46e2-b19b-174ea4bb1f7a",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "5555dfc1-a5f9-4e7e-adf8-13c28051d300",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "6b467e13-4144-4897-a3b2-b4bab57d21d8",
+      "type": "multiple-picture",
+      "title": "FOTO DAS AVARIAS PRESENTES NO EQUIPAMENTO",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "411d8fb0-6c35-491e-bb73-26c0e14bac02",
+            "title": "VEICULO POSSUI AVARIAS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "faa7b632-d161-495a-b7f8-0d2ecf0a8c6e",
+      "type": "paragraph",
+      "title": "DESCREVA DETALHADAMENTE AS AVARIAS PRESENTES NO VEÍCULO",
+      "description": "",
+      "required": true,
+      "position": 5,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "411d8fb0-6c35-491e-bb73-26c0e14bac02",
+            "title": "VEICULO POSSUI AVARIAS?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f32f1cab-de2f-4371-a243-62dbd97a9276",
+      "type": "picture",
+      "title": "FOTO DO IMEI DO BAFÔMETRO",
+      "description": "",
+      "required": true,
+      "position": 6,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "22a10684-863c-48fa-ab85-8902ef03ac35",
+      "type": "picture",
+      "title": "FOTO COM O SELO DE CALIBAÇÃO PRESENTE NO ETILÔMETRO",
+      "description": "",
+      "required": true,
+      "position": 7,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "60df4dd8-a039-4960-9908-3860c8c95d19",
+      "type": "multiple-choice",
+      "title": "ALGUMA AVARIA PRESENTE APÓS A SUBSTITUIÇÃO DO BAFÔMETRO",
+      "description": "",
+      "required": true,
+      "position": 8,
+      "maxScore": null,
+      "evaluationCriteria": null,
+      "options": [
+        {
+          "id": "a8011b8f-4562-4a98-a3c4-c1c714c54f75",
+          "value": "SIM",
+          "position": 0,
+          "score": 0,
+          "description": ""
+        },
+        {
+          "id": "51f462cb-d937-4c32-add2-9868527bd975",
+          "value": "NÃO",
+          "position": 1,
+          "score": 0,
+          "description": ""
+        }
+      ],
+      "conditions": []
+    },
+    {
+      "id": "11a5509f-7204-4992-912c-208ee5d938ec",
+      "type": "multiple-picture",
+      "title": "FOTOS DA AVARIA GERADA APÓS A SUBSTITUIÇÃO DO BAFÔMETRO",
+      "description": "",
+      "required": true,
+      "position": 9,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "60df4dd8-a039-4960-9908-3860c8c95d19",
+            "title": "ALGUMA AVARIA PRESENTE APÓS A SUBSTITUIÇÃO DO BAFÔMETRO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "78b32cce-b7bf-4c27-a030-5476358859a0",
+      "type": "paragraph",
+      "title": "DESCREVA DETALHADAMENTE AVARIA PRESENTE APÓS SUBSTITUIÇÃO DO BAFÔMETRO",
+      "description": "",
+      "required": true,
+      "position": 10,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": [
+        {
+          "value": "SIM",
+          "operator": "equal",
+          "question": {
+            "id": "60df4dd8-a039-4960-9908-3860c8c95d19",
+            "title": "ALGUMA AVARIA PRESENTE APÓS A SUBSTITUIÇÃO DO BAFÔMETRO"
+          }
+        }
+      ]
+    },
+    {
+      "id": "454240a2-d3fa-45d5-a849-4919cb15977b",
+      "type": "picture",
+      "title": "FOTO COM O MOTOR LIGADO APÓS SUBSTITUIÇÃO DO BAFÔMETRO",
+      "description": "",
+      "required": true,
+      "position": 11,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}

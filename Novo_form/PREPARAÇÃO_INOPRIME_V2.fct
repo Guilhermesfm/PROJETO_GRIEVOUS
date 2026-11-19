@@ -1,0 +1,69 @@
+{
+  "name": "PREPARAÇÃO INOPRIME V2",
+  "type": "public",
+  "description": "",
+  "questionsCount": 5,
+  "questions": [
+    {
+      "id": "589fc118-df83-4f1f-9f49-b5a2dc77fca3",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTO DO APARELHO QUE ESTÁ SENDO PREPARADO",
+      "description": "",
+      "required": true,
+      "position": 0,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "641e60c7-07b8-4bba-933f-df51ff67fb68",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTO DO CHIP E CONFIGURAÇÕES DE APN UTILIZADAS",
+      "description": "",
+      "required": true,
+      "position": 1,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "4da6806f-bec9-49cb-9f93-99549de81c08",
+      "type": "multiple-picture",
+      "title": "INSIRA AS FOTOS DAS CONFIGURAÇÕES JUNTAMENTE COM A VERSÃO DE FIRMWARE E SCRIPT",
+      "description": "NO CASO DO V5, INSIRA FOTOS DAS CONFIGURAÇÕES  DE CALIBRAGEM",
+      "required": true,
+      "position": 2,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "35196836-06f8-4dec-a735-4d368681152d",
+      "type": "multiple-picture",
+      "title": "INSIRA FOTOS DAS CONFIGURAÇÕES E OS TESTES REALIZADOS NA PLATAFORMA",
+      "description": "",
+      "required": true,
+      "position": 3,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    },
+    {
+      "id": "92822095-c055-4d0e-a9f8-e6b44b6c914b",
+      "type": "short-answer",
+      "title": "INSIRA O NOME DO CLIENTE",
+      "description": "",
+      "required": true,
+      "position": 4,
+      "maxScore": null,
+      "evaluationCriteria": "",
+      "options": [],
+      "conditions": []
+    }
+  ],
+  "isEvaluated": false
+}
