@@ -54,8 +54,8 @@ const dataCurta = (iso) =>
   iso ? new Date(iso).toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" }) : "";
 
 /**
- * Linhas da aba "Conferência de formulários": Novo, Alterado, Removido e OK,
- * nessa ordem.*/
+ * Linhas da aba "Conferência de formulários": Novo, Alterado, Removido,
+ * Sem perguntas e OK, nessa ordem. "Sem perguntas": registrado sem .fct.*/
 function conferirFormularios(itensField, registro) {
   const porNome = new Map(registro.map((r) => [normalizarNome(r.nome), r]));
   const vistos = new Set();
@@ -87,6 +87,12 @@ function conferirFormularios(itensField, registro) {
         Situacao: "Alterado",
         Observacao: "Editado depois do registro",
       });
+    } else if (!registrado.perguntasTexto) {
+      linhas.push({
+        ...base,
+        Situacao: "Sem perguntas",
+        Observacao: "Sem .fct: só nome e quantidade de perguntas",
+      });
     } else {
       linhas.push({ ...base, Situacao: "OK", Observacao: "" });
     }
@@ -104,7 +110,7 @@ function conferirFormularios(itensField, registro) {
     });
   }
 
-  const ordem = ["Novo", "Alterado", "Removido", "OK"];
+  const ordem = ["Novo", "Alterado", "Removido", "Sem perguntas", "OK"];
   return linhas.sort((a, b) => ordem.indexOf(a.Situacao) - ordem.indexOf(b.Situacao));
 }
 

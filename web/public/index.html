@@ -1035,7 +1035,7 @@
               <div class="note-forca d-none mx-0 mt-0 mb-3" id="alerta-formularios" role="alert">
                 <i class="fa-solid fa-jedi note-icon"></i>
                 <div>
-                  <h5>FORMULÁRIOS NÃO REGISTRADOS</h5>
+                  <h5>FORMULÁRIOS A REGISTRAR</h5>
                   <div id="alerta-formularios-texto"></div>
                 </div>
               </div>
@@ -1600,22 +1600,28 @@
       );
 
       /** Resultado da conferencia de formularios, antes das O.S. */
-      function mostrarConferencia({ total, novos, alterados, removidos }) {
+      function mostrarConferencia(evento) {
+        const { total, completos, novos, alterados, removidos } = evento;
+        const semPerguntas = evento.semPerguntas || [];
+        const resumo = `Formulários do Field: ${total} · ${completos} com perguntas registradas`;
         const grupos = [
           ["Novos no Field", novos],
           ["Alterados", alterados],
           ["Removidos do Field", removidos],
+          ["Sem perguntas registradas", semPerguntas],
         ].filter(([, itens]) => itens.length);
 
         if (!grupos.length) {
-          logar(`Formulários conferidos: ${total}, nenhum novo ou alterado.`, "ok");
+          logar(`${resumo}. Nenhum novo ou alterado.`, "ok");
           return;
         }
 
+        logar(resumo, "info");
         for (const [titulo, itens] of grupos) {
           for (const item of itens) logar(`${titulo}: ${item.nome}`, "erro");
         }
         document.getElementById("alerta-formularios-texto").innerHTML =
+          `<p class="mb-2">${escapar(resumo)}</p>` +
           grupos
             .map(
               ([titulo, itens]) =>

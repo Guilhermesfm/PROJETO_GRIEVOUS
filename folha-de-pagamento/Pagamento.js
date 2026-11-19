@@ -889,16 +889,19 @@ async function runPagamento(
           novos: nomes("Novo"),
           alterados: nomes("Alterado"),
           removidos: nomes("Removido"),
+          semPerguntas: nomes("Sem perguntas"),
         };
         emitir({
           tipo: "formularios",
           total: formulariosField.filter((f) => !f.archived).length,
+          completos: conferencia.filter((l) => l.Situacao === "OK").length,
           ...diferencas,
         });
         for (const [rotulo, itens] of [
           ["Formulário novo no Field", diferencas.novos],
           ["Formulário alterado no Field", diferencas.alterados],
           ["Formulário removido do Field", diferencas.removidos],
+          ["Formulário sem perguntas registradas", diferencas.semPerguntas],
         ]) {
           for (const item of itens) console.warn(`${rotulo}: ${item.nome}`);
         }
