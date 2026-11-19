@@ -605,6 +605,12 @@
         background: rgba(245, 185, 33, 0.14);
         color: var(--app-eye);
       }
+      /* Agendada: sabre branco da Ahsoka. */
+      .sit-agendada {
+        background: rgba(236, 242, 255, 0.14);
+        color: #f4f8ff;
+        box-shadow: 0 0 6px rgba(236, 242, 255, 0.35);
+      }
 
       /* Alerta de O.S. aberta ha mais de 30 dias: note do Color Admin com
          sabre vermelho. */
@@ -1316,6 +1322,7 @@
           [/impedid|cancelad/, "sit-impedida"],
           [/remanejamento/, "sit-remanejamento"],
           [/remocao|remoc/, "sit-remocao"],
+          [/agendad/, "sit-agendada"],
         ];
 
         const classe =
