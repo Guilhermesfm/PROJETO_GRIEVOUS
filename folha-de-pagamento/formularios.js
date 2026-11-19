@@ -123,10 +123,18 @@ function registrar(pastaFct) {
     : [];
   const porNome = new Map(lista.map((f) => [normalizarNome(f.name), f]));
 
-  const comFct = fs
-    .readdirSync(pastaFct)
+  // Um .fct por formulario: copias ("arquivo (1).fct") valem o mais recente.
+  const porFormulario = new Map();
+  fs.readdirSync(pastaFct)
     .filter((nome) => nome.toLowerCase().endsWith(".fct"))
-    .map((arquivo) => JSON.parse(fs.readFileSync(path.join(pastaFct, arquivo), "utf8")))
+    .map((arquivo) => path.join(pastaFct, arquivo))
+    .sort((a, b) => fs.statSync(a).mtimeMs - fs.statSync(b).mtimeMs)
+    .forEach((caminho) => {
+      const form = JSON.parse(fs.readFileSync(caminho, "utf8"));
+      porFormulario.set(normalizarNome(form.name), form);
+    });
+
+  const comFct = [...porFormulario.values()]
     .map((form) => ({
       nome: form.name,
       perguntas: form.questions.length,

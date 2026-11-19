@@ -9,8 +9,8 @@
  *   - Remocao / instalacao / remanejamento: equipamentos, dano e extravio.
  *   - Manutencao: violacao e extravio.
  *   - Impedimento: motivo do servico nao ter sido executado.
- *   - Revisao Rouxinol e Entrega e Devolucao: so entram com avaria,
- *     extravio ou violacao.
+ *   - Revisao Rouxinol, Entrega e Devolucao e Laudo tecnico V2: so entram
+ *     com avaria, extravio ou violacao (no laudo, foto de avaria).
  *   - Avaria no veiculo (antes ou depois do servico) nao entra.
  *   - Formulario so com fotos: "Formulário incompleto".
  *
@@ -122,6 +122,10 @@ const PERGUNTAS = {
   devolvidosAvariaDescricao: "relate as avarias encontradas nos equipamentos",
   devolvidosExtravio: "existe algum equipamento ou periferico extraviado",
   devolvidosExtravioDescricao: "descreva oque foi extraviado",
+  // Laudo tecnico InoPrime V2: foto de avaria = avaria.
+  laudoAparelho: "qual aparelho esta na manutencao",
+  laudoConstatado: "descreva o que foi constatado",
+  laudoFotosAvaria: "tire fotos das avarias",
   impedimentoMotivo: "informe o motivo do servico nao ser executado",
   impedimentoDescricao:
     "descreva detalhadamente apresentando toda especificacao",
@@ -203,6 +207,13 @@ function textoDaResposta(pergunta) {
   return String(
     typeof answer === "string" ? answer : JSON.stringify(answer),
   ).trim();
+}
+
+/** Quantidade de fotos anexadas numa pergunta de foto. */
+function quantidadeFotos(pergunta) {
+  const { answer } = pergunta || {};
+  if (Array.isArray(answer)) return answer.filter(Boolean).length;
+  return answer ? 1 : 0;
 }
 
 // "SIM" -> true. "NÃO" ou vazio -> false.
@@ -337,6 +348,20 @@ function analisarFormulario(formulario) {
     );
   }
 
+  // --- Laudo tecnico V2: foto de avaria marca avaria -----------------------
+  const fotosAvaria = quantidadeFotos(perguntaDe(formulario, "laudoFotosAvaria"));
+  if (fotosAvaria) {
+    resultado.avaria = true;
+    const aparelho = juntarComE(
+      rotularEquipamentos(respostaDe(formulario, "laudoAparelho")),
+    );
+    const constatado = respostaDe(formulario, "laudoConstatado");
+    resultado.obs.push(
+      `Avaria${aparelho ? ` em ${aparelho}` : ""}` +
+        `${constatado ? `: ${constatado}` : ""} (${fotosAvaria} foto${fotosAvaria > 1 ? "s" : ""})`,
+    );
+  }
+
   // --- Violacao: coluna Violacao -------------------------------------------
   if (ehSim(respostaDe(formulario, "violacao"))) {
     resultado.violacao = true;
@@ -424,7 +449,11 @@ function classificarOs({ tipo, status }) {
   ) {
     return "manutencao";
   }
-  if (alvo.includes("revisao rouxinol") || alvo.includes("entrega e devolucao")) {
+  if (
+    alvo.includes("revisao rouxinol") ||
+    alvo.includes("entrega e devolucao") ||
+    alvo.includes("laudo tecnico inoprime v2")
+  ) {
     return "ocorrencia";
   }
   return null;

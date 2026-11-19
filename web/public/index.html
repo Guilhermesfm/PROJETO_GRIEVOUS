@@ -1127,32 +1127,17 @@
                 <i class="fa-solid fa-download me-1"></i>Baixar planilha
               </a>
               <span class="ms-3 small text-muted" id="status-placas"></span>
-            </div>
-          </div>
 
-          <div class="panel">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-                <i class="fa-solid fa-play me-2"></i>Processamento
-              </h4>
-              <span class="text-muted small" id="status-execucao-placas">parado</span>
-            </div>
-            <div class="panel-body">
-              <div class="progress mb-2">
+              <div class="progress mt-3 mb-2">
                 <div
                   class="progress-bar sabre-azul"
                   id="barra-placas"
                   style="width: 0%"
                 ></div>
               </div>
-              <div class="d-flex justify-content-between small text-muted mb-3">
+              <div class="d-flex justify-content-between small text-muted">
                 <span id="progresso-placas-texto">Aguardando início</span>
                 <span id="progresso-placas-contagem">0 / 0</span>
-              </div>
-              <div class="console-log" id="log-placas">
-                <div class="linha log-neutro">
-                  <span class="hora">--:--:--</span>General Grievous em espera.
-                </div>
               </div>
             </div>
           </div>
@@ -1406,8 +1391,8 @@
         return texto;
       }
 
-      function logar(mensagem, nivel = "neutro", caixaId = "log-fechamento") {
-        const caixa = document.getElementById(caixaId);
+      function logar(mensagem, nivel = "neutro") {
+        const caixa = document.getElementById("log-fechamento");
         const linha = document.createElement("div");
         linha.className = `linha log-${nivel}`;
         linha.innerHTML = `<span class="hora">${agora()}</span>${escapar(mensagem)}`;
@@ -1791,12 +1776,14 @@
       const botaoPlacas = document.getElementById("btn-rodar-placas");
       const botaoPararPlacas = document.getElementById("btn-parar-placas");
 
-      const logarPlacas = (mensagem, nivel) => logar(mensagem, nivel, "log-placas");
-
       botaoPararPlacas.addEventListener("click", () =>
-        pedirParada(botaoPararPlacas, () =>
-          logarPlacas("Parada solicitada — encerrando após a placa atual.", "info"),
-        ).catch((erro) => logarPlacas(`Falha ao parar: ${erro.message}`, "erro")),
+        pedirParada(botaoPararPlacas, () => {
+          document.getElementById("status-placas").textContent =
+            "Parando — encerrando após a placa atual…";
+        }).catch((erro) => {
+          document.getElementById("status-placas").textContent =
+            `Falha ao parar: ${erro.message}`;
+        }),
       );
 
       /** Monta a tabela de resultados e o alerta de 30 dias. */
@@ -1826,17 +1813,16 @@
 
       /** Conecta a tela ao progresso da consulta (/run inicia, /acompanhar so acompanha). */
       function acompanharPlacas(endereco) {
-        const statusExecucao = document.getElementById("status-execucao-placas");
+        const status = document.getElementById("status-placas");
         const barra = document.getElementById("barra-placas");
         const texto = document.getElementById("progresso-placas-texto");
         const contagem = document.getElementById("progresso-placas-contagem");
+        let total = 0;
 
         botaoPlacas.disabled = true;
         botaoPararPlacas.disabled = false;
-        statusExecucao.textContent = "executando";
-        document.getElementById("log-placas").innerHTML = "";
-        document.getElementById("status-placas").textContent = "";
         barra.style.width = "0%";
+        texto.textContent = "Aguardando início";
 
         const fonte = new EventSource(endereco);
         fontePlacas = fonte;
@@ -1852,68 +1838,41 @@
           const evento = JSON.parse(mensagem.data);
 
           if (evento.tipo === "sem-execucao") {
-            statusExecucao.textContent = "parado";
             encerrar();
             return;
           }
           if (evento.tipo === "inicio") {
-            logarPlacas(`${evento.total} placa(s) para consultar`, "info");
-            contagem.textContent = `0 / ${evento.total}`;
+            total = evento.total;
+            status.textContent = `Consultando ${total} placa(s)…`;
+            contagem.textContent = `0 / ${total}`;
           }
-          if (evento.tipo === "login") logarPlacas("Entrando no Field…", "info");
-          if (evento.tipo === "logado") logarPlacas("Autenticado.", "ok");
-
           if (evento.tipo === "placa-inicio") {
             barra.style.width = `${Math.round(((evento.atual - 1) / evento.total) * 100)}%`;
             contagem.textContent = `${evento.atual} / ${evento.total}`;
             texto.textContent = evento.placa;
           }
-          if (evento.tipo === "placa-ok") {
-            logarPlacas(
-              `${evento.placa} · ${evento.situacao} · ${evento.dataCriacao}`,
-              "ok",
-            );
-          }
-          if (evento.tipo === "placa-erro") {
-            logarPlacas(`${evento.placa} · ${evento.erro}`, "erro");
-          }
-          if (evento.tipo === "parado") {
-            logarPlacas(
-              `Interrompido em ${evento.processadas} placa(s) · ${evento.restantes} não consultada(s)`,
-              "info",
-            );
-            texto.textContent = "Interrompido";
-          }
+          if (evento.tipo === "parado") texto.textContent = "Interrompido";
 
           if (evento.tipo === "fim") {
             desenharPlacas(evento.resultados);
-            logarPlacas(
-              `${evento.interrompida ? "Parado" : "Concluído"} · ` +
-                `${evento.resultados.length} placa(s) na planilha`,
-              evento.interrompida ? "info" : "ok",
-            );
+            status.textContent = evento.interrompida
+              ? `Parado — ${evento.resultados.length} de ${total} placa(s) consultada(s).`
+              : `${evento.resultados.length} placa(s) consultada(s).`;
             if (!evento.interrompida) {
               barra.style.width = "100%";
               texto.textContent = "Concluído";
             }
-            statusExecucao.textContent = evento.interrompida ? "parado" : "concluído";
             encerrar();
           }
 
           if (evento.tipo === "erro") {
-            logarPlacas(evento.erro, "erro");
-            statusExecucao.textContent = "erro";
+            status.textContent = `Erro: ${evento.erro}`;
             encerrar();
           }
         };
 
         fonte.onerror = () => {
-          logarPlacas(
-            "Conexão com o servidor encerrada — verifique se a janela do " +
-              "Grievous continua aberta.",
-            "erro",
-          );
-          statusExecucao.textContent = "parado";
+          status.textContent = `Erro: ${explicarErro(new Error("failed to fetch"))}`;
           encerrar();
         };
       }
@@ -1940,7 +1899,6 @@
         .then((status) => {
           if (status.ativa && status.tipo === "placas" && !fontePlacas) {
             acompanharPlacas("/api/placas/acompanhar");
-            logarPlacas("Consulta em andamento — acompanhando.", "info");
           }
         })
         .catch(() => {

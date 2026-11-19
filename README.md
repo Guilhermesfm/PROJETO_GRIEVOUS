@@ -118,12 +118,14 @@ O resultado sai em `folha-de-pagamento/pagamento_formularios.xlsx`:
   Identificador, Tipo, Status, Data Execução, Avaria, Violação, Obs, Link.
 - **Formularios** — todas as respostas lidas, para conferência manual.
 - **Fora do escopo** — tipos sem formulário de pagamento (preparação de
-  materiais, laudo, revisão preventiva, validação de frotas, check list,
-  extração de vídeo), que não são abertos, e as revisões/devoluções sem
-  nenhuma ocorrência.
+  materiais, preparação V2, laudo de equipamentos, revisão preventiva,
+  validação de frotas, check list, extração de vídeo), que não são abertos,
+  e as revisões/devoluções/laudos sem nenhuma ocorrência.
 
-Revisão Rouxinol e Entrega e Devolução não são serviço pago: a O.S. é aberta
-e só vai para a folha se tiver avaria nos equipamentos, extravio ou violação.
+Revisão Rouxinol, Entrega e Devolução e Laudo Técnico InoPrime V2 não são
+serviço pago: a O.S. é aberta e só vai para a folha se tiver avaria nos
+equipamentos, extravio ou violação (no laudo, foto em "Tire fotos das
+avarias").
 
 A coluna Tipo da folha é a da planilha enviada. Mas, ao abrir a O.S., vale o
 serviço cadastrado no Field: uma O.S. que a planilha chama de "Manutenção" e
@@ -146,6 +148,7 @@ entre formulários (o extravio é a 37 na "REMOÇÃO - GERAL" e a 34 na
 | Manutenção / Revisão Rouxinol       | Violação: violação na instalação | descrição da violação, extravio             |
 | Remanejamento InoPrime V2           | Avaria: periférico avariado      | "Periférico InoPrime avariado"              |
 | Entrega e Devolução                 | Avaria: material devolvido       | relato da avaria, o que foi extraviado      |
+| Laudo Técnico InoPrime V2           | Avaria: foto de avaria anexada   | aparelho, o que foi constatado, nº de fotos |
 | Impedimento de visita               | —                                | descrição do motivo + motivo sem assinatura |
 
 Avaria no veículo, antes ou depois do serviço, não entra na folha.
@@ -204,9 +207,9 @@ A última lista lida do Field fica em `folha-de-pagamento/formularios/`
 ## Consulta de placas
 
 Na aba **Placas**, informe as placas (uma por linha ou separadas por
-vírgula) e clique em Consultar. O painel **Processamento** mostra o
-andamento placa a placa, como no fechamento; outra aba aberta acompanha a
-mesma consulta. O resultado sai em
+vírgula) e clique em Consultar. A barra abaixo dos botões mostra o
+andamento placa a placa; outra aba aberta acompanha a mesma consulta. O
+resultado sai em
 `placas/situacoes_placas.xlsx`: Placa, Situacao, Data de criacao, Dias desde
 a criacao (contado no dia da consulta), Link e Observacao.
 
