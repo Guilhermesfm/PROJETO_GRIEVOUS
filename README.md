@@ -168,10 +168,42 @@ Formulário enviado só com fotos, sem as respostas que a folha usa
 Obs. Formulário aberto e não finalizado é ignorado, com aviso na Obs. As
 perguntas ficam em `PERGUNTAS`, no topo de `folha-de-pagamento/Pagamento.js`.
 
+### Conferência de formulários
+
+A cada fechamento, logo depois do login e antes de processar as O.S., o
+Grievous lê a lista de formulários do Field e compara com o registro
+(`folha-de-pagamento/formularios-registrados.json`, hoje com os 32 do
+Field). As diferenças aparecem com os nomes na faixa "Formulários não
+registrados" da tela e na aba **Conferência de formulários**:
+
+- **Novo** — está no Field e não no registro.
+- **Alterado** — mudou a quantidade de perguntas ou foi editado depois do
+  registro.
+- **Removido** — está no registro e não está mais ativo no Field.
+
+O.S. com formulário fora do registro recebe "Formulário não registrado: NOME"
+na Obs.
+
+O registro só tira o aviso: para a folha ler as respostas de um formulário
+novo, as perguntas dele precisam estar em `PERGUNTAS` (Pagamento.js).
+
+Para registrar formulários novos ou alterados: exporte o `.fct` do Field,
+coloque na pasta `Novo_form` e rode (formulário sem `.fct` entra só com nome
+e quantidade de perguntas, a partir da última lista lida do Field)
+
+```bash
+npm run formularios
+```
+
+A última lista lida do Field fica em `folha-de-pagamento/formularios/`
+(local, fora do git).
+
 ## Consulta de placas
 
 Na aba **Placas**, informe as placas (uma por linha ou separadas por
-vírgula) e clique em Consultar. O resultado sai em
+vírgula) e clique em Consultar. O painel **Processamento** mostra o
+andamento placa a placa, como no fechamento; outra aba aberta acompanha a
+mesma consulta. O resultado sai em
 `placas/situacoes_placas.xlsx`: Placa, Situacao, Data de criacao, Dias desde
 a criacao (contado no dia da consulta), Link e Observacao.
 

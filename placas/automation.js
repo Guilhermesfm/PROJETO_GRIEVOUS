@@ -38,11 +38,22 @@ function diasDesdeCriacao(texto) {
 
 /**
  * Faz login no Field, consulta cada placa e grava a planilha.
- * deveParar() e checada antes de cada placa.
+ * deveParar() e checada antes de cada placa; onEvento recebe o progresso.
  * Retorna { outputPath, resultados, interrompida }.
  */
-async function runAutomation(placas = [], deveParar = () => false) {
+async function runAutomation(
+  placas = [],
+  deveParar = () => false,
+  onEvento = () => {},
+) {
   let interrompida = false;
+  const emitir = (evento) => {
+    try {
+      onEvento(evento);
+    } catch {
+      // Erro no progresso nao para a consulta.
+    }
+  };
   const { email, senha } = carregarCredenciais();
   const urls = carregarUrlsField();
   const destinoListagem = new URL(urls.listagem);
@@ -59,9 +70,11 @@ async function runAutomation(placas = [], deveParar = () => false) {
     headless: process.env.HEADLESS !== "false",
   });
   const page = await browser.newPage();
+  emitir({ tipo: "inicio", total: placas.length });
 
   try {
     // Login: e-mail, Continuar, senha, Continuar.
+    emitir({ tipo: "login" });
     await page.goto(urls.login);
 
     await page.click('input[name="email"]');
@@ -86,14 +99,22 @@ async function runAutomation(placas = [], deveParar = () => false) {
     if (!(await esperarListagemPronta(page))) {
       throw new Error("A listagem de atividades nao carregou depois do login.");
     }
+    emitir({ tipo: "logado" });
 
-    for (const placa of placas) {
+    for (const [indice, placa] of placas.entries()) {
       // Parada solicitada: salva o que ja foi consultado.
       if (deveParar()) {
         interrompida = true;
         console.log("Execucao interrompida pelo usuario.");
+        emitir({
+          tipo: "parado",
+          processadas: indice,
+          restantes: placas.length - indice,
+        });
         break;
       }
+
+      emitir({ tipo: "placa-inicio", placa, atual: indice + 1, total: placas.length });
 
       // Falha numa placa nao derruba o lote.
       try {
@@ -160,8 +181,15 @@ async function runAutomation(placas = [], deveParar = () => false) {
         console.log(
           `Placa ${placa} -> ${situacao || SEM_RETORNO} | ${dataCriacao || SEM_RETORNO}`,
         );
+        emitir({
+          tipo: "placa-ok",
+          placa,
+          situacao: situacao || SEM_RETORNO,
+          dataCriacao: dataCriacao || SEM_RETORNO,
+        });
       } catch (erro) {
         console.error(`Falha em ${placa}: ${erro.message}`);
+        emitir({ tipo: "placa-erro", placa, erro: erro.message });
         resultados.push({
           Placa: placa,
           Situacao: SEM_RETORNO,
@@ -194,6 +222,7 @@ async function runAutomation(placas = [], deveParar = () => false) {
   ]);
 
   console.log(`Planilha gerada: ${outputPath}`);
+  emitir({ tipo: "fim", outputPath, resultados, interrompida });
 
   return { outputPath, resultados, interrompida };
 }

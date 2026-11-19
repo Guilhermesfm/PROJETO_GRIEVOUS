@@ -14,6 +14,8 @@ node_modules/
 folha-de-pagamento/*.xlsx
 folha-de-pagamento/*.xlsm
 folha-de-pagamento/*.csv
+# Ultima lista de formularios lida do Field (copia local)
+folha-de-pagamento/formularios/
 placas/*.xlsx
 
 # Grievous.exe vai versionado, para ser puxado em qualquer maquina.

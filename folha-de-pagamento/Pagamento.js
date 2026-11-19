@@ -14,6 +14,9 @@
  *   - Avaria no veiculo (antes ou depois do servico) nao entra.
  *   - Formulario so com fotos: "Formulário incompleto".
  *
+ * Antes das O.S., o login le os formularios do Field e confere com o
+ * registro (formularios.js).
+ *
  * Fluxo de cada O.S.:
  *   1. lerOrdensServico     le a planilha de entrada.
  *   2. classificarOs        separa o que entra do que e fora do escopo.
@@ -48,6 +51,14 @@ const {
   SELETOR_EDITAR,
 } = require("../field/gaveta.js");
 const { gravarPlanilha } = require("../planilha.js");
+const {
+  URL_FORMULARIOS,
+  carregarRegistro,
+  nomesRegistrados,
+  normalizarNome,
+  salvarListaField,
+  conferirFormularios,
+} = require("./formularios.js");
 
 // ---------------------------------------------------------------------------
 // Configuracao
@@ -478,13 +489,37 @@ function descobrirPlanilhaEntrada() {
 // Automacao
 // ---------------------------------------------------------------------------
 
-/** Faz login no Field e espera a listagem de atividades. */
+/**
+ * Faz login pela pagina de formularios, le a lista de formularios e vai
+ * para a listagem de atividades. Retorna os formularios (null se nao vieram).*/
 async function login(page) {
   const { email, senha } = carregarCredenciais();
   const urls = carregarUrlsField();
-  const destinoListagem = new URL(urls.listagem);
+  const loginFormularios =
+    `${urls.login.split("?")[0]}?to=${encodeURIComponent(URL_FORMULARIOS)}`;
 
-  await page.goto(urls.login);
+  // Pede a lista inteira de uma vez (o Field pagina de 25 em 25).
+  await page.route("**/graphql", async (rota) => {
+    let corpo = null;
+    try {
+      corpo = JSON.parse(rota.request().postData() || "null");
+    } catch {
+      // Pedido sem JSON segue como veio.
+    }
+    if (corpo?.operationName !== "FormsQuery") return rota.continue();
+    corpo.variables = { ...corpo.variables, take: 200, skip: 0 };
+    return rota.continue({ postData: JSON.stringify(corpo) });
+  });
+
+  let formularios = null;
+  const ouvir = async (resposta) => {
+    if (!resposta.url().includes("/graphql")) return;
+    const corpo = await resposta.json().catch(() => null);
+    if (Array.isArray(corpo?.data?.forms?.items)) formularios = corpo.data.forms.items;
+  };
+  page.on("response", ouvir);
+
+  await page.goto(loginFormularios);
 
   await page.click('input[name="email"]');
   await page.fill('input[name="email"]', email);
@@ -494,18 +529,22 @@ async function login(page) {
   await page.fill('input[aria-label="password"]', senha);
   await page.click('palantir-button:has-text("Continuar")');
 
-  // Espera o redirecionamento do login terminar.
-  await page.waitForURL(
-    (url) =>
-      url.origin === destinoListagem.origin &&
-      url.hash.startsWith(destinoListagem.hash),
-    { timeout: 60000 },
-  );
+  // Espera a lista de formularios (o login termina junto).
+  const limite = Date.now() + 60000;
+  while (!formularios && Date.now() < limite) await page.waitForTimeout(300);
+  page.off("response", ouvir);
+  await page.unroute("**/graphql");
+  if (!formularios && page.url().includes("autenticador")) {
+    throw new Error("Login no Field nao concluido. Confira o e-mail e a senha.");
+  }
+
+  await page.goto(urls.listagem);
   await fecharPopups(page);
 
   if (!(await esperarListagemPronta(page))) {
     throw new Error("A listagem de atividades nao carregou depois do login.");
   }
+  return formularios;
 }
 
 /**
@@ -802,6 +841,10 @@ async function runPagamento(
   const foraDoEscopo = [];
   // Todas as respostas, para conferencia.
   const respostasCompletas = [];
+  // Formularios conhecidos e o resultado da conferencia com o Field.
+  const registro = carregarRegistro();
+  const registrados = nomesRegistrados(registro);
+  let conferencia = [];
 
   // Separa as O.S. que serao abertas.
   const paraVisitar = [];
@@ -831,8 +874,40 @@ async function runPagamento(
 
     try {
       emitir({ tipo: "login" });
-      await login(page);
+      const formulariosField = await login(page);
       emitir({ tipo: "logado" });
+
+      // Confere os formularios do Field antes de processar as O.S.
+      if (formulariosField) {
+        salvarListaField(formulariosField);
+        conferencia = conferirFormularios(formulariosField, registro);
+        const nomes = (situacao) =>
+          conferencia
+            .filter((l) => l.Situacao === situacao)
+            .map((l) => ({ nome: l.Formulario, detalhe: l.Observacao }));
+        const diferencas = {
+          novos: nomes("Novo"),
+          alterados: nomes("Alterado"),
+          removidos: nomes("Removido"),
+        };
+        emitir({
+          tipo: "formularios",
+          total: formulariosField.filter((f) => !f.archived).length,
+          ...diferencas,
+        });
+        for (const [rotulo, itens] of [
+          ["Formulário novo no Field", diferencas.novos],
+          ["Formulário alterado no Field", diferencas.alterados],
+          ["Formulário removido do Field", diferencas.removidos],
+        ]) {
+          for (const item of itens) console.warn(`${rotulo}: ${item.nome}`);
+        }
+      } else {
+        emitir({
+          tipo: "aviso",
+          mensagem: "Não foi possível ler a lista de formulários do Field; conferência pulada.",
+        });
+      }
 
       let processadas = 0;
       for (const os of paraVisitar) {
@@ -863,6 +938,21 @@ async function runPagamento(
           const analise = analisarOs(dados.formularios);
           const { avaria, violacao, extravio } = analise;
           const linha = montarLinhaPagamento(os, dados, analise);
+
+          // Formulario fora do registro: avisa na Obs.
+          if (registrados.size) {
+            const naoRegistrados = dados.formularios
+              .map((f) => f.name)
+              .filter((nome) => !registrados.has(normalizarNome(nome)));
+            if (naoRegistrados.length) {
+              linha.Obs = [
+                linha.Obs,
+                ...naoRegistrados.map((nome) => `Formulário não registrado: ${nome}`),
+              ]
+                .filter(Boolean)
+                .join(" | ");
+            }
+          }
 
           // Vale o tipo do Field. Impedida continua impedida.
           const tipoField = dados.order.service?.description || "";
@@ -965,6 +1055,22 @@ async function runPagamento(
             nome: "Fora do escopo",
             linhas: foraDoEscopo,
             ordem: COLUNAS_PAGAMENTO,
+          },
+        ]
+      : []),
+    ...(conferencia.length
+      ? [
+          {
+            nome: "Conferência de formulários",
+            linhas: conferencia,
+            ordem: [
+              "Formulario",
+              "Situacao",
+              "Perguntas no Field",
+              "Perguntas registradas",
+              "Alterado em",
+              "Observacao",
+            ],
           },
         ]
       : []),

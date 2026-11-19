@@ -94,39 +94,60 @@ function encerrarExecucao() {
 }
 
 /**
- * Progresso do fechamento, compartilhado entre as abas.*/
-const progressoPagamento = {
-  // Eventos da execucao atual, na ordem, para repassar a quem chegar depois.
-  eventos: [],
-  // Conexoes SSE abertas (res) acompanhando o fechamento.
-  ouvintes: new Set(),
-  // Planilha gerada pelo ultimo fechamento (null = a padrao).
-  ultimaSaida: null,
-};
+ * Progresso de uma automacao, compartilhado entre as abas.*/
+function criarProgresso() {
+  const progresso = {
+    // Eventos da execucao atual, para repassar a quem chegar depois.
+    eventos: [],
+    // Conexoes SSE abertas (res) acompanhando a execucao.
+    ouvintes: new Set(),
+    // Planilha gerada pela ultima execucao (null = a padrao).
+    ultimaSaida: null,
 
-/** Grava o evento no historico e repassa para todas as abas conectadas. */
-function emitirProgressoPagamento(evento) {
-  if (evento.tipo === "fim" && evento.outputPath) {
-    progressoPagamento.ultimaSaida = evento.outputPath;
-  }
-  progressoPagamento.eventos.push(evento);
-  const linha = `data: ${JSON.stringify(evento)}\n\n`;
-  for (const res of progressoPagamento.ouvintes) res.write(linha);
+    /** Grava o evento no historico e repassa para todas as abas. */
+    emitir(evento) {
+      if (evento.tipo === "fim" && evento.outputPath) {
+        progresso.ultimaSaida = evento.outputPath;
+      }
+      progresso.eventos.push(evento);
+      const linha = `data: ${JSON.stringify(evento)}\n\n`;
+      for (const res of progresso.ouvintes) res.write(linha);
+    },
+
+    /** Conecta a aba ao progresso (fechar a aba so desconecta). */
+    acompanhar(req, res) {
+      for (const evento of progresso.eventos) {
+        res.write(`data: ${JSON.stringify(evento)}\n\n`);
+      }
+      progresso.ouvintes.add(res);
+      req.on("close", () => progresso.ouvintes.delete(res));
+    },
+
+    /** Fim da execucao: encerra as conexoes de todas as abas. */
+    encerrar() {
+      for (const res of progresso.ouvintes) res.end();
+      progresso.ouvintes.clear();
+    },
+  };
+  return progresso;
 }
 
-/** Conecta a aba ao progresso do fechamento (fechar a aba so desconecta). */
-function acompanharPagamento(req, res) {
-  for (const evento of progressoPagamento.eventos) {
-    res.write(`data: ${JSON.stringify(evento)}\n\n`);
-  }
-  progressoPagamento.ouvintes.add(res);
-  req.on("close", () => progressoPagamento.ouvintes.delete(res));
+const progressoPagamento = criarProgresso();
+const progressoPlacas = criarProgresso();
+
+/** Abre a resposta como fluxo de eventos (SSE). */
+function abrirFluxo(res) {
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream; charset=utf-8",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive",
+  });
 }
 
-/** Fim do fechamento: encerra as conexoes de todas as abas. */
-function encerrarProgressoPagamento() {
-  for (const res of progressoPagamento.ouvintes) res.end();
-  progressoPagamento.ouvintes.clear();
+/** Envia um unico evento e fecha o fluxo. */
+function responderEvento(res, evento) {
+  res.write(`data: ${JSON.stringify(evento)}\n\n`);
+  res.end();
 }
 
 // Modulos compartilhados pelas duas automacoes.
@@ -136,6 +157,7 @@ const MODULOS_COMUNS = [
   "../field/gaveta.js",
   "../field/link.js",
   "../field/credenciais.js",
+  "../folha-de-pagamento/formularios.js",
 ];
 
 /**
@@ -336,43 +358,31 @@ const server = http.createServer(async (req, res) => {
   // --- Fechamento: acompanhar o que ja esta rodando (SSE) ------------------
   // Ao abrir a tela: conecta ao fechamento em andamento, se houver.
   if (req.method === "GET" && url.pathname === "/api/pagamento/acompanhar") {
-    res.writeHead(200, {
-      "Content-Type": "text/event-stream; charset=utf-8",
-      "Cache-Control": "no-cache",
-      Connection: "keep-alive",
-    });
+    abrirFluxo(res);
 
     if (execucao.ativa && execucao.tipo === "pagamento") {
-      acompanharPagamento(req, res);
+      progressoPagamento.acompanhar(req, res);
     } else {
-      res.write(`data: ${JSON.stringify({ tipo: "sem-execucao" })}\n\n`);
-      res.end();
+      responderEvento(res, { tipo: "sem-execucao" });
     }
     return;
   }
 
   // --- Fechamento: execucao com progresso em tempo real (SSE) --------------
   if (req.method === "GET" && url.pathname === "/api/pagamento/run") {
-    res.writeHead(200, {
-      "Content-Type": "text/event-stream; charset=utf-8",
-      "Cache-Control": "no-cache",
-      Connection: "keep-alive",
-    });
+    abrirFluxo(res);
 
     // Uma execução por vez.
     if (execucao.ativa) {
       // Ja e um fechamento: esta aba so acompanha.
       if (execucao.tipo === "pagamento") {
-        acompanharPagamento(req, res);
+        progressoPagamento.acompanhar(req, res);
         return;
       }
-      res.write(
-        `data: ${JSON.stringify({
-          tipo: "erro",
-          erro: `Já existe uma execução em andamento (${execucao.tipo}). Pare-a antes de começar o fechamento.`,
-        })}\n\n`,
-      );
-      res.end();
+      responderEvento(res, {
+        tipo: "erro",
+        erro: `Já existe uma execução em andamento (${execucao.tipo}). Pare-a antes de começar o fechamento.`,
+      });
       return;
     }
 
@@ -381,8 +391,8 @@ const server = http.createServer(async (req, res) => {
 
     // Execucao nova: historico zerado, e esta aba e a primeira a acompanhar.
     progressoPagamento.eventos = [];
-    acompanharPagamento(req, res);
-    const enviar = emitirProgressoPagamento;
+    progressoPagamento.acompanhar(req, res);
+    const enviar = progressoPagamento.emitir;
 
     try {
       const resumo = resumirPlanilha();
@@ -404,7 +414,7 @@ const server = http.createServer(async (req, res) => {
       enviar({ tipo: "erro", erro: erro.message });
     } finally {
       encerrarExecucao();
-      encerrarProgressoPagamento();
+      progressoPagamento.encerrar();
     }
     return;
   }
@@ -420,38 +430,60 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // --- Placas: roda a automacao -------------------------------------------
-  if (req.method === "POST" && url.pathname === "/api/run") {
+  // --- Placas: acompanhar a consulta em andamento (SSE) --------------------
+  if (req.method === "GET" && url.pathname === "/api/placas/acompanhar") {
+    abrirFluxo(res);
+
+    if (execucao.ativa && execucao.tipo === "placas") {
+      progressoPlacas.acompanhar(req, res);
+    } else {
+      responderEvento(res, { tipo: "sem-execucao" });
+    }
+    return;
+  }
+
+  // --- Placas: consulta com progresso em tempo real (SSE) ------------------
+  if (req.method === "GET" && url.pathname === "/api/placas/run") {
+    abrirFluxo(res);
+
     if (execucao.ativa) {
-      responderJson(res, 409, {
-        ok: false,
-        error: `Já existe uma execução em andamento (${execucao.tipo}).`,
+      // Ja e uma consulta de placas: esta aba so acompanha.
+      if (execucao.tipo === "placas") {
+        progressoPlacas.acompanhar(req, res);
+        return;
+      }
+      responderEvento(res, {
+        tipo: "erro",
+        erro: `Já existe uma execução em andamento (${execucao.tipo}). Pare-a antes de consultar as placas.`,
       });
       return;
     }
 
-    try {
-      const payload = JSON.parse((await lerCorpo(req)) || "{}");
-      const placas = Array.isArray(payload.placas)
-        ? payload.placas.map((placa) => String(placa).trim()).filter(Boolean)
-        : [];
+    const placas = String(url.searchParams.get("placas") || "")
+      .split(/[\n,;]+/)
+      .map((placa) => placa.trim())
+      .filter(Boolean);
+    if (!placas.length) {
+      responderEvento(res, { tipo: "erro", erro: "Informe ao menos uma placa." });
+      return;
+    }
 
-      iniciarExecucao("placas");
+    iniciarExecucao("placas");
+    progressoPlacas.eventos = [];
+    progressoPlacas.acompanhar(req, res);
+
+    try {
       const automacao = carregarAutomacaoPlacas();
-      const resultado = await automacao.runAutomation(
+      await automacao.runAutomation(
         placas,
         () => execucao.parar,
+        progressoPlacas.emitir,
       );
-      responderJson(res, 200, {
-        ok: true,
-        outputPath: resultado.outputPath,
-        resultados: resultado.resultados,
-        interrompida: resultado.interrompida,
-      });
     } catch (erro) {
-      responderJson(res, 500, { ok: false, error: erro.message });
+      progressoPlacas.emitir({ tipo: "erro", erro: erro.message });
     } finally {
       encerrarExecucao();
+      progressoPlacas.encerrar();
     }
     return;
   }
