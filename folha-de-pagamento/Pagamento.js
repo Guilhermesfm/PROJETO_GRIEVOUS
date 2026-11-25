@@ -1,9 +1,10 @@
 /**
- * Pagamento.js - Fechamento da folha de pagamento.
+ * Pagamento.js - Financeiro Inoprime (fechamento da folha de pagamento).
  *
- * Le a planilha de O.S. exportada do Field, abre cada O.S. e le as respostas
- * dos formularios. Gera a folha com: Cliente, Identificador, Tipo, Status,
- * Data Execucao, Avaria, Violacao, Obs e Link.
+ * Le a planilha de servicos internos, abre cada O.S. e le as respostas dos
+ * formularios: as de origem Field no Field Control, as de origem HubPrime
+ * pelo relatorio no TrackerPrime (hubprime.js). Gera a folha com: Cliente,
+ * Identificador, Tipo, Status, Data Execucao, Avaria, Violacao, Obs e Link.
  *
  * Regra:
  *   - Remocao / instalacao / remanejamento: equipamentos, dano e extravio.
@@ -20,35 +21,34 @@
  * Fluxo de cada O.S.:
  *   1. lerOrdensServico     le a planilha de entrada.
  *   2. classificarOs        separa o que entra do que e fora do escopo.
- *   3. abrirOs              filtra a listagem e abre a O.S.
- *   4. lerDadosOs           pega os dados que o Field carregou.
- *   5. montarLinhaPagamento aplica a regra e monta a linha.
- *   6. gravarPlanilha       grava as abas Pagamento, Formularios e Fora do
- *                           escopo.
+ *   3. Field:    abrirOs + lerDadosOs + montarLinhaPagamento.
+ *      HubPrime: lerRelatorio + comoFormulario (hubprime.js).
+ *   4. registrarOs          decide se entra na folha.
+ *   5. gravarPlanilha       grava as abas Pagamento, Formularios, Fora do
+ *                           escopo e Conferencia de formularios.
  *
  * Uso:
  *   node folha-de-pagamento/Pagamento.js [planilha.xlsx] [saida.xlsx]
  *
- * Credenciais: EMAIL e PASSWORD no arquivo .env.
+ * Credenciais no .env: EMAIL e PASSWORD (Field), TRACKER_EMAIL e
+ * TRACKER_PASSWORD (TrackerPrime).
  */
 
 const fs = require("node:fs");
 const path = require("node:path");
 const { chromium } = require("playwright");
 const XLSX = require("xlsx");
-const {
-  carregarCredenciais,
-  carregarUrlsField,
-} = require("../field/credenciais.js");
+const { carregarUrlsField } = require("../field/credenciais.js");
+const { entrarNoField } = require("../field/login.js");
 const {
   filtrarPorIdentificador,
   esperarListagemPronta,
 } = require("../field/filtro.js");
 const { fecharPopups, clicar } = require("../field/popups.js");
 const {
+  abrirGaveta,
+  fecharGaveta,
   localizarAbaFormularios,
-  gavetaAberta,
-  SELETOR_EDITAR,
 } = require("../field/gaveta.js");
 const { gravarPlanilha } = require("../planilha.js");
 const {
@@ -59,6 +59,12 @@ const {
   salvarListaField,
   conferirFormularios,
 } = require("./formularios.js");
+const {
+  loginTracker,
+  listarOsHubPrime,
+  lerRelatorio,
+  comoFormulario,
+} = require("./hubprime.js");
 
 // ---------------------------------------------------------------------------
 // Configuracao
@@ -82,6 +88,9 @@ const STATUS_FIELD = {
 
 const HEADLESS = process.env.HEADLESS !== "false";
 
+// Relatorios do HubPrime lidos ao mesmo tempo.
+const ABAS_HUBPRIME = 3;
+
 // ---------------------------------------------------------------------------
 // Regras dos formularios
 // ---------------------------------------------------------------------------
@@ -100,10 +109,19 @@ const PERGUNTAS = {
     "equipamento que sera instalado", // Novo formulario de instalacao
     "qual produto esta sendo instalado", // Instalacao - tecnico terceiro
     "quais perifericos estao sendo instalados", // Instalacao Terrabel
+    "selecione os itens que estao sendo instalados", // HubPrime
   ],
+  // HubPrime: remocao so tem a legenda da foto dos seriais.
+  removidosLegenda: "insira fotos dos seriais dos aparelhos retirados",
   dano: "foi identificado algum dano nos equipamentos removidos",
   danoDescricao: "descreva os danos identificados",
-  extravio: "algum equipamento extraviado",
+  extravio: [
+    "algum equipamento extraviado",
+    "houve extravio de algum equipamento inoprime", // HubPrime manutencao
+    "algum periferico foi extraviado", // HubPrime remocao
+  ],
+  // HubPrime: descricao do extravio.
+  extravioEvidencia: "evidencie o extravio",
   extravioQual: "qual equipamento foi extraviado",
   extravioOutros: 'qual "outros" equipamento foi extraviado',
   // Manutencao InoPrime V2: lista dos itens extraviados.
@@ -112,11 +130,15 @@ const PERGUNTAS = {
     "alguma violacao na instalacao encontrada",
     "alguma violacao foi encontrada na instalacao", // Novo formulario de manutencao
     "violacao na instalacao", // Revisao Rouxinol
+    "houve violacao em alguns dos lacres", // HubPrime
   ],
   // "VIOACAO" esta escrito assim no Field.
   violacaoDescricao: ["descreva a violacao", "descreva detalhadamente a vioacao"],
-  // Remanejamento InoPrime V2.
-  perifericoAvariado: "algum periferico inoprime esta avariado",
+  perifericoAvariado: [
+    "algum periferico inoprime esta avariado", // Remanejamento InoPrime V2
+    "algum periferico da inoprime esta avariado", // HubPrime manutencao
+    "existe avarias nos perifericos da inoprime", // HubPrime remocao
+  ],
   // Entrega e devolucao de materiais.
   devolvidosAvaria: "nos materiais devolvidos existe alguma avaria",
   devolvidosAvariaDescricao: "relate as avarias encontradas nos equipamentos",
@@ -141,7 +163,7 @@ const PERGUNTAS = {
 const ROTULOS_EQUIPAMENTO = [
   [/rastreador/, "telemetria basica"],
   [/galileo|galielo|j-?r1[12]/, "telemetria"],
-  [/camera|momenta|\bv5\b|nt407/, "cam"],
+  [/camera|momenta|\bv5\b|nt407|videometria/, "cam"],
   [/bafometro/, "bafometro"],
   [/satelital/, "satelital"],
 ];
@@ -157,15 +179,8 @@ const PERGUNTAS_ESSENCIAIS = [
   "violacao",
 ];
 
-/** Remove acentos e normaliza para comparacao. */
-function normalizar(texto) {
-  return String(texto || "")
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase()
-    .replace(/\s+/g, " ")
-    .trim();
-}
+// Remove acentos e normaliza para comparacao.
+const normalizar = normalizarNome;
 
 /** Resposta de uma pergunta do formulario ("" se nao existe ou nao respondida). */
 function respostaDe(formulario, chave) {
@@ -216,13 +231,13 @@ function quantidadeFotos(pergunta) {
   return answer ? 1 : 0;
 }
 
-// "SIM" -> true. "NÃO" ou vazio -> false.
-const ehSim = (valor) => normalizar(valor) === "sim";
+// "SIM" -> true. "NÃO" ou vazio -> false. No HubPrime vem "SIM / legenda".
+const ehSim = (valor) => normalizar(valor).split(" / ")[0] === "sim";
 
-// "GalileoSky&Câmeras" -> ["GalileoSky", "Câmeras"].
+// Field: "GalileoSky&Câmeras". HubPrime: "TELEMETRIA, BUZZER".
 const separarOpcoes = (valor) =>
   String(valor || "")
-    .split("&")
+    .split(/&|,\s+/)
     .map((v) => v.trim())
     .filter(Boolean);
 
@@ -289,6 +304,18 @@ function analisarFormulario(formulario) {
   if (removidos.length)
     resultado.obs.push(`Remoção de ${juntarComE(removidos)}`);
 
+  // HubPrime: legenda da foto dos seriais ("V5 Galileo"); generica vira so
+  // "Remoção".
+  const legenda = respostaDe(formulario, "removidosLegenda");
+  if (perguntaDe(formulario, "removidosLegenda")) {
+    const generica =
+      !legenda ||
+      /^(ok+|equipamentos?|aparelhos?|seriais|serial|fotos?|placa|sim|nao|remocao ok)$/.test(
+        normalizar(legenda),
+      );
+    resultado.obs.push(generica ? "Remoção" : `Remoção: ${legenda}`);
+  }
+
   const instalados = rotularEquipamentos(respostaDe(formulario, "instalados"));
   if (instalados.length)
     resultado.obs.push(`Instalação de ${juntarComE(instalados)}`);
@@ -310,10 +337,14 @@ function analisarFormulario(formulario) {
       respostaDe(formulario, "extravioOutros"),
     ].filter(Boolean);
     resultado.extravio = true;
+    // HubPrime: o que foi extraviado vem escrito em "Evidencie o extravio".
+    const evidencia = respostaDe(formulario, "extravioEvidencia");
     resultado.obs.push(
       itens.length
         ? itens.map(descreverExtravio).join(", ")
-        : "Equipamento extraviado",
+        : evidencia
+          ? `Extraviado: ${evidencia}`
+          : "Equipamento extraviado",
     );
   }
 
@@ -410,17 +441,19 @@ function analisarOs(formularios) {
   return { avaria, violacao, extravio, obs: obs.join(" | ") };
 }
 
-/**
- * Data de conclusao no fuso de Brasilia, como serial do Excel.
- *
- * O Field manda a data em UTC isso converte para o
- * fuso de Brasilia*/
+/** Data UTC do Field -> serial do Excel, no fuso de Brasilia. */
 function dataExcel(iso) {
   if (!iso) return "";
   const [dia, mes, ano] = new Date(iso)
     .toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" })
     .split("/");
   return (Date.UTC(+ano, +mes - 1, +dia) - Date.UTC(1899, 11, 30)) / 86400000;
+}
+
+/** "10/11/2026 11:07" (horario de Brasilia) -> ISO; "" se vazio. */
+function dataBrasilParaIso(texto) {
+  const m = /^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2})/.exec(texto || "");
+  return m ? `${m[3]}-${m[2]}-${m[1]}T${m[4]}:${m[5]}:00-03:00` : "";
 }
 
 // ---------------------------------------------------------------------------
@@ -482,6 +515,9 @@ function lerOrdensServico(caminhoPlanilha) {
     tipo: coluna("Tipo"),
     cliente: coluna("Cliente"),
     status: coluna("Status"),
+    // ID do TrackerPrime e Origem (Field ou HubPrime).
+    id: coluna("ID"),
+    origem: coluna("Origem"),
   };
 
   return linhas
@@ -491,6 +527,9 @@ function lerOrdensServico(caminhoPlanilha) {
       tipo: String(linha[colunas.tipo] ?? "").trim(),
       cliente: String(linha[colunas.cliente] ?? "").trim(),
       status: String(linha[colunas.status] ?? "").trim(),
+      id: String(linha[colunas.id] ?? "").trim(),
+      // Sem a coluna Origem, tudo e do Field.
+      origem: String(linha[colunas.origem] ?? "").trim() || "Field",
     }))
     .filter((os) => os.identificador);
 }
@@ -522,7 +561,6 @@ function descobrirPlanilhaEntrada() {
  * Faz login pela pagina de formularios, le a lista de formularios e vai
  * para a listagem de atividades. Retorna os formularios (null se nao vieram).*/
 async function login(page) {
-  const { email, senha } = carregarCredenciais();
   const urls = carregarUrlsField();
   const loginFormularios =
     `${urls.login.split("?")[0]}?to=${encodeURIComponent(URL_FORMULARIOS)}`;
@@ -548,15 +586,7 @@ async function login(page) {
   };
   page.on("response", ouvir);
 
-  await page.goto(loginFormularios);
-
-  await page.click('input[name="email"]');
-  await page.fill('input[name="email"]', email);
-  await page.click('palantir-button:has-text("Continuar")');
-
-  await page.click('input[aria-label="password"]');
-  await page.fill('input[aria-label="password"]', senha);
-  await page.click('palantir-button:has-text("Continuar")');
+  await entrarNoField(page, loginFormularios);
 
   // Espera a lista de formularios (o login termina junto).
   const limite = Date.now() + 60000;
@@ -611,11 +641,6 @@ function criarColetor(page) {
   };
 }
 
-/** Escapa o texto para usar literalmente dentro de uma RegExp. */
-function escaparRegex(texto) {
-  return String(texto).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
 /**
  * Espera uma condicao sobre os dados coletados.*/
 async function esperarDados(page, condicao, timeout) {
@@ -631,72 +656,17 @@ async function esperarDados(page, condicao, timeout) {
 /**
  * Garante que a tela esteja na listagem antes da proxima O.S.*/
 async function voltarParaListagem(page) {
-  const URL_ATIVIDADES = carregarUrlsField().listagem;
-  // Fecha painel ou modal aberto.
-  await page.keyboard.press("Escape").catch(() => {});
+  const listagem = carregarUrlsField().listagem;
+  if (page.url().startsWith(listagem)) return fecharGaveta(page);
 
-  if (!page.url().startsWith(URL_ATIVIDADES)) {
-    await page
-      .goto(URL_ATIVIDADES, { waitUntil: "domcontentloaded" })
-      .catch(() => {});
-    await esperarListagemPronta(page);
-    return;
-  }
-
-  // Espera a gaveta fechar.
-  await localizarAbaFormularios(page)
-    .waitFor({ state: "hidden", timeout: 5000 })
-    .catch(() => {});
+  await page.goto(listagem, { waitUntil: "domcontentloaded" }).catch(() => {});
+  await esperarListagemPronta(page);
 }
 
-/**
- * Localiza a linha do identificador e abre a O.S. pelo botao de edicao.*/
+/** Filtra a listagem pelo identificador e abre a O.S. */
 async function abrirOs(page, identificador) {
   await filtrarPorIdentificador(page, identificador);
-
-  // Qualquer linha com o texto. O filtro ja esperou por ela.
-  const qualquerLinha = page
-    .locator('tr, [role="row"], palantir-table-row')
-    .filter({ hasText: identificador })
-    .first();
-
-  const encontrou = await qualquerLinha
-    .waitFor({ state: "visible", timeout: 3000 })
-    .then(() => true)
-    .catch(() => false);
-
-  if (!encontrou) {
-    throw new Error(
-      `Identificador ${identificador} nao encontrado na listagem.`,
-    );
-  }
-
-  // Vale a linha com uma celula igual ao
-  //identificador; so se nenhuma bater cai na primeira que contem o texto.
-  const exato = new RegExp(`^\\s*${escaparRegex(identificador)}\\s*$`, "i");
-  const linhaExata = page
-    .locator('tr, [role="row"], palantir-table-row')
-    .filter({ has: page.locator('td, [role="cell"]', { hasText: exato }) })
-    .first();
-  const linha = (await linhaExata.count().catch(() => 0))
-    ? linhaExata
-    : qualquerLinha;
-
-  await fecharPopups(page);
-
-  // Lapis de edicao; sem ele, clica na propria linha.
-  const botaoEditar = linha.locator(SELETOR_EDITAR).last();
-  const alvo = (await botaoEditar.count().catch(() => 0)) ? botaoEditar : linha;
-
-  // Duas tentativas de abrir a gaveta.
-  for (let tentativa = 1; tentativa <= 2; tentativa += 1) {
-    await clicar(alvo);
-
-    if (await gavetaAberta(page, 15000)) return page;
-    await page.waitForTimeout(1500);
-  }
-
-  throw new Error(`O clique em Editar nao abriu a O.S. ${identificador}`);
+  await abrirGaveta(page, identificador);
 }
 
 /**
@@ -859,13 +829,6 @@ async function runPagamento(
     }
   };
 
-  const credenciais = carregarCredenciais();
-  if (!credenciais.email || !credenciais.senha) {
-    throw new Error(
-      "Credenciais nao configuradas. Informe o login do Field na tela inicial.",
-    );
-  }
-
   const resultados = [];
   const foraDoEscopo = [];
   // Todas as respostas, para conferencia.
@@ -896,175 +859,269 @@ async function runPagamento(
     ignoradas: foraDoEscopo.length,
   });
 
+  // Field e HubPrime sao processados em etapas separadas.
+  const doHubPrime = (os) => normalizar(os.origem) === "hubprime";
+  const paraField = paraVisitar.filter((os) => !doHubPrime(os));
+  const paraHubPrime = paraVisitar.filter(doHubPrime);
+  let processadas = 0;
+
+  /** Pede parada: grava o que ja foi lido. */
+  const parar = () => {
+    if (!deveParar()) return false;
+    interrompida = true;
+    emitir({
+      tipo: "parado",
+      processadas,
+      restantes: paraVisitar.length - processadas,
+    });
+    return true;
+  };
+
+  /** Progresso da O.S. que vai ser lida. */
+  const iniciarOs = (os) => {
+    processadas += 1;
+    emitir({
+      tipo: "os-inicio",
+      identificador: os.identificador,
+      categoria: os.categoria,
+      origem: os.origem,
+      atual: processadas,
+      total: paraVisitar.length,
+    });
+  };
+
+  /**
+   * Decide se a O.S. lida entra na folha e guarda as respostas.
+   * tipoSistema: servico cadastrado no Field ou no HubPrime.*/
+  const registrarOs = (os, linha, analise, formularios, tipoSistema) => {
+    const { avaria, violacao, extravio } = analise;
+    const categoria =
+      os.categoria === "impedido" || !tipoSistema
+        ? os.categoria
+        : classificarOs({ tipo: tipoSistema, status: "" });
+
+    if (!categoria) {
+      foraDoEscopo.push({
+        ...linha,
+        Obs: `Tipo no ${os.origem}: ${tipoSistema} (fora do escopo)`,
+      });
+    } else if (categoria === "ocorrencia" && !avaria && !violacao && !extravio) {
+      // Revisao, entrega/devolucao e laudo sem ocorrencia.
+      foraDoEscopo.push({
+        ...linha,
+        Obs: [
+          tipoSistema !== linha.Tipo ? `Tipo no ${os.origem}: ${tipoSistema}` : "",
+          "Sem avaria, extravio ou violação",
+          linha.Obs,
+        ]
+          .filter(Boolean)
+          .join(" | "),
+      });
+    } else {
+      resultados.push(linha);
+    }
+
+    // Aba Formularios: perguntas respondidas.
+    let respondidas = 0;
+    for (const formulario of formularios) {
+      for (const pergunta of formulario.questions) {
+        const resposta = textoDaResposta(pergunta);
+        if (!resposta) continue;
+        respondidas += 1;
+        respostasCompletas.push({
+          Identificador: os.identificador,
+          Tipo: linha.Tipo,
+          Formulario: formulario.name,
+          "Status do formulario": formulario.status,
+          // Numero como aparece no Field/HubPrime.
+          Numero: pergunta.position + 1,
+          Pergunta: pergunta.title,
+          Resposta: resposta,
+        });
+      }
+    }
+
+    console.log(
+      `${os.identificador} [${linha.Status}] Avaria ${linha.Avaria} ` +
+        `Violação ${linha.Violação} | ` +
+        `${formularios.map((f) => f.name).join(" + ") || "sem formulario"} | ${linha.Obs}`,
+    );
+    emitir({
+      tipo: "os-ok",
+      identificador: os.identificador,
+      categoria: categoria || "fora do escopo",
+      origem: os.origem,
+      respostas: respondidas,
+      exportadas: formularios.length,
+    });
+  };
+
+  /** Erro numa O.S.: vai para a Obs e o fechamento continua. */
+  const registrarErro = (os, erro) => {
+    console.error(`Falha em ${os.identificador}: ${erro.message}`);
+    resultados.push({
+      ...montarLinhaBase(os),
+      Obs: `ERRO: ${erro.message}`,
+    });
+    emitir({
+      tipo: "os-erro",
+      identificador: os.identificador,
+      categoria: os.categoria,
+      origem: os.origem,
+      erro: erro.message,
+    });
+  };
+
   if (paraVisitar.length) {
     const browser = await chromium.launch({ headless: HEADLESS });
-    const page = await browser.newPage();
-    const coletor = criarColetor(page);
 
     try {
-      emitir({ tipo: "login" });
-      const formulariosField = await login(page);
-      emitir({ tipo: "logado" });
+      // --- O.S. do Field -----------------------------------------------------
+      if (paraField.length) {
+        const page = await browser.newPage();
+        const coletor = criarColetor(page);
 
-      // Confere os formularios do Field antes de processar as O.S.
-      if (formulariosField) {
-        salvarListaField(formulariosField);
-        conferencia = conferirFormularios(formulariosField, registro);
-        const nomes = (situacao) =>
-          conferencia
-            .filter((l) => l.Situacao === situacao)
-            .map((l) => ({ nome: l.Formulario, detalhe: l.Observacao }));
-        const diferencas = {
-          novos: nomes("Novo"),
-          alterados: nomes("Alterado"),
-          removidos: nomes("Removido"),
-          semPerguntas: nomes("Sem perguntas"),
-        };
-        emitir({
-          tipo: "formularios",
-          total: formulariosField.filter((f) => !f.archived).length,
-          completos: conferencia.filter((l) => l.Situacao === "OK").length,
-          ...diferencas,
-        });
-        for (const [rotulo, itens] of [
-          ["Formulário novo no Field", diferencas.novos],
-          ["Formulário alterado no Field", diferencas.alterados],
-          ["Formulário removido do Field", diferencas.removidos],
-          ["Formulário sem perguntas registradas", diferencas.semPerguntas],
-        ]) {
-          for (const item of itens) console.warn(`${rotulo}: ${item.nome}`);
+        emitir({ tipo: "login" });
+        const formulariosField = await login(page);
+        emitir({ tipo: "logado" });
+
+        // Confere os formularios do Field antes de processar as O.S.
+        if (formulariosField) {
+          salvarListaField(formulariosField);
+          conferencia = conferirFormularios(formulariosField, registro);
+          const nomes = (situacao) =>
+            conferencia
+              .filter((l) => l.Situacao === situacao)
+              .map((l) => ({ nome: l.Formulario, detalhe: l.Observacao }));
+          const diferencas = {
+            novos: nomes("Novo"),
+            alterados: nomes("Alterado"),
+            removidos: nomes("Removido"),
+            semPerguntas: nomes("Sem perguntas"),
+          };
+          emitir({
+            tipo: "formularios",
+            total: formulariosField.filter((f) => !f.archived).length,
+            completos: conferencia.filter((l) => l.Situacao === "OK").length,
+            ...diferencas,
+          });
+          for (const [rotulo, itens] of [
+            ["Formulário novo no Field", diferencas.novos],
+            ["Formulário alterado no Field", diferencas.alterados],
+            ["Formulário removido do Field", diferencas.removidos],
+            ["Formulário sem perguntas registradas", diferencas.semPerguntas],
+          ]) {
+            for (const item of itens) console.warn(`${rotulo}: ${item.nome}`);
+          }
+        } else {
+          emitir({
+            tipo: "aviso",
+            mensagem: "Não foi possível ler a lista de formulários do Field; conferência pulada.",
+          });
         }
-      } else {
-        emitir({
-          tipo: "aviso",
-          mensagem: "Não foi possível ler a lista de formulários do Field; conferência pulada.",
-        });
+
+        for (const os of paraField) {
+          if (parar()) break;
+          iniciarOs(os);
+          try {
+            coletor.limpar();
+            await abrirOs(page, os.identificador);
+            const dados = await lerDadosOs(page, coletor, os.identificador);
+
+            const analise = analisarOs(dados.formularios);
+            const linha = montarLinhaPagamento(os, dados, analise);
+
+            // Formulario fora do registro: avisa na Obs.
+            if (registrados.size) {
+              const naoRegistrados = dados.formularios
+                .map((f) => f.name)
+                .filter((nome) => !registrados.has(normalizarNome(nome)));
+              if (naoRegistrados.length) {
+                linha.Obs = [
+                  linha.Obs,
+                  ...naoRegistrados.map((nome) => `Formulário não registrado: ${nome}`),
+                ]
+                  .filter(Boolean)
+                  .join(" | ");
+              }
+            }
+
+            const tipoField = dados.order.service?.description || "";
+            registrarOs(os, linha, analise, dados.formularios, tipoField);
+          } catch (erro) {
+            registrarErro(os, erro);
+          }
+
+          await voltarParaListagem(page);
+        }
+        coletor.parar();
+        await page.close();
       }
 
-      let processadas = 0;
-      for (const os of paraVisitar) {
-        // Parar: grava o que ja foi lido.
-        if (deveParar()) {
-          interrompida = true;
-          emitir({
-            tipo: "parado",
-            processadas,
-            restantes: paraVisitar.length - processadas,
-          });
-          break;
-        }
-
-        processadas += 1;
-        emitir({
-          tipo: "os-inicio",
-          identificador: os.identificador,
-          categoria: os.categoria,
-          atual: processadas,
-          total: paraVisitar.length,
-        });
+      // --- O.S. do HubPrime (pelo TrackerPrime) ------------------------------
+      if (paraHubPrime.length && !interrompida) {
+        const page = await browser.newPage();
+        let listaHub = null;
         try {
-          coletor.limpar();
-          await abrirOs(page, os.identificador);
-          const dados = await lerDadosOs(page, coletor, os.identificador);
-
-          const analise = analisarOs(dados.formularios);
-          const { avaria, violacao, extravio } = analise;
-          const linha = montarLinhaPagamento(os, dados, analise);
-
-          // Formulario fora do registro: avisa na Obs.
-          if (registrados.size) {
-            const naoRegistrados = dados.formularios
-              .map((f) => f.name)
-              .filter((nome) => !registrados.has(normalizarNome(nome)));
-            if (naoRegistrados.length) {
-              linha.Obs = [
-                linha.Obs,
-                ...naoRegistrados.map((nome) => `Formulário não registrado: ${nome}`),
-              ]
-                .filter(Boolean)
-                .join(" | ");
-            }
-          }
-
-          // Vale o tipo do Field. Impedida continua impedida.
-          const tipoField = dados.order.service?.description || "";
-          const categoria =
-            os.categoria === "impedido" || !tipoField
-              ? os.categoria
-              : classificarOs({ tipo: tipoField, status: "" });
-
-          if (!categoria) {
-            foraDoEscopo.push({
-              ...linha,
-              Obs: `Tipo no Field: ${tipoField} (fora do escopo)`,
-            });
-          } else if (categoria === "ocorrencia" && !avaria && !violacao && !extravio) {
-            // Revisao e entrega/devolucao sem ocorrencia.
-            foraDoEscopo.push({
-              ...linha,
-              Obs: [
-                tipoField !== linha.Tipo ? `Tipo no Field: ${tipoField}` : "",
-                "Sem avaria, extravio ou violação",
-                linha.Obs,
-              ]
-                .filter(Boolean)
-                .join(" | "),
-            });
-          } else {
-            resultados.push(linha);
-          }
-
-          // Aba Formularios: perguntas respondidas.
-          let respondidas = 0;
-          for (const formulario of dados.formularios) {
-            for (const pergunta of formulario.questions) {
-              const resposta = textoDaResposta(pergunta);
-              if (!resposta) continue;
-              respondidas += 1;
-              respostasCompletas.push({
-                Identificador: os.identificador,
-                Tipo: linha.Tipo,
-                Formulario: formulario.name,
-                "Status do formulario": formulario.status,
-                // Numero como aparece no Field.
-                Numero: pergunta.position + 1,
-                Pergunta: pergunta.title,
-                Resposta: resposta,
-              });
-            }
-          }
-
-          console.log(
-            `${os.identificador} [${linha.Status}] Avaria ${linha.Avaria} ` +
-              `Violação ${linha.Violação} | ` +
-              `${dados.formularios.map((f) => f.name).join(" + ") || "sem formulario"} | ${linha.Obs}`,
-          );
+          emitir({ tipo: "aviso", mensagem: "Entrando no TrackerPrime para as O.S. do HubPrime…" });
+          await loginTracker(page);
+          listaHub = await listarOsHubPrime(page);
+          // So as O.S. da planilha sao analisadas; a lista serve para achar o link.
           emitir({
-            tipo: "os-ok",
-            identificador: os.identificador,
-            categoria: categoria || "fora do escopo",
-            respostas: respondidas,
-            exportadas: dados.formularios.length,
+            tipo: "aviso",
+            mensagem: `HubPrime: ${paraHubPrime.length} O.S. da planilha para analisar.`,
           });
         } catch (erro) {
-          // Erro numa O.S. vai para a Obs e o fechamento continua.
-          console.error(`Falha em ${os.identificador}: ${erro.message}`);
-          resultados.push({
-            ...montarLinhaBase(os),
-            Obs: `ERRO: ${erro.message}`,
-          });
-          emitir({
-            tipo: "os-erro",
-            identificador: os.identificador,
-            categoria: os.categoria,
-            erro: erro.message,
-          });
+          emitir({ tipo: "aviso", mensagem: `HubPrime: ${erro.message}` });
         }
 
-        await voltarParaListagem(page);
+        /** Le o relatorio da O.S. e monta a linha. */
+        const lerOsHubPrime = async (aba, os) => {
+          if (!listaHub) throw new Error("TrackerPrime indisponível");
+          const naLista = listaHub.get(os.id);
+          if (!naLista) {
+            throw new Error(`ID ${os.id || "(vazio)"} não encontrado no HubPrime.`);
+          }
+
+          const relatorio = await lerRelatorio(aba, naLista.link);
+          const formulario = comoFormulario(relatorio);
+          const analise = analisarOs([formulario]);
+          const linha = {
+            ...montarLinhaBase(os),
+            Status: naLista.status || os.status,
+            "Data Execução": dataExcel(dataBrasilParaIso(relatorio.concluidoEm)),
+            Avaria: analise.avaria ? "SIM" : "NÃO",
+            Violação: analise.violacao ? "SIM" : "NÃO",
+            Obs: analise.obs,
+            Link: naLista.link,
+          };
+          return [linha, analise, [formulario], relatorio.tipo || naLista.tipo];
+        };
+
+        // Abas extras para ler varios relatorios ao mesmo tempo.
+        const paginas = [page];
+        if (listaHub) {
+          const extras = Math.min(ABAS_HUBPRIME, paraHubPrime.length) - 1;
+          for (let i = 0; i < extras; i += 1) paginas.push(await page.context().newPage());
+        }
+
+        // Le em lotes e registra na ordem da planilha.
+        for (let inicio = 0; inicio < paraHubPrime.length; inicio += paginas.length) {
+          if (parar()) break;
+          const lote = paraHubPrime.slice(inicio, inicio + paginas.length);
+          // Le o lote junto; erro numa O.S. nao derruba as outras.
+          lote.forEach(iniciarOs);
+          const lidos = await Promise.allSettled(
+            lote.map((os, i) => lerOsHubPrime(paginas[i], os)),
+          );
+          lote.forEach((os, i) => {
+            if (lidos[i].status === "fulfilled") registrarOs(os, ...lidos[i].value);
+            else registrarErro(os, lidos[i].reason);
+          });
+        }
+        for (const pagina of paginas) await pagina.close();
       }
     } finally {
-      coletor.parar();
       await browser.close();
     }
   }

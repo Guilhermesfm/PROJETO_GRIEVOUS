@@ -1,4 +1,4 @@
-// Leitura e gravacao das credenciais do Field no arquivo .env.
+// Leitura e gravacao das credenciais do Field e do TrackerPrime no .env.
 const fs = require("node:fs");
 const path = require("node:path");
 const dotenv = require("dotenv");
@@ -23,8 +23,29 @@ function formatarValor(valor) {
     : texto;
 }
 
-/** Grava EMAIL e PASSWORD no .env preservando as demais chaves. */
+/** Grava EMAIL e PASSWORD (Field) no .env preservando as demais chaves. */
 function salvarCredenciais(email, senha) {
+  gravarPar("EMAIL", "PASSWORD", email, senha);
+  return { email };
+}
+
+/** Le TRACKER_EMAIL e TRACKER_PASSWORD (TrackerPrime/HubPrime) do .env. */
+function carregarCredenciaisTracker() {
+  dotenv.config({ path: CAMINHO_ENV, override: true, quiet: true });
+  return {
+    email: process.env.TRACKER_EMAIL || "",
+    senha: process.env.TRACKER_PASSWORD || "",
+  };
+}
+
+/** Grava TRACKER_EMAIL e TRACKER_PASSWORD no .env. */
+function salvarCredenciaisTracker(email, senha) {
+  gravarPar("TRACKER_EMAIL", "TRACKER_PASSWORD", email, senha);
+  return { email };
+}
+
+/** Grava um par e-mail/senha no .env preservando as demais chaves. */
+function gravarPar(chaveEmail, chaveSenha, email, senha) {
   if (!email || !senha) {
     throw new Error("E-mail e senha sao obrigatorios.");
   }
@@ -37,8 +58,8 @@ function salvarCredenciais(email, senha) {
     : [];
 
   const novosValores = {
-    EMAIL: formatarValor(email),
-    PASSWORD: formatarValor(senha),
+    [chaveEmail]: formatarValor(email),
+    [chaveSenha]: formatarValor(senha),
   };
   const jaEscritas = new Set();
 
@@ -63,10 +84,8 @@ function salvarCredenciais(email, senha) {
   });
 
   // Atualiza o processo em memoria para a proxima execucao.
-  process.env.EMAIL = email;
-  process.env.PASSWORD = senha;
-
-  return { email };
+  process.env[chaveEmail] = email;
+  process.env[chaveSenha] = senha;
 }
 
 // Enderecos padrao do Field (podem ser trocados no .env).
@@ -88,7 +107,7 @@ function carregarUrlsField() {
 module.exports = {
   carregarCredenciais,
   salvarCredenciais,
+  carregarCredenciaisTracker,
+  salvarCredenciaisTracker,
   carregarUrlsField,
-  URLS_PADRAO,
-  CAMINHO_ENV,
 };

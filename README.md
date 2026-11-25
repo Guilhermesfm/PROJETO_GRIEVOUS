@@ -1,9 +1,9 @@
 # Grievous
 
-Automações do Field Control:
+Automações do Field Control e do HubPrime:
 
-- **Fechamento da folha** — lê a planilha de O.S. exportada do Field, abre cada
-  O.S. e extrai as respostas dos formulários.
+- **Financeiro Inoprime** (fechamento da folha) — lê a planilha de serviços
+  internos enviada e analisa cada O.S. no Field ou no HubPrime.
 - **Placas** — consulta a situação e a data de criação de cada placa.
 
 ## Instalar em uma máquina nova
@@ -47,17 +47,17 @@ npm start
 Abre o menu no terminal:
 
 ```
-1) Fechamento (folha de pagamento)
+1) Financeiro Inoprime
 2) Automação de placas
 3) Interface web
-4) Credenciais do Field
+4) Credenciais (Field e TrackerPrime)
 ```
 
 Ou direto:
 
 ```bash
 npm run web         # interface em http://localhost:3000
-npm run pagamento   # fechamento pelo terminal
+npm run pagamento   # Financeiro Inoprime pelo terminal
 npm run placas      # consulta de placas pelo terminal
 npm run login       # grava/troca as credenciais
 ```
@@ -99,7 +99,7 @@ navegador da própria máquina. Isso é proposital: a tela de login trafega a
 senha do Field sem HTTPS. Para acessar de outro computador da rede seria
 preciso antes colocar uma senha de acesso no próprio Grievous.
 
-## Fechamento da folha
+## Financeiro Inoprime (fechamento da folha)
 
 1. Exporte a planilha de O.S. do Field (colunas `Identificador`, `Tipo`,
    `Status`, `Cliente`).
@@ -171,6 +171,18 @@ Formulário enviado só com fotos, sem as respostas que a folha usa
 Obs. Formulário aberto e não finalizado é ignorado, com aviso na Obs. As
 perguntas ficam em `PERGUNTAS`, no topo de `folha-de-pagamento/Pagamento.js`.
 
+### O.S. do HubPrime
+
+A planilha de serviços internos tem a coluna **Origem**. As O.S. do
+**Field** seguem pelo Field Control; as do **HubPrime** são lidas pelo
+TrackerPrime: o Grievous entra em Serviços internos, filtra a origem
+HubPrime (1.000 por página), acha a O.S. pelo **ID** da planilha e lê o
+"Relatório de Atendimento" (link do olho). As respostas passam pelas mesmas
+regras e a linha vai para a mesma aba Pagamento, com o link do relatório.
+
+O login do TrackerPrime fica no `.env` (`TRACKER_EMAIL`,
+`TRACKER_PASSWORD`), cadastrado pela tela de login do Grievous.
+
 ### Conferência de formulários
 
 A cada fechamento, logo depois do login e antes de processar as O.S., o
@@ -228,7 +240,8 @@ Grievous.bat             alternativa ao .exe, pelo terminal
 planilha.js              grava as planilhas (usado pelas duas automacoes)
 
 field/                   conversa com o Field (usado pelas duas automacoes)
-  credenciais.js           le e grava EMAIL/PASSWORD e as URLs no .env
+  credenciais.js           le e grava as credenciais e as URLs no .env
+  login.js                 login no Field
   filtro.js                filtro "Identificador" da listagem
   popups.js                fecha os avisos que bloqueiam a tela
   gaveta.js                abre e fecha a O.S. pelo botao de edicao
@@ -240,7 +253,10 @@ web/                     interface
   public/grievous.svg      mascara, usada no front e no favicon
 
 placas/                  consulta de placas (codigo e planilha gerada)
-folha-de-pagamento/      fechamento (codigo, planilha de entrada e saida)
+folha-de-pagamento/      Financeiro Inoprime (codigo, planilha de entrada e saida)
+  Pagamento.js             regras da folha e execucao
+  hubprime.js              O.S. do HubPrime, pelo TrackerPrime
+  formularios.js           conferencia dos formularios do Field
   fechamentos/             folhas ja fechadas; o programa nao le esta pasta
 assets/                  icone do executavel
 ```

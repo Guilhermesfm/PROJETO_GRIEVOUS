@@ -23,37 +23,48 @@ async function gavetaAberta(page, timeout = 12000) {
     .catch(() => false);
 }
 
+/** Escapa o texto para usar literalmente dentro de uma RegExp. */
+function escaparRegex(texto) {
+  return String(texto).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 /**
  * Abre a gaveta clicando no botao de edicao da linha.
- * Pressupoe que a listagem ja esta filtrada pelo identificador.
- */
+ * Pressupoe que a listagem ja esta filtrada pelo identificador.*/
 async function abrirGaveta(page, identificador) {
-  const linha = page
-    .locator('tr, [role="row"], palantir-table-row')
-    .filter({ hasText: identificador })
-    .first();
+  const linhas = page.locator('tr, [role="row"], palantir-table-row');
+  const qualquerLinha = linhas.filter({ hasText: identificador }).first();
 
-  const achou = await linha
-    .waitFor({ state: "visible", timeout: 20000 })
+  const achou = await qualquerLinha
+    .waitFor({ state: "visible", timeout: 5000 })
     .then(() => true)
     .catch(() => false);
+  if (!achou) {
+    throw new Error(`Identificador ${identificador} nao encontrado na listagem.`);
+  }
 
-  if (!achou) return false;
+  // Linha com uma celula igual ao identificador; sem ela, a que contem o texto.
+  const exato = new RegExp(`^\\s*${escaparRegex(identificador)}\\s*$`, "i");
+  const linhaExata = linhas
+    .filter({ has: page.locator('td, [role="cell"]', { hasText: exato }) })
+    .first();
+  const linha = (await linhaExata.count().catch(() => 0)) ? linhaExata : qualquerLinha;
 
   // Um aviso do Field por cima engole o clique sem dar erro.
   await fecharPopups(page);
 
+  // Lapis de edicao; sem ele, clica na propria linha.
   const botao = linha.locator(SELETOR_EDITAR).last();
   const alvo = (await botao.count().catch(() => 0)) ? botao : linha;
 
+  // Duas tentativas de abrir a gaveta.
   for (let tentativa = 1; tentativa <= 2; tentativa += 1) {
     await clicar(alvo);
-
-    if (await gavetaAberta(page)) return true;
+    if (await gavetaAberta(page, 15000)) return;
     await page.waitForTimeout(1500);
   }
 
-  return false;
+  throw new Error(`O clique em Editar nao abriu a O.S. ${identificador}`);
 }
 
 /** Fecha a gaveta e espera a listagem voltar a ser a tela de frente. */
@@ -67,7 +78,5 @@ async function fecharGaveta(page) {
 module.exports = {
   abrirGaveta,
   fecharGaveta,
-  gavetaAberta,
   localizarAbaFormularios,
-  SELETOR_EDITAR,
 };

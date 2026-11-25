@@ -83,14 +83,7 @@ async function acharIconeFechar(page) {
   return null;
 }
 
-/**
- * Clica de verdade, com plano B.
- *
- * O clique normal respeita a acionabilidade; o forcado ignora a checagem mas
- * ainda precisa da posicao na tela; o ultimo recurso dispara o click pelo DOM,
- * que funciona mesmo se o elemento estiver fora da viewport ou coberto.
- * Retorna se algum deles deu certo.
- */
+/** Clica: normal, forcado e, por ultimo, pelo DOM. Retorna se clicou. */
 async function clicar(alvo) {
   const tentativas = [
     () => alvo.click({ timeout: 4000 }),
@@ -138,23 +131,4 @@ async function fecharPopups(page, tentativas = 6) {
   return fechados;
 }
 
-/** Checa se sobrou overlay bloqueando a tela */
-async function temOverlayBloqueando(page) {
-  return page
-    .locator(
-      "md-dialog:visible, .md-dialog-container:visible, " +
-        ".cdk-overlay-backdrop:visible, md-backdrop:visible",
-    )
-    .first()
-    .isVisible()
-    .catch(() => false);
-}
-
-module.exports = {
-  fecharPopups,
-  clicar,
-  temOverlayBloqueando,
-  TEXTOS_FECHAR,
-  BOTOES,
-  ICONES_FECHAR,
-};
+module.exports = { fecharPopups, clicar };

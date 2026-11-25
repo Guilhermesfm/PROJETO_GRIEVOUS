@@ -3,9 +3,10 @@
  *
  * Uso:
  *   node Grievous.js              -> menu interativo
- *   node Grievous.js pagamento    -> roda o fechamento da folha de pagamento
+ *   node Grievous.js pagamento    -> roda o Financeiro Inoprime
  *   node Grievous.js placas       -> roda a automacao de placas
  *   node Grievous.js web          -> sobe a interface web
+ *   node Grievous.js login        -> grava as credenciais
  */
 
 const readline = require("node:readline");
@@ -13,14 +14,16 @@ const path = require("node:path");
 const {
   carregarCredenciais,
   salvarCredenciais,
+  carregarCredenciaisTracker,
+  salvarCredenciaisTracker,
 } = require("./field/credenciais.js");
 
 const OPCOES = [
   {
     chave: "pagamento",
-    titulo: "Fechamento (folha de pagamento)",
+    titulo: "Financeiro Inoprime",
     descricao:
-      "Le a planilha de folha-de-pagamento/ e extrai os formularios das O.S.",
+      "Analisa as O.S. da planilha de folha-de-pagamento/ no Field e no HubPrime.",
     executar: executarPagamento,
   },
   {
@@ -37,9 +40,12 @@ const OPCOES = [
   },
   {
     chave: "login",
-    titulo: "Credenciais do Field",
-    descricao: "Grava e-mail e senha no arquivo .env.",
-    executar: () => pedirCredenciais(true),
+    titulo: "Credenciais",
+    descricao: "Grava o login do Field e do TrackerPrime no arquivo .env.",
+    // Field primeiro; o TrackerPrime em seguida.
+    executar: async () => {
+      if (await pedirCredenciais(true)) await pedirCredenciaisTracker();
+    },
   },
 ];
 
@@ -67,7 +73,24 @@ async function pedirCredenciais(forcar = false) {
   return true;
 }
 
-/** Roda o fechamento com a planilha mais recente de folha-de-pagamento/. */
+/** Pede o login do TrackerPrime. Em branco mantem o atual. */
+async function pedirCredenciaisTracker() {
+  const atual = carregarCredenciaisTracker();
+  console.log("--- Credenciais do TrackerPrime (Enter mantem as atuais) ---");
+  if (atual.email) console.log(`Conta atual: ${atual.email}`);
+
+  const email = (await perguntar("E-mail: ")) || atual.email;
+  const senha = await perguntar("Senha: ", true);
+  if (!email || !senha) {
+    console.log("TrackerPrime mantido.\n");
+    return;
+  }
+
+  salvarCredenciaisTracker(email, senha);
+  console.log("Credenciais do TrackerPrime gravadas no .env.\n");
+}
+
+/** Roda o Financeiro Inoprime com a planilha mais recente de folha-de-pagamento/. */
 async function executarPagamento() {
   const {
     runPagamento,
@@ -193,11 +216,7 @@ async function main() {
   await opcao.executar();
 }
 
-if (require.main === module) {
-  main().catch((erro) => {
-    console.error("Erro na execucao:", erro);
-    process.exit(1);
-  });
-}
-
-module.exports = { OPCOES };
+main().catch((erro) => {
+  console.error("Erro na execucao:", erro);
+  process.exit(1);
+});

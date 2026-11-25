@@ -5,6 +5,9 @@
 // do Field, o resultado vem num campo do dialogo ou direto na area de
 // transferencia — as duas formas sao cobertas aqui.
 
+// Clique com plano B, o mesmo dos popups.
+const { clicar: clicarNoAlvo } = require("./popups.js");
+
 const PADRAO_LINK = /https?:\/\/[^\s"'<>]*fieldcontrol\.com\.br[^\s"'<>]*/i;
 
 // Links da propria aplicacao (scripts, estilos) nao sao link de O.S.
@@ -20,29 +23,10 @@ const SELETORES = {
     'palantir-button:has-text("Mais opções")',
 };
 
-/**
- * Clica de verdade, com plano B: o ultimo recurso e o click pelo DOM,
- * que funciona mesmo com o botao fora da viewport.
- */
+/** Rola ate o botao e clica. */
 async function clicar(alvo) {
   await alvo.scrollIntoViewIfNeeded({ timeout: 3000 }).catch(() => {});
-
-  const tentativas = [
-    () => alvo.click({ timeout: 4000 }),
-    () => alvo.click({ force: true, timeout: 4000 }),
-    () => alvo.evaluate((elemento) => elemento.click()),
-  ];
-
-  for (const tentar of tentativas) {
-    try {
-      await tentar();
-      return true;
-    } catch {
-      // Tenta a proxima forma.
-    }
-  }
-
-  return false;
+  return clicarNoAlvo(alvo);
 }
 
 /** O texto parece um link de O.S. do Field? */
@@ -135,4 +119,4 @@ async function capturarLinkOs(page) {
   return link;
 }
 
-module.exports = { capturarLinkOs, ehLinkDeOs, SELETORES, PADRAO_LINK };
+module.exports = { capturarLinkOs };

@@ -2,13 +2,8 @@
 # Credentials
 .env
 
-# Playwright
+# Dependencias
 node_modules/
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/playwright/.auth/
 
 # Planilhas com dados reais de clientes (ficam so na maquina)
 folha-de-pagamento/*.xlsx

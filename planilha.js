@@ -76,9 +76,4 @@ function gravarPlanilha(caminho, abas) {
   return caminho;
 }
 
-module.exports = {
-  montarAba,
-  gravarPlanilha,
-  larguraDaColuna,
-  SEM_RETORNO,
-};
+module.exports = { gravarPlanilha, SEM_RETORNO };

@@ -7,10 +7,8 @@
 
 const path = require("node:path");
 const { chromium } = require("playwright");
-const {
-  carregarCredenciais,
-  carregarUrlsField,
-} = require("../field/credenciais.js");
+const { carregarUrlsField } = require("../field/credenciais.js");
+const { entrarNoField } = require("../field/login.js");
 const {
   filtrarPorIdentificador,
   esperarListagemPronta,
@@ -20,13 +18,8 @@ const { capturarLinkOs } = require("../field/link.js");
 const { abrirGaveta, fecharGaveta } = require("../field/gaveta.js");
 const { gravarPlanilha, SEM_RETORNO } = require("../planilha.js");
 
-// A planilha de saida fica nesta pasta.
-const OUTPUT_DIR = __dirname;
-
-/** Caminho da planilha de saida, dentro desta pasta. */
-function resolveOutputPath(filename = "situacoes_placas.xlsx") {
-  return path.join(OUTPUT_DIR, filename);
-}
+// Planilha de saida, nesta pasta.
+const SAIDA_PLACAS = path.join(__dirname, "situacoes_placas.xlsx");
 
 /** Dias completos desde "dd/mm/aaaa hh:mm" ate hoje ("" sem data). */
 function diasDesdeCriacao(texto) {
@@ -54,15 +47,8 @@ async function runAutomation(
       // Erro no progresso nao para a consulta.
     }
   };
-  const { email, senha } = carregarCredenciais();
   const urls = carregarUrlsField();
   const destinoListagem = new URL(urls.listagem);
-  if (!email || !senha) {
-    throw new Error(
-      "Credenciais nao configuradas. Informe o login do Field na tela inicial.",
-    );
-  }
-
   const resultados = [];
 
   // HEADLESS=false abre o navegador na tela.
@@ -73,19 +59,8 @@ async function runAutomation(
   emitir({ tipo: "inicio", total: placas.length });
 
   try {
-    // Login: e-mail, Continuar, senha, Continuar.
     emitir({ tipo: "login" });
-    await page.goto(urls.login);
-
-    await page.click('input[name="email"]');
-    await page.fill('input[name="email"]', email);
-
-    await page.click('palantir-button:has-text("Continuar")');
-
-    await page.click('input[aria-label="password"]');
-    await page.fill('input[aria-label="password"]', senha);
-
-    await page.click('palantir-button:has-text("Continuar")');
+    await entrarNoField(page, urls.login);
 
     // Espera o login redirecionar para a listagem antes de seguir.
     await page.waitForURL(
@@ -162,7 +137,9 @@ async function runAutomation(
         // So as concluidas interessam para o link.
         let link = "";
         if (/conclu/i.test(situacao)) {
-          if (await abrirGaveta(page, placa)) {
+          // Gaveta que nao abre deixa o link como "sem retorno".
+          const abriu = await abrirGaveta(page, placa).then(() => true, () => false);
+          if (abriu) {
             link = await capturarLinkOs(page);
             await fecharGaveta(page);
           }
@@ -205,7 +182,7 @@ async function runAutomation(
   }
 
   // Gera a planilha com os resultados.
-  const outputPath = resolveOutputPath();
+  const outputPath = SAIDA_PLACAS;
   gravarPlanilha(outputPath, [
     {
       nome: "Situacoes",
@@ -227,19 +204,8 @@ async function runAutomation(
   return { outputPath, resultados, interrompida };
 }
 
-/** Execucao direta pelo terminal (as placas vem pelo Grievous.js). */
-async function main() {
-  await runAutomation([]);
-}
-
-if (require.main === module) {
-  main().catch((error) => {
-    console.error("Erro na execucao da automacao:", error);
-    process.exit(1);
-  });
-}
-
+// Pelo terminal, as placas vem do Grievous.js.
 module.exports = {
-  resolveOutputPath,
   runAutomation,
+  SAIDA_PLACAS,
 };

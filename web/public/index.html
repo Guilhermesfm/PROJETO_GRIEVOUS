@@ -181,6 +181,25 @@
         color: var(--app-muted);
       }
 
+      /* Icones desenhados (nave e speeder): mesmo tamanho dos do Font Awesome. */
+      .icone-svg {
+        width: 1.25em;
+        height: 1.1em;
+        vertical-align: -0.2em;
+      }
+      .icone-speeder {
+        width: 1.7em;
+      }
+      .sidebar .nav-link i.icone-sabre {
+        width: auto;
+      }
+
+      /* Speeder com brilho de sabre azul. */
+      .sidebar .nav-link i.icone-sabre {
+        color: var(--app-saber);
+        filter: drop-shadow(0 0 4px var(--app-saber));
+      }
+
       .sidebar .nav-link:hover {
         background: rgba(255, 255, 255, 0.04);
       }
@@ -209,11 +228,6 @@
         margin: 0 0 4px;
         color: var(--app-bone);
         text-shadow: 0 0 22px rgba(123, 240, 106, 0.22);
-      }
-
-      .page-subtitle {
-        color: var(--app-muted);
-        margin: 0 0 22px;
       }
 
       /* ---------- Panel (padrao Color Admin) ---------- */
@@ -612,6 +626,24 @@
         box-shadow: 0 0 6px rgba(236, 242, 255, 0.35);
       }
 
+      /* Origem da O.S.: contorno, para nao confundir com a categoria. */
+      .badge-origem {
+        font-size: 0.62rem;
+        font-weight: 600;
+        padding: 1px 7px;
+        border-radius: 3px;
+        border: 1px solid currentColor;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-left: 4px;
+      }
+      .origem-field {
+        color: var(--app-saber);
+      }
+      .origem-hub {
+        color: var(--app-eye);
+      }
+
       /* Alerta de O.S. aberta ha mais de 30 dias: note do Color Admin com
          sabre vermelho. */
       .note-forca {
@@ -828,10 +860,10 @@
 </svg>
 
         <h1>GRIEVOUS</h1>
-        <p class="sub">Acesso ao Field Control</p>
+        <p class="sub">Acesso ao Field Control e ao TrackerPrime</p>
 
         <div class="mb-3">
-          <label class="form-label small" for="login-email">E-mail</label>
+          <label class="form-label small" for="login-email">E-mail do Field</label>
           <input
             type="email"
             class="form-control"
@@ -839,12 +871,11 @@
             name="email"
             autocomplete="username"
             placeholder="nome@inoprime.com.br"
-            required
           />
         </div>
 
         <div class="mb-3">
-          <label class="form-label small" for="login-senha">Senha</label>
+          <label class="form-label small" for="login-senha">Senha do Field</label>
           <div class="input-group">
             <input
               type="password"
@@ -852,7 +883,6 @@
               id="login-senha"
               name="senha"
               autocomplete="current-password"
-              required
             />
             <button
               class="btn btn-ghost"
@@ -864,6 +894,31 @@
             </button>
           </div>
         </div>
+
+        <!-- TrackerPrime: O.S. de origem HubPrime. -->
+        <p class="sub mb-2 mt-1">TrackerPrime (O.S. do HubPrime)</p>
+        <div class="mb-3">
+          <label class="form-label small" for="login-tracker-email">E-mail do TrackerPrime</label>
+          <input
+            type="email"
+            class="form-control"
+            id="login-tracker-email"
+            autocomplete="off"
+            placeholder="nome@inoprime.com.br"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label small" for="login-tracker-senha">Senha do TrackerPrime</label>
+          <input
+            type="password"
+            class="form-control"
+            id="login-tracker-senha"
+            autocomplete="new-password"
+          />
+        </div>
+        <p class="login-aviso mt-0">
+          Deixe em branco o que não for mudar: fica o que já está gravado.
+        </p>
 
         <button class="btn btn-saber w-100" type="submit" id="btn-salvar-login">
           <i class="fa-solid fa-right-to-bracket me-1"></i>Entrar
@@ -920,11 +975,11 @@
 </svg>
           <span class="sabers"><i></i><i></i><i></i><i></i></span>
           GRIEVOUS
-          <small>automações Field Control</small>
+          <small>automações Field e HubPrime</small>
         </a>
 
         <div class="conta-atual">
-          <i class="fa-solid fa-user-astronaut"></i>
+          <i class="fa-brands fa-mandalorian"></i>
           <span class="email" id="conta-email">—</span>
           <button class="btn btn-sm btn-ghost" id="btn-trocar-conta">
             trocar
@@ -937,11 +992,19 @@
         <div class="nav-header">Automações</div>
         <nav class="nav flex-column">
           <a class="nav-link active" data-aba="fechamento">
-            <i class="fa-solid fa-file-invoice-dollar"></i>
-            Fechamento
+            <i class="fa-brands fa-galactic-republic"></i>
+            Financeiro Inoprime
           </a>
           <a class="nav-link" data-aba="placas">
-            <i class="fa-solid fa-car-side"></i>
+            <!-- Speeder bike (Endor), de lado. -->
+            <i class="icone-sabre">
+              <svg class="icone-svg icone-speeder" viewBox="0 0 32 16" aria-hidden="true">
+                <path fill="currentColor" d="M0 2.5h8V5H0zM0 11h8v2.5H0z" />
+                <path fill="none" stroke="currentColor" stroke-width="1.8" d="M6.5 5 10 7.4M6.5 11 10 8.8" />
+                <path fill="currentColor" d="M8.5 6.4 22 4.6l7 1.6 3 2.8-8 2.2-15-.6Z" />
+                <path fill="currentColor" d="M15.5 5.2 20.5 2l3.2 2.8Z" />
+              </svg>
+            </i>
             Placas
           </a>
         </nav>
@@ -951,17 +1014,20 @@
       <div id="content" class="content">
         <!-- ============ ABA FECHAMENTO ============ -->
         <div class="tab-pane active" id="aba-fechamento">
-          <h1 class="page-header">Fechamento da folha</h1>
-          <p class="page-subtitle">
-            Lê a planilha de <code>folha-de-pagamento/</code>, abre cada O.S. no
-            Field e extrai as respostas dos formulários.
-          </p>
+          <h1 class="page-header">Financeiro Inoprime</h1>
 
           <!-- Resumo da planilha -->
           <div class="panel">
             <div class="panel-heading">
               <h4 class="panel-title">
-                <i class="fa-solid fa-table-list me-2"></i>Planilha de entrada
+                <!-- TIE Fighter, de frente. -->
+                <i class="me-2">
+                  <svg class="icone-svg" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="currentColor" d="M0 5 5 .5v23L0 19ZM24 5 19 .5v23l5-4.5Z" />
+                    <path fill="currentColor" d="M4.5 10.6h3v2.8h-3zm12 0h3v2.8h-3z" />
+                    <path fill="currentColor" fill-rule="evenodd" d="M12 6a6 6 0 1 1 0 12 6 6 0 0 1 0-12Zm0 3.4a2.6 2.6 0 1 0 0 5.2 2.6 2.6 0 0 0 0-5.2Z" />
+                  </svg>
+                </i>Planilha de entrada
               </h4>
               <div class="d-flex gap-2">
                 <input
@@ -998,7 +1064,7 @@
           <div class="panel">
             <div class="panel-heading">
               <h4 class="panel-title">
-                <i class="fa-solid fa-play me-2"></i>Execução
+                <i class="fa-brands fa-rebel me-2"></i>Execução
               </h4>
               <span class="text-muted small" id="status-execucao">parado</span>
             </div>
@@ -1019,7 +1085,7 @@
                 </div>
                 <div class="col-auto">
                   <button class="btn btn-saber" id="btn-rodar-fechamento">
-                    <i class="fa-solid fa-bolt me-1"></i>Iniciar fechamento
+                    <i class="fa-solid fa-rocket me-1"></i>Iniciar análise
                   </button>
                 </div>
                 <div class="col-auto">
@@ -1070,7 +1136,7 @@
           <div class="panel">
             <div class="panel-heading">
               <h4 class="panel-title">
-                <i class="fa-solid fa-list-check me-2"></i>O.S. processadas
+                <i class="fa-solid fa-car me-2"></i>O.S. processadas
               </h4>
             </div>
             <div class="panel-body p-0">
@@ -1103,14 +1169,11 @@
         <!-- ============ ABA PLACAS ============ -->
         <div class="tab-pane" id="aba-placas">
           <h1 class="page-header">Consulta de placas</h1>
-          <p class="page-subtitle">
-            Busca a situação e a data de criação de cada placa no Field.
-          </p>
 
           <div class="panel">
             <div class="panel-heading">
               <h4 class="panel-title">
-                <i class="fa-solid fa-keyboard me-2"></i>Placas
+                <i class="fa-brands fa-jedi-order me-2"></i>Placas
               </h4>
             </div>
             <div class="panel-body">
@@ -1151,7 +1214,7 @@
           <div class="panel">
             <div class="panel-heading">
               <h4 class="panel-title">
-                <i class="fa-solid fa-table me-2"></i>Resultados
+                <i class="fa-brands fa-empire me-2"></i>Resultados
               </h4>
             </div>
             <div class="panel-body p-0">
@@ -1194,10 +1257,15 @@
       // ---------- Login (grava as credenciais no .env) ----------
       const telaLogin = document.getElementById("tela-login");
       const erroLogin = document.getElementById("login-erro");
+      // Login do TrackerPrime gravado no .env (O.S. do HubPrime).
+      let trackerConfigurado = false;
+      let trackerEmailAtual = "";
 
       function abrirLogin(email = "") {
         document.getElementById("login-email").value = email;
         document.getElementById("login-senha").value = "";
+        document.getElementById("login-tracker-email").value = trackerEmailAtual;
+        document.getElementById("login-tracker-senha").value = "";
         erroLogin.classList.remove("visivel");
         telaLogin.classList.add("aberta");
         document
@@ -1214,6 +1282,8 @@
       async function verificarCredenciais() {
         try {
           const dados = await (await fetch("/api/credenciais")).json();
+          trackerConfigurado = Boolean(dados.trackerConfigurado);
+          trackerEmailAtual = dados.trackerEmail || "";
           document.getElementById("conta-email").textContent =
             dados.email || "não configurado";
           if (!dados.configurado) abrirLogin(dados.email);
@@ -1252,6 +1322,10 @@
           const botao = document.getElementById("btn-salvar-login");
           const email = document.getElementById("login-email").value.trim();
           const senha = document.getElementById("login-senha").value;
+          const trackerEmail = document
+            .getElementById("login-tracker-email")
+            .value.trim();
+          const trackerSenha = document.getElementById("login-tracker-senha").value;
 
           botao.disabled = true;
           erroLogin.classList.remove("visivel");
@@ -1260,13 +1334,17 @@
             const resposta = await fetch("/api/credenciais", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ email, senha }),
+              body: JSON.stringify({ email, senha, trackerEmail, trackerSenha }),
             });
             const dados = await resposta.json();
             if (!dados.ok) throw new Error(dados.error);
 
-            document.getElementById("conta-email").textContent = dados.email;
+            document.getElementById("conta-email").textContent =
+              dados.email || "não configurado";
+            trackerEmailAtual = dados.trackerEmail || "";
+            trackerConfigurado = Boolean(trackerEmailAtual) || trackerConfigurado;
             document.getElementById("login-senha").value = "";
+            document.getElementById("login-tracker-senha").value = "";
             telaLogin.classList.remove("aberta");
             carregarResumo();
           } catch (erro) {
@@ -1300,6 +1378,12 @@
         remanejamento: "cat-remanejamento",
         impedido: "cat-impedido",
       };
+
+      /** Origem da O.S. (Field ou HubPrime). */
+      function badgeOrigem(origem) {
+        const classe = /hubprime/i.test(origem) ? "origem-hub" : "origem-field";
+        return `<span class="badge-origem ${classe}">${escapar(origem)}</span>`;
+      }
 
       function badgeCategoria(categoria) {
         const classe = CORES_CATEGORIA[categoria] || "cat-fora";
@@ -1440,12 +1524,27 @@
             )
             .join("");
 
+          // Origem das O.S.: Field e HubPrime.
+          const porOrigem = dados.porOrigem || {};
+          const origens = Object.entries(porOrigem)
+            .map(([origem, n]) => `${badgeOrigem(origem)} ${n}`)
+            .join(" &nbsp; ");
+          const semTracker =
+            porOrigem.HubPrime && !trackerConfigurado
+              ? `<div class="mb-3 small log-erro">
+                   <i class="fa-solid fa-triangle-exclamation me-1"></i>
+                   Há O.S. do HubPrime e o login do TrackerPrime não está
+                   configurado. Use "Trocar conta" para informar.
+                 </div>`
+              : "";
+
           alvo.innerHTML = `
             <div class="mb-3 small text-muted">
               <i class="fa-solid fa-file-excel me-1"></i>
               <strong class="text-white">${escapar(dados.planilha)}</strong>
-              &nbsp;·&nbsp; ${dados.total} O.S.
+              &nbsp;·&nbsp; ${dados.total} O.S. &nbsp;·&nbsp; ${origens}
             </div>
+            ${semTracker}
             <div class="stat-grid">
               <div class="widget-stat">
                 <div class="title">total</div>
@@ -1541,22 +1640,22 @@
         enviarPlanilha(e.dataTransfer.files[0]),
       );
 
-      verificarCredenciais();
-      carregarResumo();
+      // O resumo depende de saber se o TrackerPrime esta configurado.
+      verificarCredenciais().finally(carregarResumo);
 
       // ---------- Execucao do fechamento ----------
       const botaoFechamento = document.getElementById("btn-rodar-fechamento");
       const tabelaFechamento = document.getElementById("tabela-fechamento");
       let primeiraLinha = true;
 
-      function adicionarLinha(identificador, categoria, respostas, situacao) {
+      function adicionarLinha(identificador, categoria, respostas, situacao, origem) {
         if (primeiraLinha) {
           tabelaFechamento.innerHTML = "";
           primeiraLinha = false;
         }
         const linha = document.createElement("tr");
         linha.innerHTML = `
-          <td>${escapar(identificador)}</td>
+          <td>${escapar(identificador)} ${origem ? badgeOrigem(origem) : ""}</td>
           <td>${badgeCategoria(categoria)}</td>
           <td>${respostas}</td>
           <td>${situacao}</td>`;
@@ -1698,6 +1797,7 @@
               evento.categoria,
               evento.respostas,
               '<span class="log-ok">OK</span>',
+              evento.origem,
             );
           }
 
@@ -1708,6 +1808,7 @@
               evento.categoria,
               0,
               `<span class="log-erro">${escapar(evento.erro)}</span>`,
+              evento.origem,
             );
           }
 
@@ -1759,7 +1860,7 @@
 
       botaoFechamento.addEventListener("click", () => {
         if (fonteAtual) {
-          logar("Já existe um fechamento em andamento nesta janela.", "erro");
+          logar("Já existe uma análise em andamento nesta janela.", "erro");
           return;
         }
         const limite = Number(document.getElementById("campo-limite").value) || 0;
@@ -1772,7 +1873,7 @@
         .then((status) => {
           if (status.ativa && status.tipo === "pagamento" && !fonteAtual) {
             acompanharFechamento("/api/pagamento/acompanhar");
-            logar("Fechamento em andamento — acompanhando.", "info");
+            logar("Análise em andamento — acompanhando.", "info");
           }
         })
         .catch(() => {

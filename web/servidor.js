@@ -5,8 +5,11 @@ const path = require("node:path");
 const {
   carregarCredenciais,
   salvarCredenciais,
+  carregarCredenciaisTracker,
+  salvarCredenciaisTracker,
 } = require("../field/credenciais.js");
 const { SAIDA_PADRAO } = require("../folha-de-pagamento/Pagamento.js");
+const { SAIDA_PLACAS } = require("../placas/automation.js");
 
 // Porta do front. So aceita conexoes locais: a senha do Field trafega sem HTTPS.
 const PORT = Number(process.env.PORT) || 3000;
@@ -14,7 +17,6 @@ const HOST = process.env.HOST || "127.0.0.1";
 const PUBLIC_DIR = path.join(__dirname, "public");
 // As automacoes e as planilhas ficam na raiz do projeto.
 const RAIZ = path.join(__dirname, "..");
-const SAIDA_PLACAS = path.join(RAIZ, "placas", "situacoes_placas.xlsx");
 
 // Mapeia a extensão do arquivo para o tipo correto do HTTP.
 const MIME_TYPES = {
@@ -157,7 +159,9 @@ const MODULOS_COMUNS = [
   "../field/gaveta.js",
   "../field/link.js",
   "../field/credenciais.js",
+  "../field/login.js",
   "../folha-de-pagamento/formularios.js",
+  "../folha-de-pagamento/hubprime.js",
 ];
 
 /**
@@ -231,9 +235,9 @@ function lerCorpoBinario(req, limite = TAMANHO_MAXIMO) {
 }
 
 // Monta o resumo da planilha de entrada com as regras atuais do Pagamento.js.
-function resumirPlanilha() {
-  const { descobrirPlanilhaEntrada, lerOrdensServico, classificarOs } =
-    carregarAutomacaoPagamento();
+// Recebe o Pagamento ja carregado, para nao ler do disco duas vezes.
+function resumirPlanilha(automacao = carregarAutomacaoPagamento()) {
+  const { descobrirPlanilhaEntrada, lerOrdensServico, classificarOs } = automacao;
   const entrada = descobrirPlanilhaEntrada();
   if (!entrada) {
     return { ok: false, error: "Nenhuma planilha em folha-de-pagamento/." };
@@ -244,16 +248,19 @@ function resumirPlanilha() {
     categoria: classificarOs(os) || "fora do escopo",
   }));
 
-  const porCategoria = ordens.reduce((contagem, os) => {
-    contagem[os.categoria] = (contagem[os.categoria] || 0) + 1;
-    return contagem;
-  }, {});
+  const contar = (campo) =>
+    ordens.reduce((contagem, os) => {
+      contagem[os[campo]] = (contagem[os[campo]] || 0) + 1;
+      return contagem;
+    }, {});
 
   return {
     ok: true,
     planilha: path.basename(entrada),
     total: ordens.length,
-    porCategoria,
+    porCategoria: contar("categoria"),
+    // Field e HubPrime.
+    porOrigem: contar("origem"),
     ordens,
   };
 }
@@ -286,26 +293,42 @@ const server = http.createServer(async (req, res) => {
   // --- Credenciais: estado atual (a senha nunca sai daqui) -----------------
   if (req.method === "GET" && url.pathname === "/api/credenciais") {
     const { email, senha } = carregarCredenciais();
+    const tracker = carregarCredenciaisTracker();
     responderJson(res, 200, {
       ok: true,
       configurado: Boolean(email && senha),
       email,
+      trackerConfigurado: Boolean(tracker.email && tracker.senha),
+      trackerEmail: tracker.email,
     });
     return;
   }
 
-  // --- Credenciais: grava EMAIL e PASSWORD no .env -------------------------
+  // --- Credenciais: grava Field e/ou TrackerPrime no .env ------------------
   if (req.method === "POST" && url.pathname === "/api/credenciais") {
     try {
       const payload = JSON.parse((await lerCorpo(req)) || "{}");
-      salvarCredenciais(
-        String(payload.email || "").trim(),
-        String(payload.senha || ""),
-      );
-      console.log("Credenciais do Field atualizadas no .env.");
+      const email = String(payload.email || "").trim();
+      const senha = String(payload.senha || "");
+      const trackerEmail = String(payload.trackerEmail || "").trim();
+      const trackerSenha = String(payload.trackerSenha || "");
+      if (!(email && senha) && !(trackerEmail && trackerSenha)) {
+        throw new Error("Informe e-mail e senha do Field ou do TrackerPrime.");
+      }
+
+      // Campo em branco mantem o que ja esta no .env.
+      if (email && senha) {
+        salvarCredenciais(email, senha);
+        console.log("Credenciais do Field atualizadas no .env.");
+      }
+      if (trackerEmail && trackerSenha) {
+        salvarCredenciaisTracker(trackerEmail, trackerSenha);
+        console.log("Credenciais do TrackerPrime atualizadas no .env.");
+      }
       responderJson(res, 200, {
         ok: true,
-        email: String(payload.email).trim(),
+        email: carregarCredenciais().email,
+        trackerEmail: carregarCredenciaisTracker().email,
       });
     } catch (erro) {
       responderJson(res, 400, { ok: false, error: erro.message });
@@ -381,7 +404,7 @@ const server = http.createServer(async (req, res) => {
       }
       responderEvento(res, {
         tipo: "erro",
-        erro: `Já existe uma execução em andamento (${execucao.tipo}). Pare-a antes de começar o fechamento.`,
+        erro: `Já existe uma execução em andamento (${execucao.tipo}). Pare-a antes de começar a análise do Financeiro Inoprime.`,
       });
       return;
     }
@@ -395,15 +418,15 @@ const server = http.createServer(async (req, res) => {
     const enviar = progressoPagamento.emitir;
 
     try {
-      const resumo = resumirPlanilha();
+      // Le o codigo atual do disco.
+      const automacao = carregarAutomacaoPagamento();
+      const resumo = resumirPlanilha(automacao);
       if (!resumo.ok) throw new Error(resumo.error);
 
       // Permite rodar so um pedaco da planilha (util para testar).
       const limite = Number(url.searchParams.get("limite")) || 0;
       const ordens = limite ? resumo.ordens.slice(0, limite) : resumo.ordens;
 
-      // Le o codigo atual do disco.
-      const automacao = carregarAutomacaoPagamento();
       await automacao.runPagamento(
         ordens,
         automacao.SAIDA_PADRAO,

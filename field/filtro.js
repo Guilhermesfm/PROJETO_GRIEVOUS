@@ -221,5 +221,4 @@ async function esperarTabelaFiltrada(page, valor, timeout = 15000) {
 module.exports = {
   filtrarPorIdentificador,
   esperarListagemPronta,
-  SELETORES,
 };
